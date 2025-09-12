@@ -1,0 +1,570 @@
+# Implementation Guidelines - Raco Hotels Customer Portal
+
+## Code Implementation Standards
+
+### 1. TypeScript Implementation Rules
+
+#### Strict Type Safety (CRITICAL)
+```typescript
+// ❌ NEVER DO THIS - Will cause ESLint error
+function processData(data: any) {
+  return data.someProperty;
+}
+
+// ✅ ALWAYS DO THIS - Proper typing
+interface ApiResponse {
+  hotels: Hotel[];
+  pagination: PaginationMeta;
+}
+
+function processHotelData(data: ApiResponse): Hotel[] {
+  return data.hotels;
+}
+```
+
+#### Interface Definitions
+```typescript
+// Define all API response structures
+interface Hotel {
+  id: string;
+  name: string;
+  location: {
+    city: string;
+    country: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+  };
+  amenities: string[];
+  rating: number;
+  priceRange: {
+    min: number;
+    max: number;
+    currency: string;
+  };
+}
+
+// Use proper generics for reusable types
+interface ApiResponse<T> {
+  data: T;
+  meta: {
+    pagination?: PaginationMeta;
+    filters?: FilterMeta;
+  };
+  error?: ApiError;
+}
+```
+
+### 2. Next.js App Router Implementation
+
+#### Server Components (for SEO)
+```typescript
+// app/hotels/page.tsx
+interface SearchParams {
+  location?: string;
+  dates?: string;
+  guests?: string;
+}
+
+interface HotelsPageProps {
+  searchParams: SearchParams;
+}
+
+export default async function HotelsPage({ searchParams }: HotelsPageProps) {
+  try {
+    // Direct API call in server component for SEO
+    const response = await fetch(`${process.env.API_BASE_URL}/hotels`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.API_TOKEN}`,
+      },
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data: ApiResponse<Hotel[]> = await response.json();
+    
+    return (
+      <div>
+        <HotelSearchForm defaultValues={searchParams} />
+        <HotelGrid hotels={data.data} />
+      </div>
+    );
+  } catch (error) {
+    return <ErrorBoundary error={error} />;
+  }
+}
+
+// Generate metadata for SEO
+export async function generateMetadata({ 
+  searchParams 
+}: HotelsPageProps): Promise<Metadata> {
+  const location = searchParams.location || 'All Locations';
+  
+  return {
+    title: `Hotels in ${location} - Raco Hotels`,
+    description: `Find and book the best hotels in ${location}. Compare prices, amenities, and reviews.`,
+    openGraph: {
+      title: `Hotels in ${location}`,
+      description: `Discover amazing hotels in ${location}`,
+      images: ['/og-hotels.jpg'],
+    },
+  };
+}
+```
+
+#### Client Components (for Interactivity)
+```typescript
+'use client';
+
+import { useState } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
+
+interface HotelSearchFormProps {
+  defaultValues?: SearchParams;
+  onSearch?: (params: SearchParams) => void;
+}
+
+export function HotelSearchForm({ defaultValues, onSearch }: HotelSearchFormProps) {
+  const [searchParams, setSearchParams] = useState<SearchParams>(defaultValues || {});
+
+  // Use React Query for client-side data fetching
+  const { data: suggestions, isLoading } = useQuery({
+    queryKey: ['location-suggestions', searchParams.location],
+    queryFn: async () => {
+      if (!searchParams.location) return [];
+      
+      const response = await fetch(`/api/locations/suggest?q=${searchParams.location}`);
+      if (!response.ok) throw new Error('Failed to fetch suggestions');
+      
+      return response.json() as LocationSuggestion[];
+    },
+    enabled: Boolean(searchParams.location && searchParams.location.length > 2),
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSearch?.(searchParams);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Form implementation with proper accessibility */}
+    </form>
+  );
+}
+```
+
+### 3. API Integration Patterns
+
+#### Error Handling Implementation
+```typescript
+// lib/api.ts
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public code?: string
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+export async function apiCall<T>(
+  url: string,
+  options?: RequestInit
+): Promise<T> {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+      ...options,
+    });
+
+    if (!response.ok) {
+      throw new ApiError(
+        `API call failed: ${response.statusText}`,
+        response.status
+      );
+    }
+
+    const data = await response.json();
+    return data as T;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    
+    throw new ApiError('Network error occurred', 0);
+  }
+}
+
+// Usage in components
+export function useHotels(searchParams: SearchParams) {
+  return useQuery({
+    queryKey: ['hotels', searchParams],
+    queryFn: () => apiCall<ApiResponse<Hotel[]>>('/api/hotels', {
+      method: 'POST',
+      body: JSON.stringify(searchParams),
+    }),
+    retry: (failureCount, error) => {
+      // Don't retry on 4xx errors
+      if (error instanceof ApiError && error.status >= 400 && error.status < 500) {
+        return false;
+      }
+      return failureCount < 3;
+    },
+  });
+}
+```
+
+### 4. Component Implementation Patterns
+
+#### Compound Component Pattern
+```typescript
+// components/HotelCard/index.tsx
+interface HotelCardProps {
+  hotel: Hotel;
+  children?: React.ReactNode;
+}
+
+interface HotelCardImageProps {
+  src: string;
+  alt: string;
+}
+
+interface HotelCardContentProps {
+  children: React.ReactNode;
+}
+
+interface HotelCardActionsProps {
+  children: React.ReactNode;
+}
+
+export function HotelCard({ hotel, children }: HotelCardProps) {
+  return (
+    <article className="bg-white rounded-lg shadow-md overflow-hidden">
+      {children}
+    </article>
+  );
+}
+
+export function HotelCardImage({ src, alt }: HotelCardImageProps) {
+  return (
+    <div className="relative aspect-video">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      />
+    </div>
+  );
+}
+
+export function HotelCardContent({ children }: HotelCardContentProps) {
+  return <div className="p-4">{children}</div>;
+}
+
+export function HotelCardActions({ children }: HotelCardActionsProps) {
+  return <div className="p-4 pt-0 flex gap-2">{children}</div>;
+}
+
+// Usage
+<HotelCard hotel={hotel}>
+  <HotelCardImage src={hotel.images[0]} alt={hotel.name} />
+  <HotelCardContent>
+    <h3>{hotel.name}</h3>
+    <p>{hotel.location.city}</p>
+  </HotelCardContent>
+  <HotelCardActions>
+    <Button>View Details</Button>
+    <Button variant="outline">Save</Button>
+  </HotelCardActions>
+</HotelCard>
+```
+
+#### Custom Hook Implementation
+```typescript
+// hooks/useLocalStorage.ts
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, (value: T) => void, () => void] {
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    if (typeof window === 'undefined') {
+      return initialValue;
+    }
+
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.warn(`Error reading localStorage key "${key}":`, error);
+      return initialValue;
+    }
+  });
+
+  const setValue = useCallback((value: T) => {
+    try {
+      setStoredValue(value);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(key, JSON.stringify(value));
+      }
+    } catch (error) {
+      console.warn(`Error setting localStorage key "${key}":`, error);
+    }
+  }, [key]);
+
+  const removeValue = useCallback(() => {
+    try {
+      setStoredValue(initialValue);
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(key);
+      }
+    } catch (error) {
+      console.warn(`Error removing localStorage key "${key}":`, error);
+    }
+  }, [key, initialValue]);
+
+  return [storedValue, setValue, removeValue];
+}
+```
+
+### 5. Styling Implementation with Tailwind
+
+#### Component Variants Pattern
+```typescript
+// components/Button/Button.tsx
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+export function Button({ 
+  className, 
+  variant, 
+  size, 
+  asChild = false, 
+  ...props 
+}: ButtonProps) {
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
+}
+```
+
+### 6. Performance Implementation
+
+#### Image Optimization
+```typescript
+// components/OptimizedImage.tsx
+interface OptimizedImageProps {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  priority?: boolean;
+  className?: string;
+}
+
+export function OptimizedImage({
+  src,
+  alt,
+  width,
+  height,
+  priority = false,
+  className,
+}: OptimizedImageProps) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      priority={priority}
+      className={className}
+      placeholder="blur"
+      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkrHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+    />
+  );
+}
+```
+
+#### Code Splitting
+```typescript
+// Dynamic imports for heavy components
+const HotelMap = dynamic(() => import('./HotelMap'), {
+  loading: () => <MapSkeleton />,
+  ssr: false, // Only load on client-side
+});
+
+const BookingModal = dynamic(() => import('./BookingModal'), {
+  loading: () => <ModalSkeleton />,
+});
+
+// Usage with lazy loading
+export function HotelDetails({ hotel }: { hotel: Hotel }) {
+  const [showMap, setShowMap] = useState(false);
+  const [showBooking, setShowBooking] = useState(false);
+
+  return (
+    <div>
+      <HotelInfo hotel={hotel} />
+      
+      {showMap && <HotelMap coordinates={hotel.location.coordinates} />}
+      
+      <Button onClick={() => setShowBooking(true)}>
+        Book Now
+      </Button>
+      
+      {showBooking && (
+        <BookingModal 
+          hotel={hotel} 
+          onClose={() => setShowBooking(false)} 
+        />
+      )}
+    </div>
+  );
+}
+```
+
+### 7. Testing Implementation
+
+#### Component Testing
+```typescript
+// __tests__/HotelCard.test.tsx
+import { render, screen } from '@testing-library/react';
+import { HotelCard } from '@/components/HotelCard';
+import { mockHotel } from '@/mocks/hotel';
+
+describe('HotelCard', () => {
+  it('renders hotel information correctly', () => {
+    render(<HotelCard hotel={mockHotel} />);
+    
+    expect(screen.getByText(mockHotel.name)).toBeInTheDocument();
+    expect(screen.getByText(mockHotel.location.city)).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: mockHotel.name })).toBeInTheDocument();
+  });
+
+  it('handles missing hotel data gracefully', () => {
+    const incompleteHotel = { ...mockHotel, images: [] };
+    
+    expect(() => {
+      render(<HotelCard hotel={incompleteHotel} />);
+    }).not.toThrow();
+  });
+});
+```
+
+### 8. Security Implementation
+
+#### Input Sanitization
+```typescript
+// lib/sanitize.ts
+import DOMPurify from 'isomorphic-dompurify';
+
+export function sanitizeHtml(dirty: string): string {
+  return DOMPurify.sanitize(dirty, {
+    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br'],
+    ALLOWED_ATTR: [],
+  });
+}
+
+export function validateEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+export function sanitizeSearchQuery(query: string): string {
+  return query
+    .trim()
+    .replace(/[<>\"']/g, '') // Remove potentially harmful characters
+    .substring(0, 100); // Limit length
+}
+```
+
+## Implementation Checklist
+
+Before submitting any code, ensure:
+
+### TypeScript Compliance
+- [ ] No `any` types used anywhere
+- [ ] All props and function parameters properly typed
+- [ ] API response types defined and used
+- [ ] No TypeScript errors or warnings
+
+### Next.js Best Practices
+- [ ] Server components used for SEO-critical content
+- [ ] Client components only when interactivity is needed
+- [ ] Proper metadata generation for SEO
+- [ ] Image optimization with Next.js Image component
+
+### Performance
+- [ ] Dynamic imports for heavy components
+- [ ] Proper image optimization and sizing
+- [ ] Bundle analysis shows no unnecessary dependencies
+- [ ] Loading states implemented for async operations
+
+### Accessibility
+- [ ] Semantic HTML structure
+- [ ] Proper ARIA labels and roles
+- [ ] Keyboard navigation support
+- [ ] Color contrast meets WCAG standards
+
+### Code Quality
+- [ ] ESLint passes without errors
+- [ ] Prettier formatting applied
+- [ ] No console.log statements in production code
+- [ ] Error boundaries implemented where needed
+
+### Testing
+- [ ] Unit tests for complex logic
+- [ ] Component tests for UI behavior
+- [ ] API integration tests with mocked responses
+- [ ] Accessibility tests with axe-core
+
+---
+
+**Remember**: Every implementation should prioritize type safety, performance, and user experience. The hotel booking industry requires trust and reliability.

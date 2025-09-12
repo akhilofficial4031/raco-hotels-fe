@@ -1,0 +1,249 @@
+# Next.js Frontend Rules - Raco Hotels Customer Portal
+
+## Project Overview
+This is a **Next.js 15** frontend application for Raco Hotels customer portal. Key characteristics:
+- **API-only communication** - No direct database connections
+- **SSR for SEO** - Server-side rendering primarily for search engine optimization
+- **Customer-facing portal** - Hotel booking and customer management interface
+- **Cloudflare deployment** - Uses OpenNext.js for Cloudflare hosting
+
+## Core Development Principles
+
+### 1. Type Safety (MANDATORY)
+- **NEVER use `any` type** - ESLint will error on any usage
+- Use proper TypeScript interfaces and types for all data structures
+- Define API response types explicitly
+- Use generic types for reusable components
+
+### 2. API Communication Patterns
+- All data fetching through external APIs only
+- Use Next.js App Router with Server Components for SEO-critical pages
+- Implement proper error handling for API calls
+- Use React Query/TanStack Query for client-side data fetching and caching
+
+### 3. Code Quality Standards
+- Follow established ESLint and Prettier configuration
+- Use descriptive variable and function names
+- Implement proper error boundaries
+- Write self-documenting code with JSDoc comments for complex functions
+
+## Technical Stack Constraints
+
+### Required Technologies
+- **Next.js 15** with App Router
+- **TypeScript** (strict mode enabled)
+- **React 19** 
+- **Tailwind CSS 4** for styling
+- **OpenNext.js** for Cloudflare deployment
+
+### Forbidden Patterns
+- Direct database connections or ORM usage
+- Using `any` type in TypeScript
+- Client-side only applications (must support SSR)
+- Inline styles (use Tailwind classes)
+- `var` declarations (use `const`/`let`)
+
+## File Organization Rules
+
+### Component Structure
+```
+app/
+├── (routes)/           # Route groups
+├── components/         # Reusable UI components
+├── lib/               # Utility functions and configurations
+├── types/             # TypeScript type definitions
+└── styles/            # Global styles and Tailwind config
+```
+
+### Component Naming
+- Use PascalCase for component files: `HotelCard.tsx`
+- Use kebab-case for page routes: `hotel-details/page.tsx`
+- Prefix custom hooks with `use`: `useHotelData.ts`
+
+## API Integration Guidelines
+
+### Server Components (for SSR/SEO)
+- Use for initial page loads and SEO-critical content
+- Fetch data directly in server components
+- Handle errors gracefully with proper fallbacks
+
+### Client Components (for interactivity)
+- Use React Query for data fetching and caching
+- Implement loading states and error handling
+- Use Suspense boundaries where appropriate
+
+### Error Handling Pattern
+```typescript
+interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  status: 'success' | 'error' | 'loading';
+}
+```
+
+## Performance Guidelines
+
+### Image Optimization
+- Always use Next.js `<Image>` component
+- Provide appropriate `alt` text for accessibility
+- Use WebP format when possible
+
+### Bundle Optimization
+- Dynamic imports for heavy components
+- Tree-shake unused dependencies
+- Optimize Tailwind with purge configuration
+
+### Caching Strategy
+- Use Next.js built-in caching for static content
+- Implement proper cache invalidation for dynamic data
+- Use React Query cache for API responses
+
+## SEO & Accessibility
+
+### Meta Tags
+- Include proper Open Graph tags
+- Use structured data where applicable
+- Implement proper title and description meta tags
+
+### Accessibility
+- Use semantic HTML elements
+- Provide ARIA labels where needed
+- Ensure keyboard navigation support
+- Maintain proper color contrast ratios
+
+## Security Considerations
+
+### API Security
+- Validate all API responses
+- Sanitize user inputs
+- Use environment variables for sensitive configuration
+- Implement proper CORS handling
+
+### Client Security
+- Never expose sensitive data in client-side code
+- Use secure HTTP headers
+- Implement CSP (Content Security Policy) headers
+
+## Testing Strategy
+
+### Unit Testing
+- Test utility functions thoroughly
+- Mock API calls in component tests
+- Focus on business logic and edge cases
+
+### Integration Testing
+- Test API integration flows
+- Verify error handling scenarios
+- Test responsive design breakpoints
+
+## Deployment Considerations
+
+### Cloudflare Optimization
+- Follow OpenNext.js best practices
+- Optimize for edge computing
+- Use Cloudflare Workers where beneficial
+
+### Environment Configuration
+- Use different configs for dev/staging/production
+- Validate environment variables at build time
+- Implement proper logging for debugging
+
+## Code Review Checklist
+
+Before submitting code, ensure:
+- [ ] No TypeScript errors or warnings
+- [ ] All ESLint rules pass
+- [ ] Code is properly formatted with Prettier
+- [ ] API error handling is implemented
+- [ ] Loading states are shown for async operations
+- [ ] Responsive design works on mobile/tablet/desktop
+- [ ] Accessibility guidelines are followed
+- [ ] No console.log statements in production code
+
+## Common Patterns
+
+### Data Fetching Component
+```typescript
+interface HotelListProps {
+  searchParams: {
+    location?: string;
+    dates?: string;
+  };
+}
+
+export default async function HotelList({ searchParams }: HotelListProps) {
+  try {
+    const hotels = await fetchHotels(searchParams);
+    return <HotelGrid hotels={hotels} />;
+  } catch (error) {
+    return <ErrorComponent message="Failed to load hotels" />;
+  }
+}
+```
+
+### Custom Hook Pattern
+```typescript
+export function useHotelBooking() {
+  return useMutation({
+    mutationFn: async (booking: BookingRequest) => {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(booking),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Booking failed');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      // Handle success
+    },
+    onError: (error) => {
+      // Handle error
+    },
+  });
+}
+```
+
+## Debugging Guidelines
+
+### Development Tools
+- Use React Developer Tools for component debugging
+- Use Network tab for API call inspection
+- Use Lighthouse for performance auditing
+
+### Error Reporting
+- Implement proper error boundaries
+- Log errors with context for debugging
+- Use structured logging for production
+
+## Documentation Requirements
+
+### Component Documentation
+- Document props interfaces with JSDoc
+- Include usage examples in comments
+- Document any side effects or assumptions
+
+### API Documentation
+- Document expected API response structures
+- Include error response formats
+- Document rate limiting and retry logic
+
+## Performance Monitoring
+
+### Core Web Vitals
+- Monitor LCP, FID, and CLS metrics
+- Optimize for mobile performance
+- Use Next.js built-in analytics
+
+### Bundle Analysis
+- Regularly analyze bundle size
+- Identify and remove unused dependencies
+- Optimize imports to reduce bundle size
+
+---
+
+**Remember**: This is a customer-facing hotel portal that must be fast, accessible, and SEO-optimized. Every decision should prioritize user experience and search engine visibility.

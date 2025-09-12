@@ -1,0 +1,664 @@
+# Debugging Guidelines - Raco Hotels Customer Portal
+
+## Debugging Strategy for Next.js + TypeScript
+
+### 1. Development Environment Setup
+
+#### Essential Browser Tools
+
+```javascript
+// Add to browser console for debugging
+window.debug = {
+  hotel: (id) =>
+    console.log("Hotel:", window.__NEXT_DATA__.props.pageProps.hotel),
+  api: (endpoint) => console.log("API Call:", endpoint),
+  state: () => console.log("App State:", window.__APP_STATE__),
+};
+
+// Performance monitoring
+window.performance.mark("app-start");
+window.addEventListener("load", () => {
+  window.performance.mark("app-loaded");
+  window.performance.measure("app-load-time", "app-start", "app-loaded");
+});
+```
+
+#### VS Code Debug Configuration
+
+```json
+// .vscode/launch.json - Add to existing configuration
+{
+  "name": "Debug Next.js (TypeScript)",
+  "type": "node",
+  "request": "launch",
+  "program": "${workspaceFolder}/node_modules/.bin/next",
+  "args": ["dev"],
+  "env": {
+    "NODE_OPTIONS": "--inspect"
+  },
+  "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"],
+  "console": "integratedTerminal",
+  "restart": true,
+  "runtimeArgs": ["--preserve-symlinks"]
+}
+```
+
+### 2. TypeScript Debugging Patterns
+
+#### Debug Utility Functions
+
+```typescript
+// lib/debug.ts
+interface DebugContext {
+  component?: string;
+  action?: string;
+  userId?: string;
+  timestamp: number;
+}
+
+export function debugLog<T>(
+  message: string,
+  data?: T,
+  context?: Partial<DebugContext>
+): void {
+  if (process.env.NODE_ENV !== "development") return;
+
+  const debugContext: DebugContext = {
+    timestamp: Date.now(),
+    ...context,
+  };
+
+  console.group(`🐛 ${message}`);
+  console.log("Context:", debugContext);
+  if (data) {
+    console.log("Data:", data);
+  }
+  console.trace("Stack trace");
+  console.groupEnd();
+}
+
+// Type-safe debugging for API calls
+export function debugApi<T>(
+  endpoint: string,
+  method: string,
+  payload?: unknown,
+  response?: T,
+  error?: Error
+): void {
+  if (process.env.NODE_ENV !== "development") return;
+
+  console.group(`🌐 API: ${method.toUpperCase()} ${endpoint}`);
+
+  if (payload) {
+    console.log("Request:", payload);
+  }
+
+  if (response) {
+    console.log("Response:", response);
+  }
+
+  if (error) {
+    console.error("Error:", error);
+  }
+
+  console.groupEnd();
+}
+
+// Component state debugging
+export function useDebugValue<T>(value: T, label: string): T {
+  React.useDebugValue(value, (val) => `${label}: ${JSON.stringify(val)}`);
+  return value;
+}
+```
+
+#### Debug Hooks
+
+```typescript
+// hooks/useDebug.ts
+export function useComponentDebug(componentName: string) {
+  const renderCount = useRef(0);
+  const lastPropsRef = useRef<Record<string, unknown>>();
+
+  useEffect(() => {
+    renderCount.current += 1;
+    debugLog(`${componentName} rendered`, {
+      renderCount: renderCount.current,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  const debugProps = useCallback(
+    (props: Record<string, unknown>) => {
+      if (lastPropsRef.current) {
+        const changedProps = Object.keys(props).filter(
+          (key) => props[key] !== lastPropsRef.current![key]
+        );
+
+        if (changedProps.length > 0) {
+          debugLog(`${componentName} props changed`, {
+            changed: changedProps,
+            newProps: Object.fromEntries(
+              changedProps.map((key) => [key, props[key]])
+            ),
+          });
+        }
+      }
+      lastPropsRef.current = props;
+    },
+    [componentName]
+  );
+
+  return { debugProps, renderCount: renderCount.current };
+}
+
+// API debugging hook
+export function useApiDebug() {
+  const apiCalls = useRef<
+    Array<{
+      endpoint: string;
+      method: string;
+      timestamp: number;
+      status: "pending" | "success" | "error";
+      duration?: number;
+    }>
+  >([]);
+
+  const logApiCall = useCallback(
+    (
+      endpoint: string,
+      method: string,
+      status: "pending" | "success" | "error",
+      startTime?: number
+    ) => {
+      const call = {
+        endpoint,
+        method,
+        timestamp: Date.now(),
+        status,
+        duration: startTime ? Date.now() - startTime : undefined,
+      };
+
+      apiCalls.current.push(call);
+      debugApi(endpoint, method, undefined, call);
+    },
+    []
+  );
+
+  return { apiCalls: apiCalls.current, logApiCall };
+}
+```
+
+### 3. API Debugging Strategies
+
+#### API Error Debugging
+
+```typescript
+// lib/api-debug.ts
+interface ApiDebugInfo {
+  url: string;
+  method: string;
+  headers: Record<string, string>;
+  payload?: unknown;
+  response?: unknown;
+  error?: Error;
+  duration: number;
+  timestamp: number;
+}
+
+export class ApiDebugger {
+  private static calls: ApiDebugInfo[] = [];
+
+  static logCall(info: ApiDebugInfo): void {
+    this.calls.push(info);
+
+    if (process.env.NODE_ENV === "development") {
+      console.group(`🔍 API Debug: ${info.method} ${info.url}`);
+      console.log("Duration:", `${info.duration}ms`);
+      console.log("Headers:", info.headers);
+
+      if (info.payload) {
+        console.log("Request:", info.payload);
+      }
+
+      if (info.response) {
+        console.log("Response:", info.response);
+      }
+
+      if (info.error) {
+        console.error("Error:", info.error);
+      }
+
+      console.groupEnd();
+    }
+  }
+
+  static getCalls(): readonly ApiDebugInfo[] {
+    return this.calls;
+  }
+
+  static clearCalls(): void {
+    this.calls = [];
+  }
+
+  static getFailedCalls(): readonly ApiDebugInfo[] {
+    return this.calls.filter((call) => call.error);
+  }
+}
+
+// Enhanced API call with debugging
+export async function debugApiCall<T>(
+  url: string,
+  options?: RequestInit
+): Promise<T> {
+  const startTime = Date.now();
+  const method = options?.method || "GET";
+
+  try {
+    const response = await fetch(url, options);
+    const duration = Date.now() - startTime;
+
+    if (!response.ok) {
+      throw new ApiError(`HTTP ${response.status}`, response.status);
+    }
+
+    const data = await response.json();
+
+    ApiDebugger.logCall({
+      url,
+      method,
+      headers: Object.fromEntries(response.headers.entries()),
+      payload: options?.body,
+      response: data,
+      duration,
+      timestamp: startTime,
+    });
+
+    return data;
+  } catch (error) {
+    const duration = Date.now() - startTime;
+
+    ApiDebugger.logCall({
+      url,
+      method,
+      headers: {},
+      payload: options?.body,
+      error: error as Error,
+      duration,
+      timestamp: startTime,
+    });
+
+    throw error;
+  }
+}
+```
+
+### 4. Component Debugging
+
+#### React Component Debug Wrapper
+
+```typescript
+// components/DebugWrapper.tsx
+interface DebugWrapperProps {
+  name: string;
+  children: React.ReactNode;
+  props?: Record<string, unknown>;
+}
+
+export function DebugWrapper({ name, children, props }: DebugWrapperProps) {
+  const { debugProps, renderCount } = useComponentDebug(name);
+
+  useEffect(() => {
+    if (props) {
+      debugProps(props);
+    }
+  }, [props, debugProps]);
+
+  if (process.env.NODE_ENV !== 'development') {
+    return <>{children}</>;
+  }
+
+  return (
+    <div data-debug-component={name} data-render-count={renderCount}>
+      {children}
+    </div>
+  );
+}
+
+// Usage in components
+export function HotelCard({ hotel, onSelect }: HotelCardProps) {
+  return (
+    <DebugWrapper name="HotelCard" props={{ hotelId: hotel.id }}>
+      <div className="hotel-card">
+        {/* Component content */}
+      </div>
+    </DebugWrapper>
+  );
+}
+```
+
+#### Performance Debugging
+
+```typescript
+// hooks/usePerformanceDebug.ts
+export function usePerformanceDebug(componentName: string) {
+  const renderTimeRef = useRef<number>();
+
+  // Measure render time
+  renderTimeRef.current = performance.now();
+
+  useLayoutEffect(() => {
+    const renderTime = performance.now() - renderTimeRef.current!;
+
+    if (renderTime > 16) {
+      // More than one frame (60fps)
+      console.warn(
+        `⚠️ Slow render: ${componentName} took ${renderTime.toFixed(2)}ms`
+      );
+    }
+
+    debugLog(`${componentName} render time`, {
+      renderTime: `${renderTime.toFixed(2)}ms`,
+      isSlowRender: renderTime > 16,
+    });
+  });
+
+  const measureOperation = useCallback(
+    <T>(operation: () => T, operationName: string): T => {
+      const start = performance.now();
+      const result = operation();
+      const duration = performance.now() - start;
+
+      debugLog(`${componentName} operation: ${operationName}`, {
+        duration: `${duration.toFixed(2)}ms`,
+      });
+
+      return result;
+    },
+    [componentName]
+  );
+
+  return { measureOperation };
+}
+```
+
+### 5. State Debugging
+
+#### Redux/Context State Debugging
+
+```typescript
+// lib/state-debug.ts
+export function createStateDebugger<T>(stateName: string) {
+  let previousState: T | undefined;
+
+  return {
+    logStateChange: (newState: T, action?: string) => {
+      if (process.env.NODE_ENV !== "development") return;
+
+      console.group(`🔄 State: ${stateName}${action ? ` (${action})` : ""}`);
+
+      if (previousState) {
+        const changes = findStateChanges(previousState, newState);
+        if (changes.length > 0) {
+          console.log("Changes:", changes);
+        } else {
+          console.log("No changes detected");
+        }
+      }
+
+      console.log("New State:", newState);
+      console.groupEnd();
+
+      previousState = newState;
+    },
+  };
+}
+
+function findStateChanges<T>(
+  oldState: T,
+  newState: T
+): Array<{
+  path: string;
+  oldValue: unknown;
+  newValue: unknown;
+}> {
+  const changes: Array<{
+    path: string;
+    oldValue: unknown;
+    newValue: unknown;
+  }> = [];
+
+  function compareObjects(
+    obj1: unknown,
+    obj2: unknown,
+    path: string = ""
+  ): void {
+    if (obj1 === obj2) return;
+
+    if (typeof obj1 !== typeof obj2) {
+      changes.push({ path, oldValue: obj1, newValue: obj2 });
+      return;
+    }
+
+    if (typeof obj1 === "object" && obj1 !== null && obj2 !== null) {
+      const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
+
+      for (const key of keys) {
+        const newPath = path ? `${path}.${key}` : key;
+        compareObjects(
+          (obj1 as Record<string, unknown>)[key],
+          (obj2 as Record<string, unknown>)[key],
+          newPath
+        );
+      }
+    } else {
+      changes.push({ path, oldValue: obj1, newValue: obj2 });
+    }
+  }
+
+  compareObjects(oldState, newState);
+  return changes;
+}
+```
+
+### 6. Error Boundary Debugging
+
+#### Enhanced Error Boundary with Debugging
+
+```typescript
+// components/ErrorBoundary.tsx
+interface ErrorInfo {
+  componentStack: string;
+  errorBoundary?: string;
+  errorInfo?: React.ErrorInfo;
+}
+
+interface DebugErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+  errorInfo?: ErrorInfo;
+  errorId?: string;
+}
+
+export class DebugErrorBoundary extends React.Component<
+  React.PropsWithChildren<{ name?: string }>,
+  DebugErrorBoundaryState
+> {
+  constructor(props: React.PropsWithChildren<{ name?: string }>) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): Partial<DebugErrorBoundaryState> {
+    const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    return {
+      hasError: true,
+      error,
+      errorId,
+    };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    const errorId = this.state.errorId!;
+    const boundaryName = this.props.name || 'Unknown';
+
+    const debugInfo: ErrorInfo = {
+      componentStack: errorInfo.componentStack,
+      errorBoundary: boundaryName,
+      errorInfo,
+    };
+
+    // Log detailed error information
+    console.group(`💥 Error Boundary: ${boundaryName}`);
+    console.error('Error:', error);
+    console.error('Error Info:', errorInfo);
+    console.error('Component Stack:', errorInfo.componentStack);
+    console.groupEnd();
+
+    // Store error for debugging
+    if (typeof window !== 'undefined') {
+      window.__ERROR_STORE__ = window.__ERROR_STORE__ || [];
+      window.__ERROR_STORE__.push({
+        id: errorId,
+        error,
+        info: debugInfo,
+        timestamp: Date.now(),
+        url: window.location.href,
+      });
+    }
+
+    this.setState({ errorInfo: debugInfo });
+  }
+
+  render(): React.ReactNode {
+    if (this.state.hasError) {
+      return (
+        <div className="error-boundary p-4 border border-red-300 bg-red-50">
+          <h2 className="text-red-800 font-bold">Something went wrong</h2>
+          {process.env.NODE_ENV === 'development' && (
+            <details className="mt-2">
+              <summary className="cursor-pointer text-red-600">
+                Debug Information
+              </summary>
+              <pre className="mt-2 text-xs bg-red-100 p-2 overflow-auto">
+                {JSON.stringify(
+                  {
+                    error: this.state.error?.message,
+                    stack: this.state.error?.stack,
+                    componentStack: this.state.errorInfo?.componentStack,
+                  },
+                  null,
+                  2
+                )}
+              </pre>
+            </details>
+          )}
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+### 7. Performance Debugging
+
+#### Bundle Analysis Debugging
+
+```typescript
+// lib/bundle-debug.ts
+export function analyzeBundleSize(): void {
+  if (process.env.NODE_ENV !== "development") return;
+
+  const modules = Object.keys(require.cache);
+  const bundleInfo = modules.map((module) => ({
+    name: module,
+    size: require.cache[module]?.exports
+      ? JSON.stringify(require.cache[module].exports).length
+      : 0,
+  }));
+
+  bundleInfo.sort((a, b) => b.size - a.size);
+
+  console.group("📦 Bundle Analysis");
+  console.table(bundleInfo.slice(0, 20)); // Top 20 largest modules
+  console.groupEnd();
+}
+
+// Network debugging
+export function debugNetworkRequests(): void {
+  if (typeof window === "undefined") return;
+
+  const observer = new PerformanceObserver((list) => {
+    for (const entry of list.getEntries()) {
+      if (entry.entryType === "navigation") {
+        console.log("Navigation timing:", entry);
+      }
+
+      if (entry.entryType === "resource") {
+        const resource = entry as PerformanceResourceTiming;
+        if (resource.duration > 1000) {
+          // Slow requests
+          console.warn("Slow resource:", {
+            name: resource.name,
+            duration: `${resource.duration.toFixed(2)}ms`,
+            size: resource.transferSize,
+          });
+        }
+      }
+    }
+  });
+
+  observer.observe({ entryTypes: ["navigation", "resource"] });
+}
+```
+
+## Debugging Checklist
+
+### When Encountering Issues
+
+#### TypeScript Errors
+
+- [ ] Check if proper types are defined
+- [ ] Verify no `any` types are being used
+- [ ] Ensure all imports have correct types
+- [ ] Check if generic types need constraints
+
+#### Runtime Errors
+
+- [ ] Check browser console for JavaScript errors
+- [ ] Verify API endpoints are returning expected data
+- [ ] Check network tab for failed requests
+- [ ] Ensure environment variables are set correctly
+
+#### Performance Issues
+
+- [ ] Use React DevTools Profiler
+- [ ] Check for unnecessary re-renders
+- [ ] Analyze bundle size with webpack-bundle-analyzer
+- [ ] Verify images are optimized
+- [ ] Check for memory leaks in useEffect hooks
+
+#### SEO/SSR Issues
+
+- [ ] Verify server-side rendering is working
+- [ ] Check meta tags in page source
+- [ ] Test with Lighthouse for SEO score
+- [ ] Ensure structured data is valid
+
+### Debug Tools Setup
+
+```bash
+# Install additional debugging tools
+yarn add -D @next/bundle-analyzer
+yarn add -D react-devtools
+yarn add -D lighthouse
+
+# For runtime debugging
+yarn add -D why-did-you-render
+```
+
+---
+
+**Remember**: Debugging is about understanding the system, not just fixing immediate issues. Always document the root cause and prevention strategies for future reference.

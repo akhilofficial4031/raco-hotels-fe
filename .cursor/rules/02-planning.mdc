@@ -1,0 +1,292 @@
+# Project Planning Guidelines - Raco Hotels Customer Portal
+
+## Planning Methodology
+
+### 1. Task Breakdown Strategy
+When approaching any feature or task:
+
+1. **Understand the Requirement**
+   - Clarify user stories and acceptance criteria
+   - Identify SEO and performance implications
+   - Determine API dependencies and data flow
+
+2. **Break Down Into Phases**
+   - **Phase 1**: Core functionality (MVP)
+   - **Phase 2**: Enhanced UX and edge cases
+   - **Phase 3**: Performance optimizations and analytics
+
+3. **Technical Planning**
+   - Identify reusable components
+   - Plan API integration points
+   - Consider responsive design requirements
+   - Plan error handling and loading states
+
+### 2. Feature Development Workflow
+
+#### Before Starting Development
+- [ ] Review API documentation and endpoints
+- [ ] Create TypeScript interfaces for data structures
+- [ ] Plan component hierarchy and state management
+- [ ] Identify SEO requirements (meta tags, structured data)
+- [ ] Consider accessibility requirements
+- [ ] Plan responsive breakpoints
+
+#### During Development
+- [ ] Start with server components for SSR
+- [ ] Add client components only when interactivity is needed
+- [ ] Implement loading states and error boundaries
+- [ ] Add proper TypeScript typing (no `any` types)
+- [ ] Follow established file structure conventions
+
+#### After Development
+- [ ] Test responsive design on all breakpoints
+- [ ] Verify accessibility compliance
+- [ ] Run performance audits
+- [ ] Test error scenarios and API failures
+- [ ] Verify SEO meta tags and structured data
+
+### 3. Architecture Planning
+
+#### Component Architecture
+```
+Feature/
+├── components/           # Feature-specific components
+│   ├── FeatureCard.tsx
+│   ├── FeatureList.tsx
+│   └── FeatureForm.tsx
+├── hooks/               # Custom hooks for this feature
+│   └── useFeatureData.ts
+├── types/               # TypeScript types
+│   └── feature.types.ts
+└── utils/               # Feature utilities
+    └── feature.utils.ts
+```
+
+#### Data Flow Planning
+1. **Server-side data fetching** for initial page load (SEO)
+2. **Client-side data fetching** for user interactions
+3. **Error handling** at each layer
+4. **Loading states** for better UX
+
+### 4. API Integration Planning
+
+#### API Call Strategy
+- **Server Components**: Direct fetch for initial data
+- **Client Components**: React Query for caching and state management
+- **Error Handling**: Consistent error response handling
+- **Loading States**: Skeleton loaders and spinners
+
+#### Data Validation Planning
+```typescript
+// Always define API response types
+interface HotelApiResponse {
+  hotels: Hotel[];
+  pagination: PaginationInfo;
+  filters: FilterOptions;
+}
+
+// Validate API responses
+function validateHotelResponse(data: unknown): HotelApiResponse {
+  // Implement runtime validation
+  if (!isValidHotelResponse(data)) {
+    throw new Error('Invalid API response structure');
+  }
+  return data as HotelApiResponse;
+}
+```
+
+### 5. Performance Planning
+
+#### Core Web Vitals Strategy
+- **LCP (Largest Contentful Paint)**: Optimize hero images and critical content
+- **FID (First Input Delay)**: Minimize JavaScript blocking
+- **CLS (Cumulative Layout Shift)**: Reserve space for dynamic content
+
+#### Optimization Checklist
+- [ ] Image optimization with Next.js Image component
+- [ ] Code splitting with dynamic imports
+- [ ] Bundle analysis and tree shaking
+- [ ] Caching strategy for API responses
+- [ ] CDN optimization for static assets
+
+### 6. SEO Planning
+
+#### Meta Tags Strategy
+```typescript
+// Plan meta tags for each page type
+interface PageMeta {
+  title: string;
+  description: string;
+  keywords?: string[];
+  openGraph: {
+    title: string;
+    description: string;
+    images: OpenGraphImage[];
+  };
+  structuredData?: object;
+}
+```
+
+#### Content Strategy
+- **Server-side rendering** for search engine crawling
+- **Structured data** for rich snippets
+- **Sitemap generation** for better indexing
+- **Internal linking** strategy
+
+### 7. Accessibility Planning
+
+#### WCAG Compliance Checklist
+- [ ] Semantic HTML structure
+- [ ] Proper heading hierarchy (h1 → h2 → h3)
+- [ ] Alt text for all images
+- [ ] Keyboard navigation support
+- [ ] Focus management for modals/dropdowns
+- [ ] Color contrast compliance
+- [ ] Screen reader compatibility
+
+#### Testing Strategy
+- Use automated tools (axe-core, Lighthouse)
+- Manual keyboard navigation testing
+- Screen reader testing with NVDA/JAWS
+- Color blindness simulation
+
+### 8. Error Handling Planning
+
+#### Error Boundary Strategy
+```typescript
+// Plan error boundaries at strategic levels
+- Root level: Catch catastrophic errors
+- Route level: Handle page-specific errors  
+- Component level: Handle component-specific errors
+```
+
+#### API Error Handling
+- Network errors (timeout, connection issues)
+- HTTP errors (4xx, 5xx status codes)
+- Data validation errors
+- Rate limiting errors
+
+### 9. Testing Strategy
+
+#### Unit Testing Plan
+- Utility functions and business logic
+- Custom hooks with mock data
+- Component props and state changes
+- API response parsing and validation
+
+#### Integration Testing Plan
+- API integration flows
+- User interaction scenarios
+- Error handling scenarios
+- Responsive design testing
+
+#### E2E Testing Plan
+- Critical user journeys
+- Hotel search and booking flow
+- Mobile device testing
+- Cross-browser compatibility
+
+### 10. Deployment Planning
+
+#### Environment Strategy
+- **Development**: Local development with mock APIs
+- **Staging**: Full API integration testing
+- **Production**: Cloudflare deployment with monitoring
+
+#### Cloudflare Optimization
+- Edge caching configuration
+- Worker scripts for API proxying
+- Image optimization settings
+- CDN configuration
+
+### 11. Monitoring & Analytics Planning
+
+#### Performance Monitoring
+- Core Web Vitals tracking
+- Page load time metrics
+- API response time monitoring
+- Error rate tracking
+
+#### User Analytics
+- User behavior tracking
+- Conversion funnel analysis
+- Search and filter usage
+- Mobile vs desktop usage patterns
+
+### 12. Security Planning
+
+#### Client-side Security
+- Input sanitization and validation
+- XSS prevention strategies
+- CSRF protection
+- Secure HTTP headers
+
+#### API Security
+- API key management
+- Request rate limiting
+- Response data validation
+- Error message sanitization
+
+## Feature-Specific Planning Templates
+
+### New Page Development
+1. **SEO Requirements**
+   - Meta tags and Open Graph
+   - Structured data schema
+   - Internal linking strategy
+
+2. **API Integration**
+   - Identify required endpoints
+   - Define TypeScript interfaces
+   - Plan error handling
+
+3. **UI/UX Planning**
+   - Wireframe and design review
+   - Responsive breakpoint planning
+   - Accessibility requirements
+
+### Component Development
+1. **Reusability Analysis**
+   - Identify similar patterns
+   - Plan prop interfaces
+   - Consider composition patterns
+
+2. **Performance Considerations**
+   - Bundle size impact
+   - Rendering optimization
+   - Memoization strategies
+
+3. **Testing Requirements**
+   - Unit test scenarios
+   - Visual regression testing
+   - Accessibility testing
+
+## Project Milestone Planning
+
+### Phase 1: Foundation (Weeks 1-2)
+- Core routing structure
+- Basic component library
+- API integration setup
+- SEO foundation
+
+### Phase 2: Core Features (Weeks 3-6)
+- Hotel search and listing
+- Hotel detail pages
+- Booking flow (if applicable)
+- User account features
+
+### Phase 3: Enhancement (Weeks 7-8)
+- Performance optimizations
+- Advanced filtering
+- Analytics integration
+- A/B testing setup
+
+### Phase 4: Polish (Weeks 9-10)
+- Bug fixes and refinements
+- Accessibility improvements
+- SEO optimizations
+- Performance tuning
+
+---
+
+**Remember**: Always prioritize user experience, SEO performance, and code maintainability in your planning decisions.

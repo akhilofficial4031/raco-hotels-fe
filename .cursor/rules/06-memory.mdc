@@ -1,0 +1,302 @@
+# Project Memory - Raco Hotels Customer Portal
+
+## Project Context & Domain Knowledge
+
+### 1. Business Domain Understanding
+
+#### Hotel Industry Context
+
+- **Customer Journey**: Search → Compare → Book → Experience → Review
+- **Key Decision Factors**: Location, Price, Amenities, Reviews, Availability
+- **Seasonal Patterns**: Peak seasons, local events, weather dependencies
+- **Market Segments**: Business travelers, leisure travelers, groups, families
+- **Competitive Landscape**: Online travel agencies (OTAs), direct bookings, comparison sites
+
+#### Raco Hotels Brand
+
+- **Target Market**: Mid to premium hotel segment
+- **Value Proposition**: Quality accommodations with personalized service
+- **Core Services**: Hotel bookings, customer management, loyalty programs
+- **Geographic Focus**: [To be defined based on business requirements]
+
+### 2. Technical Architecture Context
+
+#### Current Stack Decisions & Rationale
+
+```typescript
+// Technology choices and reasons
+const techStack = {
+  frontend: {
+    framework: "Next.js 15",
+    reason:
+      "SSR for SEO, App Router for modern patterns, Cloudflare compatibility",
+  },
+  language: {
+    primary: "TypeScript",
+    reason:
+      "Type safety, better DX, reduced runtime errors, no any types allowed",
+  },
+  styling: {
+    framework: "Tailwind CSS 4",
+    reason: "Utility-first, consistent design system, smaller bundle",
+  },
+  deployment: {
+    platform: "Cloudflare",
+    reason: "Global edge network, fast performance, cost-effective",
+  },
+  architecture: {
+    pattern: "API-only communication",
+    reason: "Microservices backend, separation of concerns, scalability",
+  },
+} as const;
+```
+
+#### Key Architectural Decisions
+
+1. **No Database Direct Access**: All data through external APIs
+2. **SSR for SEO**: Critical for hotel search visibility
+3. **Progressive Enhancement**: Works without JavaScript, enhanced with it
+4. **Mobile-First**: Majority of hotel bookings happen on mobile
+5. **Performance-First**: Core Web Vitals are crucial for conversion
+
+### 3. Development Environment Context
+
+#### Project Structure Rationale
+
+```
+app/                    # Next.js App Router pages
+├── (marketing)/        # Marketing pages (/)
+├── (search)/          # Search functionality (/search, /hotels)
+├── (booking)/         # Booking flow (/book, /checkout)
+└── (account)/         # User account pages (/profile, /bookings)
+
+components/            # Reusable UI components
+├── ui/               # Basic UI primitives (Button, Input, etc.)
+├── forms/            # Form-specific components
+├── layout/           # Layout components (Header, Footer, etc.)
+└── features/         # Feature-specific components
+
+lib/                  # Utility functions and configurations
+├── api/              # API integration layer
+├── utils/            # General utilities
+├── validators/       # Form and data validation
+└── constants/        # App constants and enums
+
+types/                # TypeScript type definitions
+├── api/              # API response types
+├── domain/           # Business domain types
+└── global/           # Global application types
+```
+
+#### Code Quality Standards Context
+
+- **ESLint Configuration**: Strict rules, no `any` types, React best practices
+- **Prettier**: Consistent formatting, double quotes, 80-character lines
+- **TypeScript**: Strict mode, comprehensive type coverage
+- **Testing**: Unit tests for logic, integration tests for user flows
+
+### 4. API Integration Context
+
+#### External API Patterns
+
+```typescript
+// Standard API response structure expected
+interface ApiResponse<T> {
+  data: T;
+  meta?: {
+    pagination?: PaginationMeta;
+    total?: number;
+    filters?: FilterMeta;
+  };
+  error?: {
+    message: string;
+    code: string;
+    details?: Record<string, unknown>;
+  };
+}
+
+// Expected error handling pattern
+interface ApiError {
+  status: number;
+  message: string;
+  code?: string;
+  retryable?: boolean;
+}
+```
+
+#### Known API Endpoints (to be expanded)
+
+- `GET /api/hotels` - Hotel search and listing
+- `GET /api/hotels/{id}` - Hotel details
+- `POST /api/bookings` - Create booking
+- `GET /api/locations/suggest` - Location autocomplete
+
+### 5. User Experience Context
+
+#### Target User Personas
+
+1. **Business Traveler**: Quick booking, location near business centers, amenities for work
+2. **Leisure Traveler**: Price-conscious, amenities for relaxation, family-friendly
+3. **Group Organizer**: Bulk bookings, group discounts, event spaces
+4. **Mobile User**: Touch-friendly interface, fast loading, offline capability
+
+#### Critical User Journeys
+
+1. **Quick Search**: Location + dates → results in <3 seconds
+2. **Detailed Comparison**: Multiple hotels side-by-side comparison
+3. **Booking Flow**: Minimized steps, clear pricing, secure payment
+4. **Mobile Experience**: Thumb-friendly navigation, readable text
+
+### 6. Performance Context
+
+#### Performance Budgets
+
+- **First Contentful Paint**: <1.5 seconds
+- **Largest Contentful Paint**: <2.5 seconds
+- **Cumulative Layout Shift**: <0.1
+- **First Input Delay**: <100ms
+- **Bundle Size**: <200KB initial JavaScript
+
+#### SEO Requirements
+
+- **Core Web Vitals**: Must pass all metrics
+- **Structured Data**: Hotel, LocalBusiness, Review schemas
+- **Meta Tags**: Complete Open Graph and Twitter cards
+- **Sitemap**: Dynamic generation for all hotel pages
+
+### 7. Security Context
+
+#### Security Considerations
+
+- **Input Sanitization**: All user inputs sanitized
+- **XSS Prevention**: Content Security Policy headers
+- **API Security**: Rate limiting, CORS configuration
+- **Data Privacy**: GDPR compliance, cookie consent
+
+#### Environment Variables
+
+```typescript
+// Required environment variables
+const requiredEnvVars = [
+  "API_BASE_URL",
+  "API_TOKEN",
+  "NEXT_PUBLIC_SITE_URL",
+] as const;
+
+// Optional environment variables
+const optionalEnvVars = [
+  "NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN",
+  "NEXT_PUBLIC_GOOGLE_ANALYTICS_ID",
+] as const;
+```
+
+### 8. Testing Context
+
+#### Testing Strategy
+
+- **Unit Tests**: Business logic, utility functions, custom hooks
+- **Integration Tests**: API integration, form submissions
+- **Component Tests**: User interactions, accessibility
+- **E2E Tests**: Critical user journeys, cross-browser compatibility
+
+#### Testing Tools
+
+- **Jest**: Unit and integration testing
+- **React Testing Library**: Component testing
+- **Playwright**: End-to-end testing
+- **axe-core**: Accessibility testing
+
+### 9. Deployment Context
+
+#### Cloudflare Deployment
+
+- **OpenNext.js**: Adapter for Next.js on Cloudflare
+- **Edge Functions**: API proxying, caching strategies
+- **CDN**: Static asset optimization
+- **Analytics**: Performance monitoring
+
+#### Environment Strategy
+
+- **Development**: Local with mock APIs
+- **Staging**: Full integration with staging APIs
+- **Production**: Live APIs with monitoring
+
+### 10. Known Issues & Workarounds
+
+#### Current Technical Debt
+
+1. **Image Optimization**: Need to implement responsive images
+2. **Caching Strategy**: API response caching not implemented
+3. **Error Boundaries**: Need more granular error handling
+4. **Accessibility**: Some components missing ARIA labels
+
+#### Browser Compatibility
+
+- **Minimum Support**: Last 2 versions of major browsers
+- **IE Support**: Not supported
+- **Mobile Safari**: Special attention to iOS quirks
+- **Progressive Enhancement**: Core functionality works without JavaScript
+
+### 11. Future Considerations
+
+#### Planned Features
+
+1. **User Authentication**: Login/register functionality
+2. **Booking Management**: View and modify bookings
+3. **Loyalty Program**: Points and rewards system
+4. **Reviews System**: User-generated hotel reviews
+5. **Recommendation Engine**: Personalized hotel suggestions
+
+#### Technical Improvements
+
+1. **Offline Support**: Service worker for offline browsing
+2. **Push Notifications**: Booking confirmations and updates
+3. **A/B Testing**: Feature flag system
+4. **Analytics**: Enhanced user behavior tracking
+
+### 12. Decision Log
+
+#### Key Technical Decisions Made
+
+| Date          | Decision                  | Rationale                         | Impact                  |
+| ------------- | ------------------------- | --------------------------------- | ----------------------- |
+| Project Start | No database direct access | Microservices architecture        | API-only communication  |
+| Project Start | TypeScript strict mode    | Type safety, developer experience | No `any` types allowed  |
+| Project Start | Tailwind CSS              | Consistent design system          | Utility-first styling   |
+| Project Start | Next.js App Router        | Modern React patterns             | File-based routing      |
+| Project Start | Cloudflare deployment     | Global performance                | Edge computing benefits |
+
+#### API Design Decisions
+
+- RESTful endpoints with consistent response structure
+- Pagination using cursor-based pagination for performance
+- Error responses follow RFC 7807 problem details standard
+- Rate limiting implemented on API side
+
+#### UX/UI Decisions
+
+- Mobile-first responsive design
+- Progressive enhancement approach
+- Accessibility as first-class citizen
+- Performance budget strictly enforced
+
+### 13. Team Knowledge
+
+#### Development Workflow
+
+1. **Feature Planning**: Requirements → Design → Technical Planning
+2. **Implementation**: TDD approach, component-first development
+3. **Code Review**: Focus on types, performance, accessibility
+4. **Testing**: Unit → Integration → E2E testing
+5. **Deployment**: Staging → Production with monitoring
+
+#### Communication Patterns
+
+- **User Stories**: Focused on customer value
+- **Technical Specs**: Clear acceptance criteria
+- **Code Documentation**: Self-documenting code with JSDoc
+- **Decision Records**: Architectural decisions documented
+
+---
+
+**This memory file should be updated as the project evolves, capturing new decisions, patterns, and domain knowledge that emerges during development.**

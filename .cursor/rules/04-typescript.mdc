@@ -1,0 +1,663 @@
+# TypeScript Rules - Raco Hotels Customer Portal
+
+## Core TypeScript Principles
+
+### 1. ABSOLUTE PROHIBITION: No `any` Type
+
+```typescript
+// ❌ FORBIDDEN - Will cause ESLint error
+function processData(data: any): any {
+  return data.something;
+}
+
+// ❌ FORBIDDEN - Even in function parameters
+const handler = (event: any) => {};
+
+// ❌ FORBIDDEN - In type assertions
+const result = response as any;
+
+// ✅ REQUIRED - Always use proper types
+interface ApiData {
+  id: string;
+  value: number;
+}
+
+function processData(data: ApiData): ApiData {
+  return data;
+}
+
+// ✅ REQUIRED - Use proper event types
+const handler = (event: React.MouseEvent<HTMLButtonElement>) => {};
+
+// ✅ REQUIRED - Use proper type assertions
+const result = response as ApiResponse<Hotel[]>;
+```
+
+### 2. Strict Type Definitions
+
+#### API Response Types
+
+```typescript
+// Always define complete API structures
+interface ApiResponse<T> {
+  data: T;
+  meta?: {
+    pagination?: PaginationMeta;
+    total?: number;
+    page?: number;
+    limit?: number;
+  };
+  error?: {
+    message: string;
+    code: string;
+    details?: Record<string, unknown>;
+  };
+}
+
+interface Hotel {
+  readonly id: string; // Use readonly for immutable fields
+  name: string;
+  description: string;
+  location: {
+    address: string;
+    city: string;
+    country: string;
+    coordinates: {
+      readonly lat: number;
+      readonly lng: number;
+    };
+  };
+  amenities: readonly string[]; // Immutable arrays
+  images: readonly HotelImage[];
+  pricing: {
+    currency: string;
+    basePrice: number;
+    taxes?: number;
+  };
+  rating: {
+    average: number;
+    count: number;
+  };
+  availability?: boolean;
+  createdAt: string; // ISO date string
+  updatedAt: string;
+}
+
+interface HotelImage {
+  readonly id: string;
+  url: string;
+  alt: string;
+  width: number;
+  height: number;
+  isPrimary: boolean;
+}
+```
+
+#### Component Props Types
+
+```typescript
+// Use interfaces for component props
+interface HotelCardProps {
+  hotel: Hotel;
+  onSelect?: (hotel: Hotel) => void;
+  onFavorite?: (hotelId: string) => void;
+  className?: string;
+  variant?: "default" | "compact" | "detailed";
+  showPricing?: boolean;
+}
+
+// Use readonly for arrays and objects in props
+interface HotelListProps {
+  hotels: readonly Hotel[];
+  filters: Readonly<{
+    location?: string;
+    priceRange?: [number, number];
+    amenities?: readonly string[];
+  }>;
+  onFiltersChange: (filters: HotelListProps["filters"]) => void;
+}
+
+// Generic props for reusable components
+interface DataTableProps<T> {
+  data: readonly T[];
+  columns: readonly ColumnDef<T>[];
+  onRowSelect?: (item: T) => void;
+  loading?: boolean;
+  error?: string | null;
+}
+```
+
+### 3. Advanced TypeScript Patterns
+
+#### Discriminated Unions for State Management
+
+```typescript
+// Use discriminated unions for complex state
+type AsyncState<T> =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: T }
+  | { status: "error"; error: string };
+
+// Usage in hooks
+function useHotels(searchParams: SearchParams) {
+  const [state, setState] = useState<AsyncState<Hotel[]>>({ status: "idle" });
+
+  const fetchHotels = useCallback(async () => {
+    setState({ status: "loading" });
+    try {
+      const response = await apiCall<ApiResponse<Hotel[]>>("/api/hotels", {
+        method: "POST",
+        body: JSON.stringify(searchParams),
+      });
+      setState({ status: "success", data: response.data });
+    } catch (error) {
+      setState({
+        status: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }, [searchParams]);
+
+  return { state, fetchHotels };
+}
+```
+
+#### Utility Types for API
+
+```typescript
+// Create utility types for common patterns
+type ApiEndpoint = `/api/${string}`;
+type HotelId = `hotel_${string}`;
+type UserId = `user_${string}`;
+
+// Branded types for type safety
+interface Hotel {
+  id: HotelId;
+  ownerId: UserId;
+  // ... other properties
+}
+
+// Partial updates
+type HotelUpdate = Partial<Pick<Hotel, "name" | "description" | "amenities">>;
+
+// Required fields for creation
+type CreateHotelRequest = Pick<Hotel, "name" | "location"> & {
+  ownerId: UserId;
+};
+
+// Omit sensitive fields from public API
+type PublicHotel = Omit<Hotel, "ownerId" | "internalNotes">;
+```
+
+#### Generic Components with Constraints
+
+```typescript
+// Generic component with proper constraints
+interface SelectOption<T = string> {
+  value: T;
+  label: string;
+  disabled?: boolean;
+}
+
+interface SelectProps<T> {
+  options: readonly SelectOption<T>[];
+  value?: T;
+  onChange: (value: T) => void;
+  placeholder?: string;
+  multiple?: boolean;
+}
+
+function Select<T extends string | number>({
+  options,
+  value,
+  onChange,
+  placeholder,
+  multiple = false,
+}: SelectProps<T>) {
+  // Implementation with proper typing
+}
+
+// Usage with type inference
+const amenityOptions: readonly SelectOption<string>[] = [
+  { value: 'wifi', label: 'WiFi' },
+  { value: 'pool', label: 'Swimming Pool' },
+];
+
+<Select
+  options={amenityOptions}
+  value={selectedAmenity}
+  onChange={(amenity) => setSelectedAmenity(amenity)} // amenity is inferred as string
+/>
+```
+
+### 4. Form and Validation Types
+
+#### Form Data Types
+
+```typescript
+// Define form schemas with validation
+interface HotelSearchForm {
+  location: string;
+  checkIn: Date;
+  checkOut: Date;
+  guests: {
+    adults: number;
+    children: number;
+  };
+  priceRange: [number, number];
+  amenities: readonly string[];
+}
+
+// Validation result types
+interface ValidationResult<T> {
+  isValid: boolean;
+  data?: T;
+  errors: Partial<Record<keyof T, string>>;
+}
+
+// Form state with validation
+interface FormState<T> {
+  values: T;
+  errors: Partial<Record<keyof T, string>>;
+  touched: Partial<Record<keyof T, boolean>>;
+  isSubmitting: boolean;
+  isValid: boolean;
+}
+
+// Custom form hook with proper typing
+function useForm<T extends Record<string, unknown>>(
+  initialValues: T,
+  validator: (values: T) => ValidationResult<T>
+) {
+  const [state, setState] = useState<FormState<T>>({
+    values: initialValues,
+    errors: {},
+    touched: {},
+    isSubmitting: false,
+    isValid: false,
+  });
+
+  const setValue = useCallback(<K extends keyof T>(field: K, value: T[K]) => {
+    setState((prev) => ({
+      ...prev,
+      values: { ...prev.values, [field]: value },
+      touched: { ...prev.touched, [field]: true },
+    }));
+  }, []);
+
+  return { state, setValue };
+}
+```
+
+### 5. Event Handler Types
+
+#### Proper Event Typing
+
+```typescript
+// Always use specific event types
+interface SearchFormProps {
+  onSubmit: (data: HotelSearchForm) => void;
+  onInputChange: (field: keyof HotelSearchForm, value: string) => void;
+  onDateChange: (field: 'checkIn' | 'checkOut', date: Date) => void;
+}
+
+function SearchForm({ onSubmit, onInputChange, onDateChange }: SearchFormProps) {
+  // Type-safe event handlers
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    // Process form data with proper typing
+  };
+
+  const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onInputChange('location', event.target.value);
+  };
+
+  const handleDateChange = (date: Date, field: 'checkIn' | 'checkOut') => {
+    onDateChange(field, date);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form elements */}
+    </form>
+  );
+}
+```
+
+### 6. API Hook Types
+
+#### Typed API Hooks
+
+```typescript
+// Generic API hook with proper error handling
+interface UseApiOptions<T> {
+  initialData?: T;
+  enabled?: boolean;
+  refetchOnWindowFocus?: boolean;
+  onSuccess?: (data: T) => void;
+  onError?: (error: ApiError) => void;
+}
+
+function useApi<T>(
+  endpoint: ApiEndpoint,
+  options: UseApiOptions<T> = {}
+): {
+  data: T | undefined;
+  error: ApiError | null;
+  isLoading: boolean;
+  refetch: () => Promise<void>;
+} {
+  const [data, setData] = useState<T | undefined>(options.initialData);
+  const [error, setError] = useState<ApiError | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    if (!options.enabled && options.enabled !== undefined) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await apiCall<T>(endpoint);
+      setData(response);
+      options.onSuccess?.(response);
+    } catch (err) {
+      const apiError =
+        err instanceof ApiError ? err : new ApiError("Unknown error");
+      setError(apiError);
+      options.onError?.(apiError);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [endpoint, options]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { data, error, isLoading, refetch: fetchData };
+}
+
+// Usage with full type safety
+const {
+  data: hotels,
+  error,
+  isLoading,
+} = useApi<ApiResponse<Hotel[]>>("/api/hotels", {
+  onSuccess: (response) => {
+    // response is typed as ApiResponse<Hotel[]>
+    console.log(`Loaded ${response.data.length} hotels`);
+  },
+  onError: (error) => {
+    // error is typed as ApiError
+    console.error(`Failed to load hotels: ${error.message}`);
+  },
+});
+```
+
+### 7. Context and Provider Types
+
+#### Typed React Context
+
+```typescript
+// Define context state type
+interface AppContextState {
+  user: User | null;
+  preferences: UserPreferences;
+  searchHistory: readonly HotelSearchForm[];
+  favorites: readonly HotelId[];
+}
+
+// Define context actions
+type AppContextAction =
+  | { type: "SET_USER"; payload: User | null }
+  | { type: "UPDATE_PREFERENCES"; payload: Partial<UserPreferences> }
+  | { type: "ADD_TO_SEARCH_HISTORY"; payload: HotelSearchForm }
+  | { type: "TOGGLE_FAVORITE"; payload: HotelId };
+
+// Context type
+interface AppContextType {
+  state: AppContextState;
+  dispatch: React.Dispatch<AppContextAction>;
+  // Derived/computed values
+  isLoggedIn: boolean;
+  favoriteCount: number;
+}
+
+// Create typed context
+const AppContext = React.createContext<AppContextType | undefined>(undefined);
+
+// Custom hook for using context
+function useAppContext(): AppContextType {
+  const context = useContext(AppContext);
+  if (context === undefined) {
+    throw new Error("useAppContext must be used within an AppProvider");
+  }
+  return context;
+}
+
+// Typed reducer
+function appReducer(
+  state: AppContextState,
+  action: AppContextAction
+): AppContextState {
+  switch (action.type) {
+    case "SET_USER":
+      return { ...state, user: action.payload };
+    case "UPDATE_PREFERENCES":
+      return {
+        ...state,
+        preferences: { ...state.preferences, ...action.payload },
+      };
+    case "ADD_TO_SEARCH_HISTORY":
+      return {
+        ...state,
+        searchHistory: [action.payload, ...state.searchHistory.slice(0, 9)],
+      };
+    case "TOGGLE_FAVORITE":
+      const favorites = state.favorites.includes(action.payload)
+        ? state.favorites.filter((id) => id !== action.payload)
+        : [...state.favorites, action.payload];
+      return { ...state, favorites };
+    default:
+      // TypeScript ensures exhaustive checking
+      const _exhaustiveCheck: never = action;
+      return state;
+  }
+}
+```
+
+### 8. Environment and Configuration Types
+
+#### Environment Variables
+
+```typescript
+// Define environment variables with proper types
+interface EnvironmentVariables {
+  readonly NODE_ENV: "development" | "production" | "test";
+  readonly API_BASE_URL: string;
+  readonly API_TOKEN: string;
+  readonly NEXT_PUBLIC_SITE_URL: string;
+  readonly NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN?: string;
+}
+
+// Runtime validation of environment variables
+function getEnvironmentVariables(): EnvironmentVariables {
+  const env = process.env;
+
+  if (!env.API_BASE_URL) {
+    throw new Error("API_BASE_URL environment variable is required");
+  }
+
+  if (!env.API_TOKEN) {
+    throw new Error("API_TOKEN environment variable is required");
+  }
+
+  if (!env.NEXT_PUBLIC_SITE_URL) {
+    throw new Error("NEXT_PUBLIC_SITE_URL environment variable is required");
+  }
+
+  return {
+    NODE_ENV:
+      (env.NODE_ENV as EnvironmentVariables["NODE_ENV"]) || "development",
+    API_BASE_URL: env.API_BASE_URL,
+    API_TOKEN: env.API_TOKEN,
+    NEXT_PUBLIC_SITE_URL: env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN:
+      env.NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN,
+  };
+}
+
+// Use throughout the app
+const ENV = getEnvironmentVariables();
+```
+
+## TypeScript Configuration Rules
+
+### 1. tsconfig.json Settings
+
+Ensure your `tsconfig.json` includes these strict settings:
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
+  }
+}
+```
+
+### 2. Import/Export Best Practices
+
+```typescript
+// ✅ Use explicit exports for better tree-shaking
+export { HotelCard } from "./HotelCard";
+export { HotelList } from "./HotelList";
+export type { Hotel, HotelId } from "./types";
+
+// ✅ Use const assertions for immutable data
+export const HOTEL_AMENITIES = [
+  "wifi",
+  "pool",
+  "gym",
+  "spa",
+  "restaurant",
+] as const;
+
+export type HotelAmenity = (typeof HOTEL_AMENITIES)[number];
+
+// ✅ Use namespace imports for utilities
+import * as utils from "@/lib/utils";
+import * as validators from "@/lib/validators";
+
+// ✅ Use type-only imports when possible
+import type { Hotel } from "@/types/hotel";
+import type { ApiResponse } from "@/types/api";
+```
+
+### 3. Error Handling Types
+
+```typescript
+// Create a robust error handling system
+abstract class AppError extends Error {
+  abstract readonly name: string;
+  abstract readonly statusCode: number;
+
+  constructor(
+    message: string,
+    public readonly context?: Record<string, unknown>
+  ) {
+    super(message);
+  }
+}
+
+class ApiError extends AppError {
+  readonly name = "ApiError";
+
+  constructor(
+    message: string,
+    public readonly statusCode: number,
+    context?: Record<string, unknown>
+  ) {
+    super(message, context);
+  }
+}
+
+class ValidationError extends AppError {
+  readonly name = "ValidationError";
+  readonly statusCode = 400;
+
+  constructor(
+    message: string,
+    public readonly field: string,
+    context?: Record<string, unknown>
+  ) {
+    super(message, context);
+  }
+}
+
+// Result type for operations that can fail
+type Result<T, E = AppError> =
+  | { success: true; data: T }
+  | { success: false; error: E };
+
+// Usage in functions
+async function fetchHotel(id: HotelId): Promise<Result<Hotel, ApiError>> {
+  try {
+    const hotel = await apiCall<Hotel>(`/api/hotels/${id}`);
+    return { success: true, data: hotel };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error instanceof ApiError ? error : new ApiError("Unknown error", 500),
+    };
+  }
+}
+```
+
+## TypeScript Code Review Checklist
+
+Before submitting TypeScript code, ensure:
+
+### Type Safety
+
+- [ ] No `any` types used anywhere in the codebase
+- [ ] All function parameters and return types are explicitly typed
+- [ ] All component props have proper interface definitions
+- [ ] API responses have complete type definitions
+- [ ] Event handlers use specific React event types
+
+### Best Practices
+
+- [ ] Use `readonly` for immutable data structures
+- [ ] Use discriminated unions for complex state
+- [ ] Use generic types for reusable components
+- [ ] Use branded types for domain-specific values
+- [ ] Implement proper error handling with typed errors
+
+### Performance
+
+- [ ] Use type-only imports where possible
+- [ ] Avoid creating types in render functions
+- [ ] Use const assertions for literal types
+- [ ] Proper tree-shaking with explicit exports
+
+### Code Organization
+
+- [ ] Types are organized in dedicated files
+- [ ] Shared types are properly exported
+- [ ] Complex types are broken down into smaller interfaces
+- [ ] Utility types are created for common patterns
+
+---
+
+**Remember**: TypeScript is not just about avoiding errors—it's about creating self-documenting, maintainable code that helps developers understand the system. Every type should tell a story about your application's domain.

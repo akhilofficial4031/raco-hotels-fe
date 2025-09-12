@@ -1,0 +1,440 @@
+# Directory Structure - Raco Hotels Customer Portal
+
+## Project Organization Philosophy
+
+This Next.js 15 application follows a **feature-first** directory structure optimized for:
+
+- **Scalability**: Easy to add new features without restructuring
+- **Developer Experience**: Intuitive file locations and clear boundaries
+- **TypeScript Support**: Co-located types with their usage
+- **SEO Optimization**: Server-side rendering with proper routing
+- **Performance**: Code splitting and tree-shaking friendly
+
+## Root Directory Structure
+
+```
+raco-hotels-fe/
+├── .cursor/                    # Cursor AI rules and configuration
+│   └── rules/                  # Project-specific AI rules
+├── .next/                      # Next.js build output (auto-generated)
+├── .vscode/                    # VS Code workspace settings
+├── app/                        # Next.js App Router (main application)
+├── components/                 # Reusable UI components
+├── lib/                        # Utility functions and configurations
+├── types/                      # TypeScript type definitions
+├── public/                     # Static assets
+├── docs/                       # Project documentation
+├── tests/                      # Test files and utilities
+└── config/                     # Configuration files
+```
+
+## Detailed Directory Breakdown
+
+### 1. App Router Structure (`app/`)
+
+```
+app/
+├── (marketing)/               # Route group for marketing pages
+│   ├── page.tsx              # Homepage (/)
+│   ├── about/                # About page (/about)
+│   │   └── page.tsx
+│   ├── contact/              # Contact page (/contact)
+│   │   └── page.tsx
+│   └── layout.tsx            # Marketing layout wrapper
+│
+├── (search)/                 # Route group for search functionality
+│   ├── search/               # Search page (/search)
+│   │   ├── page.tsx
+│   │   ├── loading.tsx       # Loading UI
+│   │   └── error.tsx         # Error UI
+│   ├── hotels/               # Hotels listing (/hotels)
+│   │   ├── page.tsx
+│   │   ├── [id]/             # Hotel details (/hotels/[id])
+│   │   │   ├── page.tsx
+│   │   │   ├── gallery/      # Hotel gallery (/hotels/[id]/gallery)
+│   │   │   │   └── page.tsx
+│   │   │   └── reviews/      # Hotel reviews (/hotels/[id]/reviews)
+│   │   │       └── page.tsx
+│   │   └── loading.tsx
+│   └── layout.tsx            # Search layout wrapper
+│
+├── (booking)/                # Route group for booking flow
+│   ├── book/                 # Booking initiation (/book)
+│   │   ├── [hotelId]/        # Book specific hotel (/book/[hotelId])
+│   │   │   ├── page.tsx
+│   │   │   └── confirmation/ # Booking confirmation
+│   │   │       └── page.tsx
+│   │   └── page.tsx
+│   ├── checkout/             # Checkout process (/checkout)
+│   │   ├── page.tsx
+│   │   └── success/          # Payment success (/checkout/success)
+│   │       └── page.tsx
+│   └── layout.tsx            # Booking layout wrapper
+│
+├── (account)/                # Route group for user account
+│   ├── login/                # Login page (/login)
+│   │   └── page.tsx
+│   ├── register/             # Registration (/register)
+│   │   └── page.tsx
+│   ├── profile/              # User profile (/profile)
+│   │   ├── page.tsx
+│   │   ├── bookings/         # User bookings (/profile/bookings)
+│   │   │   ├── page.tsx
+│   │   │   └── [id]/         # Booking details (/profile/bookings/[id])
+│   │   │       └── page.tsx
+│   │   └── settings/         # Account settings (/profile/settings)
+│   │       └── page.tsx
+│   └── layout.tsx            # Account layout wrapper
+│
+├── api/                      # API routes (if needed for proxying)
+│   ├── hotels/
+│   │   └── route.ts          # Hotel API proxy
+│   └── bookings/
+│       └── route.ts          # Booking API proxy
+│
+├── globals.css               # Global styles and Tailwind imports
+├── layout.tsx                # Root layout component
+├── loading.tsx               # Global loading UI
+├── error.tsx                 # Global error UI
+├── not-found.tsx             # 404 page
+├── robots.txt                # SEO robots file
+└── sitemap.ts                # Dynamic sitemap generation
+```
+
+### 2. Components Structure (`components/`)
+
+```
+components/
+├── ui/                       # Basic UI primitives
+│   ├── Button/
+│   │   ├── Button.tsx        # Main component
+│   │   ├── Button.test.tsx   # Unit tests
+│   │   ├── Button.stories.tsx # Storybook stories
+│   │   └── index.ts          # Export barrel
+│   ├── Input/
+│   │   ├── Input.tsx
+│   │   ├── Input.test.tsx
+│   │   └── index.ts
+│   ├── Modal/
+│   ├── Dropdown/
+│   ├── Card/
+│   ├── Badge/
+│   ├── Spinner/
+│   └── index.ts              # Re-export all UI components
+│
+├── forms/                    # Form-specific components
+│   ├── SearchForm/
+│   │   ├── SearchForm.tsx
+│   │   ├── LocationInput.tsx
+│   │   ├── DatePicker.tsx
+│   │   ├── GuestSelector.tsx
+│   │   ├── PriceRangeSlider.tsx
+│   │   └── index.ts
+│   ├── BookingForm/
+│   │   ├── BookingForm.tsx
+│   │   ├── GuestDetails.tsx
+│   │   ├── PaymentForm.tsx
+│   │   └── index.ts
+│   ├── ContactForm/
+│   └── LoginForm/
+│
+├── layout/                   # Layout components
+│   ├── Header/
+│   │   ├── Header.tsx
+│   │   ├── Navigation.tsx
+│   │   ├── UserMenu.tsx
+│   │   └── index.ts
+│   ├── Footer/
+│   │   ├── Footer.tsx
+│   │   ├── FooterLinks.tsx
+│   │   └── index.ts
+│   ├── Sidebar/
+│   └── Breadcrumbs/
+│
+├── features/                 # Feature-specific components
+│   ├── hotel/
+│   │   ├── HotelCard/
+│   │   │   ├── HotelCard.tsx
+│   │   │   ├── HotelImage.tsx
+│   │   │   ├── HotelInfo.tsx
+│   │   │   ├── HotelActions.tsx
+│   │   │   └── index.ts
+│   │   ├── HotelList/
+│   │   │   ├── HotelList.tsx
+│   │   │   ├── HotelGrid.tsx
+│   │   │   ├── HotelListItem.tsx
+│   │   │   └── index.ts
+│   │   ├── HotelDetails/
+│   │   │   ├── HotelDetails.tsx
+│   │   │   ├── HotelGallery.tsx
+│   │   │   ├── HotelAmenities.tsx
+│   │   │   ├── HotelReviews.tsx
+│   │   │   └── index.ts
+│   │   └── HotelMap/
+│   │       ├── HotelMap.tsx
+│   │       ├── MapMarker.tsx
+│   │       └── index.ts
+│   │
+│   ├── search/
+│   │   ├── SearchFilters/
+│   │   ├── SearchResults/
+│   │   ├── SearchSuggestions/
+│   │   └── SearchHistory/
+│   │
+│   ├── booking/
+│   │   ├── BookingSummary/
+│   │   ├── BookingProgress/
+│   │   ├── PaymentMethods/
+│   │   └── BookingConfirmation/
+│   │
+│   └── user/
+│       ├── UserProfile/
+│       ├── BookingHistory/
+│       ├── FavoriteHotels/
+│       └── UserSettings/
+│
+└── providers/                # Context providers and wrappers
+    ├── AppProvider.tsx       # Main app context provider
+    ├── QueryProvider.tsx     # React Query provider
+    ├── ThemeProvider.tsx     # Theme context provider
+    └── index.ts
+```
+
+### 3. Library Structure (`lib/`)
+
+```
+lib/
+├── api/                      # API integration layer
+│   ├── client.ts             # Base API client configuration
+│   ├── endpoints.ts          # API endpoint definitions
+│   ├── hotels.ts             # Hotel-related API calls
+│   ├── bookings.ts           # Booking-related API calls
+│   ├── users.ts              # User-related API calls
+│   ├── types.ts              # API response types
+│   └── errors.ts             # API error handling
+│
+├── utils/                    # General utility functions
+│   ├── cn.ts                 # className utility (clsx + tailwind-merge)
+│   ├── date.ts               # Date formatting and manipulation
+│   ├── currency.ts           # Currency formatting
+│   ├── url.ts                # URL manipulation utilities
+│   ├── string.ts             # String manipulation utilities
+│   ├── validation.ts         # General validation functions
+│   ├── storage.ts            # Local/session storage utilities
+│   └── index.ts              # Re-export utilities
+│
+├── validators/               # Form and data validation
+│   ├── hotel.ts              # Hotel data validation
+│   ├── booking.ts            # Booking form validation
+│   ├── user.ts               # User data validation
+│   └── common.ts             # Common validation schemas
+│
+├── hooks/                    # Custom React hooks
+│   ├── useLocalStorage.ts    # Local storage hook
+│   ├── useDebounce.ts        # Debounce hook
+│   ├── useClickOutside.ts    # Click outside detection
+│   ├── useMediaQuery.ts      # Responsive design hook
+│   ├── useApi.ts             # API data fetching hook
+│   └── index.ts              # Re-export hooks
+│
+├── constants/                # Application constants
+│   ├── routes.ts             # Route constants
+│   ├── api.ts                # API-related constants
+│   ├── ui.ts                 # UI-related constants
+│   ├── validation.ts         # Validation constants
+│   └── index.ts              # Re-export constants
+│
+└── config/                   # Configuration files
+    ├── env.ts                # Environment variable configuration
+    ├── database.ts           # Database configuration (if needed)
+    ├── auth.ts               # Authentication configuration
+    └── app.ts                # General app configuration
+```
+
+### 4. Types Structure (`types/`)
+
+```
+types/
+├── api/                      # API-related types
+│   ├── common.ts             # Common API types (ApiResponse, etc.)
+│   ├── hotel.ts              # Hotel API types
+│   ├── booking.ts            # Booking API types
+│   ├── user.ts               # User API types
+│   └── index.ts              # Re-export API types
+│
+├── domain/                   # Business domain types
+│   ├── hotel.ts              # Hotel business logic types
+│   ├── booking.ts            # Booking business logic types
+│   ├── user.ts               # User business logic types
+│   ├── location.ts           # Location and geography types
+│   └── index.ts              # Re-export domain types
+│
+├── global/                   # Global application types
+│   ├── env.ts                # Environment variable types
+│   ├── navigation.ts         # Navigation and routing types
+│   ├── ui.ts                 # UI component types
+│   └── index.ts              # Re-export global types
+│
+└── index.ts                  # Main types export file
+```
+
+### 5. Public Assets (`public/`)
+
+```
+public/
+├── images/                   # Static images
+│   ├── logos/                # Brand logos
+│   ├── icons/                # Icon files
+│   ├── placeholders/         # Placeholder images
+│   └── og/                   # Open Graph images
+│
+├── fonts/                    # Custom fonts (if any)
+├── favicon.ico               # Favicon
+├── robots.txt                # SEO robots file
+├── sitemap.xml               # Static sitemap (if needed)
+└── manifest.json             # PWA manifest
+```
+
+### 6. Documentation (`docs/`)
+
+```
+docs/
+├── api/                      # API documentation
+│   ├── endpoints.md          # API endpoints documentation
+│   └── integration.md        # Integration guidelines
+│
+├── deployment/               # Deployment documentation
+│   ├── cloudflare.md         # Cloudflare deployment guide
+│   └── environment.md        # Environment setup
+│
+├── development/              # Development documentation
+│   ├── setup.md              # Development setup
+│   ├── testing.md            # Testing guidelines
+│   └── contributing.md       # Contribution guidelines
+│
+└── design/                   # Design documentation
+    ├── components.md         # Component design guidelines
+    ├── patterns.md           # Design patterns
+    └── accessibility.md      # Accessibility guidelines
+```
+
+### 7. Testing Structure (`tests/`)
+
+```
+tests/
+├── __mocks__/                # Mock files
+│   ├── api/                  # API mocks
+│   ├── components/           # Component mocks
+│   └── data/                 # Test data
+│
+├── e2e/                      # End-to-end tests
+│   ├── search.spec.ts        # Search functionality tests
+│   ├── booking.spec.ts       # Booking flow tests
+│   └── auth.spec.ts          # Authentication tests
+│
+├── integration/              # Integration tests
+│   ├── api/                  # API integration tests
+│   └── components/           # Component integration tests
+│
+└── utils/                    # Test utilities
+    ├── setup.ts              # Test setup configuration
+    ├── helpers.ts            # Test helper functions
+    └── fixtures.ts           # Test fixtures
+```
+
+## File Naming Conventions
+
+### Components
+
+- **PascalCase** for component files: `HotelCard.tsx`
+- **PascalCase** for component directories: `HotelCard/`
+- **camelCase** for utility files: `hotelUtils.ts`
+- **kebab-case** for page routes: `hotel-details/page.tsx`
+
+### Types
+
+- **PascalCase** for interfaces and types: `interface Hotel {}`
+- **SCREAMING_SNAKE_CASE** for constants: `const API_BASE_URL`
+- **camelCase** for functions and variables: `const fetchHotels`
+
+### Files
+
+- **`.tsx`** for React components
+- **`.ts`** for TypeScript utilities and logic
+- **`.test.tsx/.test.ts`** for test files
+- **`.stories.tsx`** for Storybook stories
+- **`.d.ts`** for type declaration files
+
+## Import/Export Patterns
+
+### Barrel Exports
+
+```typescript
+// components/ui/index.ts
+export { Button } from "./Button";
+export { Input } from "./Input";
+export { Modal } from "./Modal";
+
+// Usage
+import { Button, Input, Modal } from "@/components/ui";
+```
+
+### Type-only Imports
+
+```typescript
+// Use type-only imports when possible
+import type { Hotel } from "@/types/domain";
+import type { ApiResponse } from "@/types/api";
+
+// Regular imports for runtime values
+import { Button } from "@/components/ui";
+import { validateHotel } from "@/lib/validators";
+```
+
+### Path Aliases
+
+```typescript
+// tsconfig.json paths configuration
+{
+  "@/*": ["./*"],
+  "@/components/*": ["components/*"],
+  "@/lib/*": ["lib/*"],
+  "@/types/*": ["types/*"],
+  "@/app/*": ["app/*"]
+}
+
+// Usage in imports
+import { Hotel } from '@/types/domain';
+import { Button } from '@/components/ui';
+import { apiCall } from '@/lib/api/client';
+```
+
+## Best Practices
+
+### 1. Co-location
+
+- Keep related files close together
+- Place component tests next to components
+- Keep component-specific types with components
+
+### 2. Single Responsibility
+
+- One component per file
+- One main export per file
+- Clear separation of concerns
+
+### 3. Consistent Naming
+
+- Use descriptive, intention-revealing names
+- Follow established naming conventions
+- Avoid abbreviations and unclear names
+
+### 4. Scalable Structure
+
+- Group by feature, not by file type
+- Use route groups in App Router
+- Implement proper barrel exports
+
+---
+
+**This directory structure is designed to grow with the project while maintaining clarity and developer productivity. Always consider the impact on navigation, imports, and code organization when adding new files or directories.**
