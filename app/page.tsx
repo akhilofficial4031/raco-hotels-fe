@@ -1,4 +1,8 @@
+import { generateHomePageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = generateHomePageMetadata();
 
 export default function Home() {
   return (
