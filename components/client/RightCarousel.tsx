@@ -1,9 +1,9 @@
 "use client";
-import React from "react";
 import { EmblaOptionsType } from "embla-carousel";
+import React from "react";
 
-import useEmblaCarousel from "embla-carousel-react";
 import ClassNames from "embla-carousel-class-names";
+import useEmblaCarousel from "embla-carousel-react";
 import "../embla-carousel/embla.css";
 import {
   NextButton,

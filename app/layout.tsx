@@ -1,6 +1,4 @@
-import { defaultSEO } from "@/lib/seo";
 import type { Metadata } from "next";
-import { DefaultSeo } from "next-seo";
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import "../font-awesome-4.7.0/css/font-awesome.css";
@@ -99,7 +97,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <DefaultSeo {...defaultSEO} />
         {children}
       </body>
     </html>
