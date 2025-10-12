@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -15,7 +16,8 @@
     "fix-all": "yarn lint:fix && yarn format",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "sitemap": "next-sitemap"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.8.0",
@@ -30,6 +32,8 @@
     "lucide-react": "^0.544.0",
     "motion": "^12.23.22",
     "next": "15.4.6",
+    "next-seo": "^6.8.0",
+    "next-sitemap": "^4.2.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwind-merge": "^3.3.1"

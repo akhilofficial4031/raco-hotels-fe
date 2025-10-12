@@ -9,6 +9,10 @@ import Restaurant from "./components/Restaurant";
 import SignatureExperiences from "./components/SignatureExperiences";
 import Testimonials from "./components/Testimonials";
 import TopBanner from "./components/TopBanner";
+import { generateHomePageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = generateHomePageMetadata();
 
 export default function Home() {
   return (

@@ -1,9 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React from "react";
+import { Hotel } from "@/types/hotel";
 import { EmblaOptionsType } from "embla-carousel";
-import useEmblaCarousel from "embla-carousel-react";
 import ClassNames from "embla-carousel-class-names";
+import useEmblaCarousel from "embla-carousel-react";
+import Link from "next/link";
+import React from "react";
 import "./embla.css";
 import {
   NextButton,
@@ -11,8 +13,6 @@ import {
   usePrevNextButtons,
 } from "./EmblaCarouselArrowButtons";
 import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
-import { Hotel } from "@/types/hotel";
-import Link from "next/link";
 
 type PropType = {
   slides: Hotel[];
