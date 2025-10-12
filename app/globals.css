@@ -1,11 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 @import "tailwindcss";
+@import "tw-animate-css";
 
 body {
   font-family: "Cinzel", serif;
+  overflow-x: hidden;
 }
 
 .dm-sans {
   font-family: "DM Sans", sans-serif;
+}
+
+@theme {
+  --color-primary: #640d5f;
+  --color-secondary: #ffb200;
+  --color-background-light: #fdf5ff;
+  --color-pink-bg: #feeffd;
+  --font-cinzel: "Cinzel", serif;
+  --font-dm-sans: "DM Sans", sans-serif;
 }

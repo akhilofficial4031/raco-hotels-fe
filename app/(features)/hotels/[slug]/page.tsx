@@ -7,6 +7,8 @@ import Features from "./components/Features";
 import LocationInfo from "./components/LocationInfo";
 import CheckAvailability from "./components/CheckAvailability";
 import Image from "next/image";
+import { BlurFade } from "@/components/ui/blur-fade";
+import { TextAnimate } from "@/components/ui/text-animate";
 
 interface Props {
   params: {
@@ -36,9 +38,16 @@ const HotelDetailsPage = async ({ params: { slug } }: Props) => {
         <div className="absolute inset-0 bg-black opacity-40 z-10"></div>
 
         <div className="relative z-20 flex flex-col items-center justify-center h-full text-white text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl tracking-wider">
+          {/* <h1 className="text-5xl md:text-6xl lg:text-7xl tracking-wider">
             {hotel.name}{" "}
-          </h1>
+          </h1> */}
+          <BlurFade
+            delay={0.2}
+            duration={0.5}
+            className="text-5xl md:text-6xl lg:text-7xl tracking-wider"
+          >
+            {hotel.name}
+          </BlurFade>
           <div className="flex items-center mt-4">
             {Array.from({ length: hotel.starRating }).map((_, i) => (
               <svg

@@ -1,0 +1,21 @@
+.embla__testimonials .embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+@media (min-width: 768px) {
+  .embla__testimonials .embla__slide {
+    flex: 0 0 25%;
+  }
+}
+
+.embla {
+  max-width: 100%;
+  margin: auto;
+  --slide-height: 19rem;
+  --slide-spacing: 1rem;
+  --slide-size: 70%;
+}
