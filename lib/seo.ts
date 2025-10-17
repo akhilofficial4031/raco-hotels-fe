@@ -1,4 +1,5 @@
 import { DefaultSeoProps } from "next-seo";
+import { processImageUrl } from "./utils";
 
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com";
@@ -131,6 +132,20 @@ export const pageSEOConfigs = {
     keywords:
       "Raco Hotels, luxury hotels, premium accommodations, hotel group, hospitality, travel",
   },
+  // Dynamic home page configuration - allows overriding with API data
+  dynamicHome: (data?: {
+    title?: string;
+    description?: string;
+    keywords?: string;
+  }) => ({
+    title: data?.title ?? "Welcome to Raco Hotels - Your Gateway to Luxury",
+    description:
+      data?.description ??
+      "Discover exceptional hospitality with Raco Hotels. Premium accommodations, world-class service, and unforgettable experiences across our global hotel portfolio.",
+    keywords:
+      data?.keywords ??
+      "Raco Hotels, luxury hotels, premium accommodations, hotel group, hospitality, travel",
+  }),
 };
 
 // Schema.org structured data
@@ -177,9 +192,7 @@ export const generateHotelSchema = (hotel: {
       latitude: hotel.latitude,
       longitude: hotel.longitude,
     },
-    image: hotel.images.map(
-      (img) => `${baseUrl}/${img.url.replace("r2://", "")}`
-    ),
+    image: hotel.images.map((img) => processImageUrl(img.url, baseUrl)),
     url: `${siteUrl}/hotels/${hotel.name.toLowerCase().replace(/\s+/g, "-")}`,
     priceRange: "$$$",
     "@id": `${siteUrl}/hotels/${hotel.name.toLowerCase().replace(/\s+/g, "-")}#hotel`,

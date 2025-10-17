@@ -181,5 +181,29 @@ export const pageMetadataConfigs = {
 export const generateHotelsPageMetadata = (): Metadata =>
   generatePageMetadata(pageMetadataConfigs.hotels);
 
-export const generateHomePageMetadata = (): Metadata =>
-  generatePageMetadata(pageMetadataConfigs.home);
+export const generateHomePageMetadata = (seoData?: {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  ogImage?: string;
+}): Metadata => {
+  if (seoData) {
+    return generatePageMetadata({
+      path: "/",
+      title: seoData.title || pageMetadataConfigs.home.title,
+      description: seoData.description || pageMetadataConfigs.home.description,
+      keywords: seoData.keywords || pageMetadataConfigs.home.keywords,
+      images: seoData.ogImage
+        ? [
+            {
+              url: seoData.ogImage,
+              width: 1200,
+              height: 630,
+              alt: "Raco Hotels - Luxury Accommodations",
+            },
+          ]
+        : undefined,
+    });
+  }
+  return generatePageMetadata(pageMetadataConfigs.home);
+};

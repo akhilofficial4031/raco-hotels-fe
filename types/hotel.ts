@@ -68,6 +68,8 @@ export interface Hotel {
   images: Image[];
   features: Feature[];
   amenities: Amenity[];
+  // Optional field added when images are processed on server-side
+  processedImageUrl?: string;
 }
 
 export interface HotelResponse {

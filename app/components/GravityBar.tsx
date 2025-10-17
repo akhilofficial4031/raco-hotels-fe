@@ -1,13 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-const GravityBar = () => {
+import { GravityBarProps } from "@/types";
+import Image from "next/image";
+
+const GravityBar = ({ data }: GravityBarProps) => {
   return (
     <section className="bg-background-light py-16 md:py-24">
       <div className="relative">
-        <img
-          src="/celebrate-your-moments.png"
-          alt="Celebrate your moments"
+        <Image
+          src={data.badge.src}
+          alt={data.badge.alt}
+          width={128}
+          height={128}
           className="w-32 z-50 h-auto object-cover absolute top-62 left-1/2 -translate-x-1/2"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20 px-8 mb-8">
@@ -15,32 +20,32 @@ const GravityBar = () => {
           <div className="text-right mb-12 items-end">
             <p className="font-semibold tracking-wider uppercase mb-4 text-right">
               <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-                GRAVITY BAR
+                {data.sectionTitle}
               </span>
             </p>
             <h2 className="text-4xl md:text-5xl font-normal text-primary leading-tight text-right">
-              ROOFTOP VIBES: LIVE
-              <br />
-              MUSIC, COCKTAILS
+              {data.title}
             </h2>
             <div className="">
               <p className="text-gray-600 dm-sans mt-6 text-right">
-                In a world that moves too fast, we believe in the art of slow
-                living. Natural textures, warm lighting, and thoughtful spaces
-                create an atmosphere of comfort and timeless elegance.
+                {data.description}
               </p>
             </div>
           </div>
           <div className="bg-gradient-to-r from-primary to-secondary h-auto w-full flex items-center justify-center">
-            <h3 className="text-white text-3xl font-semibold">GRAVITY BAR</h3>
+            <h3 className="text-white text-3xl font-semibold">
+              {data.sectionTitle}
+            </h3>
           </div>
         </div>
 
         {/* Main Content */}
         <div className="relative px-8">
-          <img
-            src="/gravitybar.png"
-            alt="Gravity Bar"
+          <Image
+            src={data.image.src}
+            alt={data.image.alt}
+            width={800}
+            height={600}
             className="w-full h-auto object-cover"
           />
 
@@ -69,12 +74,18 @@ const GravityBar = () => {
 
         {/* Action Buttons */}
         <div className="flex justify-center space-x-4 mt-8 ">
-          <button className="bg-primary text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity font-semibold">
-            Explore More
-          </button>
-          <button className="bg-transparent text-primary px-6 py-2 rounded-full border border-primary hover:bg-primary hover:text-white transition-colors font-semibold">
-            Reserve now
-          </button>
+          {data.ctas.map((cta, index) => (
+            <button
+              key={index}
+              className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+                cta.variant === "primary"
+                  ? "bg-primary text-white hover:opacity-90"
+                  : "bg-transparent text-primary border border-primary hover:bg-primary hover:text-white"
+              }`}
+            >
+              {cta.text}
+            </button>
+          ))}
         </div>
       </div>
     </section>

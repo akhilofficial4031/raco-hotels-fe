@@ -1,0 +1,12 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# Host
+Host: https://raco-hotels.com
+
+# Sitemaps
+Sitemap: https://raco-hotels.com/sitemap.xml
+Sitemap: https://raco-hotels.com/server-sitemap.xml

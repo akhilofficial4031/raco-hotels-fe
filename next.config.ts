@@ -6,16 +6,19 @@ const nextConfig: NextConfig = {
   // Environment variables for SEO
   env: {
     NEXT_PUBLIC_SITE_URL:
-      process.env.NEXT_PUBLIC_SITE_URL || "https://raco-hotels.com",
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com",
   },
 
   // Image optimization
   images: {
-    domains: ["localhost"],
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "pub-11201a01c0de4768a1eb0c759b0f5b14.r2.dev",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
       },
     ],
   },

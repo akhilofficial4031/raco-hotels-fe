@@ -4,6 +4,7 @@ import { Hotel } from "@/types/hotel";
 import { EmblaOptionsType } from "embla-carousel";
 import ClassNames from "embla-carousel-class-names";
 import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import "./embla.css";
@@ -21,7 +22,6 @@ type PropType = {
 
 const EmblaCarousel: React.FC<PropType> = (props) => {
   const { slides, options } = props;
-  const baseUrl = process.env.NEXT_BUCKET_URL;
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [ClassNames()]);
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
@@ -40,11 +40,13 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         <div className="embla__container">
           {slides.map((hotel) => (
             <div className="embla__slide" key={hotel.id}>
-              <Link href={`/hotels/${hotel.id}`}>
-                <img
+              <Link href={`/hotels/${hotel.slug}`}>
+                <Image
                   className="embla__slide__img"
-                  src={`${baseUrl}/${hotel.images[0].url.replace("r2://", "")}`}
-                  alt="Your alt text"
+                  src={hotel.processedImageUrl ?? hotel.images[0]?.url ?? ""}
+                  alt={hotel.name}
+                  width={400}
+                  height={300}
                 />
                 <div className="mt-2">
                   <h1>{hotel.name}</h1>

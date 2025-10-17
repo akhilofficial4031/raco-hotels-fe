@@ -9,16 +9,19 @@ import {
   generateHotelSchema,
   siteUrl,
 } from "@/lib/seo";
+import { processImageUrl } from "@/lib/utils";
 import { ApiResponse } from "@/types/api";
 import { HotelDetailsResponse } from "@/types/hotel";
 import type { Metadata } from "next";
+import Amenities from "./components/Amenities";
 import CheckAvailability from "./components/CheckAvailability";
+import Features from "./components/Features";
 import LocationInfo from "./components/LocationInfo";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate dynamic metadata for SEO using the utility function
@@ -40,16 +43,20 @@ const generateHotelPageMetadata = withMetadataErrorHandling(
 );
 
 export const generateMetadata = async ({
-  params: { slug },
-}: Props): Promise<Metadata> => generateHotelPageMetadata(slug);
+  params,
+}: Props): Promise<Metadata> => {
+  const { slug } = await params;
+  return generateHotelPageMetadata(slug);
+};
 
-const HotelDetailsPage = async ({ params: { slug } }: Props) => {
+const HotelDetailsPage = async ({ params }: Props) => {
+  const { slug } = await params;
   const hotelResponse = await getFetcher<ApiResponse<HotelDetailsResponse>>(
     `/api/hotels/slug/${slug}`
   );
 
   const hotel = hotelResponse.data.hotel;
-  const baseUrl = process.env.NEXT_BUCKET_URL;
+  const baseUrl = process.env.NEXT_BUCKET_URL ?? "";
 
   // Generate structured data
   const hotelSchema = generateHotelSchema(hotel);
@@ -71,12 +78,13 @@ const HotelDetailsPage = async ({ params: { slug } }: Props) => {
           description: `Book ${hotel.name} in ${hotel.city}, ${hotel.countryCode}. Experience luxury accommodations with Raco Hotels.`,
           url: `${siteUrl}/hotels/${slug}`,
           siteName: "Raco Hotels",
-          images: hotel.images.slice(0, 4).map((img) => ({
-            url: `${baseUrl}/${img.url.replace("r2://", "")}`,
-            width: 1200,
-            height: 630,
-            alt: img.alt || `${hotel.name} - ${hotel.city}`,
-          })),
+          images:
+            hotel.images?.slice(0, 4).map((img) => ({
+              url: processImageUrl(img.url, baseUrl),
+              width: 1200,
+              height: 630,
+              alt: img.alt ?? `${hotel.name} - ${hotel.city}`,
+            })) ?? [],
           locale: "en_US",
           type: "website",
         }}
@@ -85,7 +93,7 @@ const HotelDetailsPage = async ({ params: { slug } }: Props) => {
         <div
           className="relative h-screen w-full"
           style={{
-            backgroundImage: `url(${baseUrl}/${hotel.images[0].url.replace("r2://", "")})`,
+            backgroundImage: `url(/hero/hero1.png)`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -143,13 +151,15 @@ const HotelDetailsPage = async ({ params: { slug } }: Props) => {
           </div>
         </div>
         <div className="container mx-auto px-4 pb-16">
-          {/* <div className="-mt-32">
-          <Amenities amenities={hotel.amenities} />
-        </div>
-        <div>
-          <Features features={hotel.features} />
-        </div> */}
-          <LocationInfo locationInfo={hotel.locationInfo} />
+          <div className="-mt-32">
+            <Amenities amenities={hotel.amenities} />
+          </div>
+          <div>
+            <Features features={hotel.features} />
+          </div>
+          {hotel.locationInfo?.length && hotel.locationInfo.length > 0 ? (
+            <LocationInfo locationInfo={hotel.locationInfo} hotel={hotel} />
+          ) : null}
         </div>
       </div>
     </>

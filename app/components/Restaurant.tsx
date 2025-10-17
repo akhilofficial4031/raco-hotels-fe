@@ -1,16 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import useEmblaCarousel from "embla-carousel-react";
-import { EmblaOptionsType } from "embla-carousel";
 import { usePrevNextButtons } from "@/components/embla-carousel/EmblaCarouselArrowButtons";
 import "@/components/embla-carousel/embla.css";
+import { RestaurantProps } from "@/types";
+import { EmblaOptionsType } from "embla-carousel";
+import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 
-const Restaurant = () => {
+const Restaurant = ({ data }: RestaurantProps) => {
   const options: EmblaOptionsType = { loop: true };
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const { onNextButtonClick } = usePrevNextButtons(emblaApi);
-  const images = ["/experience1.png", "/experience2.png"];
 
   return (
     <section className="bg-background-light py-16 md:py-16">
@@ -18,13 +19,15 @@ const Restaurant = () => {
         {/* Gradient Header */}
         <div className="bg-gradient-to-r from-primary to-secondary h-56 flex items-center justify-center mb-8 relative">
           <h2 className="text-white text-4xl md:text-5xl font-semibold tracking-widest">
-            PRIYAM RESTAURANT
+            {data.title}
           </h2>
           {/* Overlapping Circular Badge */}
           <div className="absolute z-50 -bottom-24 left-1/2 -translate-x-1/2 w-32 h-32 md:w-40 md:h-40 pointer-events-none">
-            <img
-              src="/celebrate-your-moments.png"
-              alt="Celebrate your moments"
+            <Image
+              src={data.badge.src}
+              alt={data.badge.alt}
+              width={160}
+              height={160}
               className="w-full h-full object-contain"
             />
           </div>
@@ -36,39 +39,39 @@ const Restaurant = () => {
           <div className="text-center md:text-left">
             <p className="font-semibold tracking-wider uppercase mb-4">
               <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-                PRIYAM RESTAURANT
+                {data.sectionTitle}
               </span>
             </p>
             <h3 className="text-3xl md:text-4xl font-normal text-primary leading-tight mb-4">
-              CULINARY ELEGANCE:
-              <br />
-              KERALA CUISINE WITH
-              <br />
-              GLOBAL FUSION
+              {data.subtitle}
             </h3>
-            <p className="text-gray-600 dm-sans mb-6">
-              In a world that moves too fast, we believe in the art of slow
-              living. Natural textures, warm lighting, and thoughtful spaces
-              create an atmosphere of comfort and timeless elegance.
-            </p>
+            <p className="text-gray-600 dm-sans mb-6">{data.description}</p>
             <div className="flex justify-center md:justify-start space-x-4">
-              <button className="bg-primary text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity font-semibold">
-                Explore More
-              </button>
-              <button className="bg-transparent text-primary px-6 py-2 rounded-full border border-primary hover:bg-primary hover:text-white transition-colors font-semibold">
-                Reserve now
-              </button>
+              {data.ctas.map((cta, index) => (
+                <button
+                  key={index}
+                  className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+                    cta.variant === "primary"
+                      ? "bg-primary text-white hover:opacity-90"
+                      : "bg-transparent text-primary border border-primary hover:bg-primary hover:text-white"
+                  }`}
+                >
+                  {cta.text}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Right Image Carousel */}
           <div className="relative overflow-hidden" ref={emblaRef}>
             <div className="flex">
-              {images.map((src, index) => (
+              {data.images.map((image, index) => (
                 <div className="flex-[0_0_100%] min-w-0" key={index}>
-                  <img
-                    src={src}
-                    alt={`Priyam Restaurant Interior ${index + 1}`}
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={800}
+                    height={500}
                     className="w-full h-[500px] object-cover"
                   />
                 </div>

@@ -1,33 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { HeaderProps } from "@/types";
+import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const Header = () => {
+const Header = ({ data }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    {
-      href: "#",
-      label: "Our Properties",
-      dropdown: [
-        { href: "/properties/property-1", label: "Property 1" },
-        { href: "/properties/property-2", label: "Property 2" },
-      ],
-    },
-    {
-      href: "#",
-      label: "Dining & Experiences",
-      dropdown: [
-        { href: "/dining", label: "Dining" },
-        { href: "/experiences", label: "Experiences" },
-      ],
-    },
-    { href: "/offers", label: "Offers" },
-    { href: "/contact", label: "Contact" },
-  ];
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <header className="bg-white text-gray-800 shadow-md dm-sans">
@@ -35,12 +19,17 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="Raco Hotels" width={120} height={40} />
+              <Image
+                src={data.logo.src}
+                alt={data.logo.alt}
+                width={data.logo.width}
+                height={data.logo.height}
+              />
             </Link>
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) =>
+            {data.navigation.map((link) =>
               link.dropdown ? (
                 <div key={link.label} className="relative group">
                   <a
@@ -89,11 +78,16 @@ const Header = () => {
 
           <div className="hidden md:flex items-center space-x-4">
             <button className="bg-primary text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity">
-              Book Now
+              {data.cta.text}
             </button>
             <div className="flex items-center space-x-2">
-              <img src="/globe.svg" alt="Language" width={20} height={20} />
-              <span>Eng</span>
+              <Image
+                src={data.language.icon}
+                alt="Language"
+                width={20}
+                height={20}
+              />
+              <span>{data.language.text}</span>
             </div>
           </div>
 
@@ -141,10 +135,10 @@ const Header = () => {
         </div>
       </div>
 
-      {isMobileMenuOpen ? (
+      {isMounted && isMobileMenuOpen ? (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navLinks.map((link) => (
+            {data.navigation.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
@@ -154,11 +148,16 @@ const Header = () => {
               </Link>
             ))}
             <button className="w-full text-left bg-primary text-white px-4 py-3 rounded-md hover:opacity-90 transition-opacity mt-4">
-              Book Now
+              {data.cta.text}
             </button>
             <div className="flex items-center space-x-2 px-3 py-2">
-              <img src="/globe.svg" alt="Language" width={20} height={20} />
-              <span>Eng</span>
+              <Image
+                src={data.language.icon}
+                alt="Language"
+                width={20}
+                height={20}
+              />
+              <span>{data.language.text}</span>
             </div>
           </div>
         </div>

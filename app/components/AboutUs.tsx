@@ -1,7 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-const AboutUs = () => {
+import { AboutUsProps } from "@/types";
+import Image from "next/image";
+
+const AboutUs = ({ data }: AboutUsProps) => {
   return (
     <section className="bg-white py-16 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,23 +14,45 @@ const AboutUs = () => {
             <div className="mb-12 text-center lg:text-left">
               <p className="font-semibold tracking-wider uppercase mb-4">
                 <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-                  ABOUT US
+                  {data.sectionTitle}
                 </span>
               </p>
               <h2 className="text-4xl md:text-5xl font-normal text-gray-800 leading-tight mt-4">
-                We create <em className="font-serif italic">experiences</em>,
-                not just stays. Our hospitality is defined by warmth and{" "}
-                <em className="font-serif italic">passion for elegance</em>.
+                {data.title.split("experiences").map((part, index) =>
+                  index === 0 ? (
+                    <span key={index}>
+                      {part}
+                      <em className="font-serif italic">experiences</em>
+                    </span>
+                  ) : (
+                    <span key={index}>
+                      {part
+                        .split("passion for elegance")
+                        .map((subpart, subindex) =>
+                          subindex === 0 ? (
+                            <span key={subindex}>
+                              {subpart}
+                              <em className="font-serif italic">
+                                passion for elegance
+                              </em>
+                            </span>
+                          ) : (
+                            <span key={subindex}>{subpart}</span>
+                          )
+                        )}
+                    </span>
+                  )
+                )}
               </h2>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-8 lg:items-start">
               <div className="flex-shrink-0 pt-8">
-                <img
-                  src="/best-choice.png"
-                  alt="Best Choice"
-                  width={150}
-                  height={150}
+                <Image
+                  src={data.badge.src}
+                  alt={data.badge.alt}
+                  width={data.badge.width}
+                  height={data.badge.height}
                   className="mx-auto"
                 />
               </div>
@@ -35,15 +60,12 @@ const AboutUs = () => {
                 <div className="relative flex items-center justify-center w-60 h-60">
                   <div className="absolute inset-0 border border-gray-200 rounded-full" />
                   <p className="text-center text-gray-600 dm-sans text-sm p-8">
-                    In a world that moves too fast, we believe in the art of
-                    slow living. Natural textures, warm lighting, and thoughtful
-                    spaces create an atmosphere of comfort and timeless
-                    elegance.
+                    {data.description}
                   </p>
                 </div>
                 <div className="mt-8">
                   <button className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold">
-                    About Us
+                    {data.cta.text}
                   </button>
                 </div>
               </div>
@@ -52,11 +74,11 @@ const AboutUs = () => {
 
           {/* Right Image Gallery */}
           <div className="relative">
-            <img
-              src="/about1.png"
-              alt="Hotel Poolside"
-              width={300}
-              height={250}
+            <Image
+              src={data.image.src}
+              alt={data.image.alt}
+              width={data.image.width}
+              height={data.image.height}
               className="rounded-lg object-cover"
             />
             <button className="absolute bottom-4 right-4 bg-white/50 backdrop-blur-sm p-3 rounded-full text-gray-800 hover:bg-white transition-all">
