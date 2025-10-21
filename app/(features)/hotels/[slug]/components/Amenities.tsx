@@ -1,5 +1,4 @@
 import { Amenity } from "@/types/hotel";
-import Image from "next/image";
 import React from "react";
 
 interface Props {
@@ -7,7 +6,7 @@ interface Props {
 }
 
 const Amenities = ({ amenities }: Props) => {
-  const baseUrl = process.env.NEXT_PUBLIC_BUCKET_URL;
+  const _baseUrl = process.env.NEXT_PUBLIC_BUCKET_URL;
 
   return (
     <div className="py-16">
@@ -21,7 +20,7 @@ const Amenities = ({ amenities }: Props) => {
               <i
                 className={`fa ${amenity.icon} text-purple-500`}
                 aria-hidden="true"
-              ></i>
+              />
               <span className="text-gray-700 font-sans">{amenity.name}</span>
             </div>
           ))}

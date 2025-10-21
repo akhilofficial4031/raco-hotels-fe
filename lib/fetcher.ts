@@ -5,6 +5,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 export async function getFetcher<T>(endpoint: string): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
+  // eslint-disable-next-line no-console
   console.log("url", url);
   const response = await fetch(url);
 

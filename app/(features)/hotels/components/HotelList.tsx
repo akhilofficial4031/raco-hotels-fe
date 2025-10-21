@@ -1,14 +1,12 @@
-import { getFetcher } from "@/lib/fetcher";
-import { ApiResponse } from "@/types/api";
-import { HotelResponse } from "@/types/hotel";
 import RightCarousel from "@/components/client/RightCarousel";
+import { getActiveHotels } from "@/lib/hotels";
 
 export default async function HotelList() {
-  const hotels = await getFetcher<ApiResponse<HotelResponse>>("/api/hotels");
+  const hotels = await getActiveHotels();
 
   return (
     <div>
-      <RightCarousel hotels={hotels.data.hotels} />
+      <RightCarousel hotels={hotels} />
     </div>
   );
 }

@@ -25,6 +25,12 @@ export async function GET() {
     // Add other dynamic pages
     const additionalFields = [
       {
+        loc: siteUrl,
+        lastmod: new Date().toISOString(),
+        changefreq: "daily" as const,
+        priority: 1.0,
+      },
+      {
         loc: `${siteUrl}/hotels`,
         lastmod: new Date().toISOString(),
         changefreq: "daily" as const,
@@ -36,12 +42,19 @@ export async function GET() {
 
     return getServerSideSitemap(allFields);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error("Error generating server sitemap:", error);
 
     // Return minimal sitemap in case of error
     const siteUrl =
       process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com";
     const fallbackFields = [
+      {
+        loc: siteUrl,
+        lastmod: new Date().toISOString(),
+        changefreq: "daily" as const,
+        priority: 1.0,
+      },
       {
         loc: `${siteUrl}/hotels`,
         lastmod: new Date().toISOString(),

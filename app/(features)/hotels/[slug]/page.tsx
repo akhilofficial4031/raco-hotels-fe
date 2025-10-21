@@ -9,6 +9,7 @@ import {
   generateHotelSchema,
   siteUrl,
 } from "@/lib/seo";
+import { getImageUrl } from "@/lib/utils";
 import { ApiResponse } from "@/types/api";
 import { HotelDetailsResponse } from "@/types/hotel";
 import type { Metadata } from "next";
@@ -16,9 +17,9 @@ import CheckAvailability from "./components/CheckAvailability";
 import LocationInfo from "./components/LocationInfo";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate dynamic metadata for SEO using the utility function
@@ -28,28 +29,29 @@ const generateHotelPageMetadata = withMetadataErrorHandling(
       `/api/hotels/slug/${slug}`
     );
     const hotel = hotelResponse.data.hotel;
-    const baseUrl = process.env.NEXT_BUCKET_URL ?? "";
 
     return generateHotelMetadata({
       hotel,
       slug,
-      baseUrl,
     });
   },
   "Hotel Details"
 );
 
 export const generateMetadata = async ({
-  params: { slug },
-}: Props): Promise<Metadata> => generateHotelPageMetadata(slug);
+  params,
+}: Props): Promise<Metadata> => {
+  const { slug } = await params;
+  return generateHotelPageMetadata(slug);
+};
 
-const HotelDetailsPage = async ({ params: { slug } }: Props) => {
+const HotelDetailsPage = async ({ params }: Props) => {
+  const { slug } = await params;
   const hotelResponse = await getFetcher<ApiResponse<HotelDetailsResponse>>(
     `/api/hotels/slug/${slug}`
   );
 
   const hotel = hotelResponse.data.hotel;
-  const baseUrl = process.env.NEXT_BUCKET_URL;
 
   // Generate structured data
   const hotelSchema = generateHotelSchema(hotel);
@@ -72,7 +74,7 @@ const HotelDetailsPage = async ({ params: { slug } }: Props) => {
           url: `${siteUrl}/hotels/${slug}`,
           siteName: "Raco Hotels",
           images: hotel.images.slice(0, 4).map((img) => ({
-            url: `${baseUrl}/${img.url.replace("r2://", "")}`,
+            url: getImageUrl(img.url),
             width: 1200,
             height: 630,
             alt: img.alt || `${hotel.name} - ${hotel.city}`,
@@ -85,7 +87,7 @@ const HotelDetailsPage = async ({ params: { slug } }: Props) => {
         <div
           className="relative h-screen w-full"
           style={{
-            backgroundImage: `url(${baseUrl}/${hotel.images[0].url.replace("r2://", "")})`,
+            backgroundImage: `url(${getImageUrl(hotel.images[0]?.url)})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

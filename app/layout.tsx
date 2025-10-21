@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import "../font-awesome-4.7.0/css/font-awesome.css";
+import SmoothScroll from "./components/SmoothScroll";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     title: "Raco Hotels - Luxury Accommodations & Premium Hotel Bookings",
     description:
       "Discover amazing hotels in premium locations worldwide. Book your perfect stay with Raco Hotels - luxury accommodations, exclusive deals, and exceptional service across our hotel group.",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://raco-hotels.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com",
     siteName: "Raco Hotels",
     locale: "en_US",
     type: "website",
@@ -90,14 +91,14 @@ export default function RootLayout({
         />
         <link
           rel="canonical"
-          href={process.env.NEXT_PUBLIC_SITE_URL || "https://raco-hotels.com"}
+          href={process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com"}
         />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
       </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );

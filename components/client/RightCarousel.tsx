@@ -3,23 +3,33 @@ import { EmblaOptionsType } from "embla-carousel";
 // import Autoplay from "embla-carousel-autoplay";
 import React from "react";
 
+import { getImageUrl } from "@/lib/utils";
+import { Hotel } from "@/types/hotel";
 import ClassNames from "embla-carousel-class-names";
 import useEmblaCarousel from "embla-carousel-react";
+import Link from "next/link";
 import "../embla-carousel/embla.css";
 import {
   NextButton,
   usePrevNextButtons,
 } from "../embla-carousel/EmblaCarouselArrowButtons";
-import { Hotel } from "@/types/hotel";
-import Link from "next/link";
 
 const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
+  // Debug logging
+  console.log("RightCarousel: Received hotels:", hotels.length);
+  hotels.forEach((hotel, index) => {
+    console.log(`Hotel ${index}:`, {
+      name: hotel.name,
+      imagesCount: hotel.images?.length || 0,
+      firstImageUrl: hotel.images?.[0]?.url || "No image URL",
+    });
+  });
+
   const options: EmblaOptionsType = {
     loop: true,
     align: "start",
     slidesToScroll: 1,
   };
-  const baseUrl = process.env.NEXT_BUCKET_URL;
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [
     ClassNames(),
     // Autoplay(),
@@ -41,11 +51,8 @@ const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     className="absolute inset-0 w-full h-full object-cover"
-                    src={`${baseUrl}/${hotel.images[0].url.replace(
-                      "r2://",
-                      ""
-                    )}`}
-                    alt={hotel.name}
+                    src={getImageUrl(hotel.images[0]?.url)}
+                    alt={hotel.images[0]?.alt || hotel.name}
                   />
                 </div>
                 <div className="p-4">

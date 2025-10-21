@@ -21,9 +21,11 @@
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.8.0",
+    "@studio-freight/react-lenis": "^0.0.47",
     "antd": "^5.27.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "critters": "^0.0.25",
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-class-names": "^8.6.0",

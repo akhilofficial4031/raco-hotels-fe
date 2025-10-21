@@ -1,6 +1,12 @@
 "use client";
 
-const OurStays = () => {
+import { OurStaysContent } from "@/types/landing-page";
+
+interface OurStaysProps {
+  content: OurStaysContent;
+}
+
+const OurStays = ({ content }: OurStaysProps) => {
   return (
     <section className="bg-background-light py-16 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -8,22 +14,16 @@ const OurStays = () => {
           <div className="md:col-span-2">
             <p className="font-semibold tracking-wider uppercase mb-4">
               <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-                OUR STAYS
+                {content.sectionTag}
               </span>
             </p>
             <h2 className="text-5xl md:text-6xl font-normal text-primary leading-tight">
-              DISCOVER OUR
-              <br />
-              CURATED COLLECTION
-              <br />
-              OF EXQUISITE STAYS
+              {content.title}
             </h2>
           </div>
           <div>
             <p className="text-gray-600 dm-sans">
-              In a world that moves too fast, we believe in the art of slow
-              living. Natural textures, warm lighting, and thoughtful spaces
-              create an atmosphere of comfort and timeless elegance.
+              {content.description}
             </p>
           </div>
         </div>

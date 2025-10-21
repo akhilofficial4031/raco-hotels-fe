@@ -1,15 +1,48 @@
 "use client";
 
-import { ReactLenis } from "@studio-freight/react-lenis";
-import { ReactNode } from "react";
+import dynamic from "next/dynamic";
+import { ReactNode, useEffect, useState } from "react";
 
-function SmoothScrolling({ children }: { children: ReactNode }) {
+// Dynamically import ReactLenis to avoid SSR issues
+const ReactLenis = dynamic(
+  () => import("@studio-freight/react-lenis").then((mod) => mod.ReactLenis),
+  {
+    ssr: false, // Disable server-side rendering for this component
+    loading: () => null, // No loading component needed
+  }
+);
+
+interface SmoothScrollProps {
+  children: ReactNode;
+}
+
+function SmoothScrolling({ children }: SmoothScrollProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Render children directly on server and during hydration
+  if (!isClient) {
+    return children as React.ReactElement;
+  }
+
+  // Only render ReactLenis on the client side after hydration
   return (
-    <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothTouch: true }}>
+    <ReactLenis
+      root
+      options={{
+        lerp: 0.1,
+        duration: 1.5,
+        wheelMultiplier: 1,
+        touchMultiplier: 2,
+        infinite: false,
+      }}
+    >
       {children}
     </ReactLenis>
   );
 }
 
 export default SmoothScrolling;
-

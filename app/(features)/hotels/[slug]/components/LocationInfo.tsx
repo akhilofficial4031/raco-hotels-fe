@@ -1,13 +1,11 @@
 import { LocationInfo as LocationInfoType } from "@/types/hotel";
-import Image from "next/image";
-import React from "react";
 
 interface Props {
   locationInfo: LocationInfoType[];
 }
 
 const LocationInfo = ({ locationInfo }: Props) => {
-  const baseUrl = process.env.NEXT_PUBLIC_BUCKET_URL;
+  const _baseUrl = process.env.NEXT_PUBLIC_BUCKET_URL;
   return (
     <div className="py-24">
       <h2 className="text-4xl font-serif text-purple-900 mb-16 text-center">

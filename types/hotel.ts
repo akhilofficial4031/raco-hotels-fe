@@ -78,3 +78,21 @@ export interface HotelResponse {
 export interface HotelDetailsResponse {
   hotel: Hotel;
 }
+
+// Navigation-specific types for header dropdown
+export interface HotelNavItem {
+  id: number;
+  name: string;
+  slug: string;
+  city: string;
+  state: string;
+}
+
+export interface NavLink {
+  href: string;
+  label: string;
+  dropdown?: Array<{
+    href: string;
+    label: string;
+  }>;
+}

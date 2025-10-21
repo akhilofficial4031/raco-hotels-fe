@@ -1,21 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { HotelNavItem, NavLink } from "@/types/hotel";
+import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
-const Header = () => {
+interface HeaderProps {
+  hotels?: HotelNavItem[];
+}
+
+const Header = ({ hotels = [] }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const navLinks = [
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleDropdownToggle = (label: string) => {
+    setOpenDropdown(openDropdown === label ? null : label);
+  };
+
+  // Generate hotel dropdown items from API data
+  const hotelDropdownItems = hotels.map((hotel) => ({
+    href: `/hotels/${hotel.slug}`,
+    label: `${hotel.name} - ${hotel.city}, ${hotel.state}`,
+  }));
+
+  const navLinks: NavLink[] = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     {
-      href: "#",
+      href: "/hotels",
       label: "Our Properties",
-      dropdown: [
-        { href: "/properties/property-1", label: "Property 1" },
-        { href: "/properties/property-2", label: "Property 2" },
-      ],
+      dropdown:
+        hotelDropdownItems.length > 0
+          ? hotelDropdownItems
+          : [{ href: "/hotels", label: "View All Properties" }],
     },
     {
       href: "#",
@@ -35,21 +70,31 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="Raco Hotels" width={120} height={40} />
+              <Image
+                src="/logo.png"
+                alt="Raco Hotels"
+                width={120}
+                height={40}
+              />
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav
+            className="hidden md:flex items-center space-x-8"
+            ref={dropdownRef}
+          >
             {navLinks.map((link) =>
               link.dropdown ? (
-                <div key={link.label} className="relative group">
-                  <a
-                    href={link.href}
-                    className="flex items-center hover:text-primary transition-colors"
+                <div key={link.label} className="relative">
+                  <button
+                    onClick={() => handleDropdownToggle(link.label)}
+                    className="flex items-center hover:text-primary transition-colors focus:outline-none"
                   >
                     {link.label}
                     <svg
-                      className="w-4 h-4 ml-1"
+                      className={`w-4 h-4 ml-1 transition-transform ${
+                        openDropdown === link.label ? "rotate-180" : ""
+                      }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -62,18 +107,21 @@ const Header = () => {
                         d="M19 9l-7 7-7-7"
                       />
                     </svg>
-                  </a>
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 invisible group-hover:visible z-10">
-                    {link.dropdown.map((item) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
+                  </button>
+                  {openDropdown === link.label && (
+                    <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                      {link.dropdown.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary first:rounded-t-md last:rounded-b-md"
+                          onClick={() => setOpenDropdown(null)}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <Link
@@ -92,7 +140,7 @@ const Header = () => {
               Book Now
             </button>
             <div className="flex items-center space-x-2">
-              <img src="/globe.svg" alt="Language" width={20} height={20} />
+              <Image src="/globe.svg" alt="Language" width={20} height={20} />
               <span>Eng</span>
             </div>
           </div>
@@ -157,7 +205,7 @@ const Header = () => {
               Book Now
             </button>
             <div className="flex items-center space-x-2 px-3 py-2">
-              <img src="/globe.svg" alt="Language" width={20} height={20} />
+              <Image src="/globe.svg" alt="Language" width={20} height={20} />
               <span>Eng</span>
             </div>
           </div>

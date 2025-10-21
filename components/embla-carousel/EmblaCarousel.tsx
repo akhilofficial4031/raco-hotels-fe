@@ -1,9 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
+import { getImageUrl } from "@/lib/utils";
 import { Hotel } from "@/types/hotel";
 import { EmblaOptionsType } from "embla-carousel";
 import ClassNames from "embla-carousel-class-names";
 import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import "./embla.css";
@@ -21,7 +22,6 @@ type PropType = {
 
 const EmblaCarousel: React.FC<PropType> = (props) => {
   const { slides, options } = props;
-  const baseUrl = process.env.NEXT_BUCKET_URL;
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [ClassNames()]);
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
@@ -41,10 +41,13 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           {slides.map((hotel) => (
             <div className="embla__slide" key={hotel.id}>
               <Link href={`/hotels/${hotel.id}`}>
-                <img
+                <Image
                   className="embla__slide__img"
-                  src={`${baseUrl}/${hotel.images[0].url.replace("r2://", "")}`}
-                  alt="Your alt text"
+                  src={getImageUrl(hotel.images[0]?.url)}
+                  alt={hotel.images[0]?.alt || hotel.name}
+                  width={400}
+                  height={300}
+                  style={{ objectFit: "cover" }}
                 />
                 <div className="mt-2">
                   <h1>{hotel.name}</h1>

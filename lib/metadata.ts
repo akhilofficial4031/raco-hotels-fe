@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { siteUrl } from "./seo";
+import { getImageUrl } from "./utils";
 
 // Base metadata configuration
 const BASE_METADATA = {
@@ -33,7 +34,6 @@ interface HotelMetadataParams {
     images: Array<{ url: string; alt?: string }>;
   };
   slug: string;
-  baseUrl?: string;
 }
 
 interface PageMetadataParams extends BaseMetadataParams {
@@ -100,7 +100,7 @@ export const generatePageMetadata = (params: PageMetadataParams): Metadata => {
 export const generateHotelMetadata = (
   params: HotelMetadataParams
 ): Metadata => {
-  const { hotel, slug, baseUrl = "" } = params;
+  const { hotel, slug } = params;
 
   const title = `${hotel.name} - ${hotel.city}, ${hotel.countryCode} | Raco Hotels`;
   const description = `Book ${hotel.name} in ${hotel.city}, ${hotel.countryCode}. ${hotel.description.slice(0, 120)}... Experience luxury accommodations with Raco Hotels.`;
@@ -115,7 +115,7 @@ export const generateHotelMetadata = (
   ];
 
   const images = hotel.images.slice(0, 4).map((img) => ({
-    url: `${baseUrl}/${img.url.replace("r2://", "")}`,
+    url: getImageUrl(img.url),
     width: 1200,
     height: 630,
     alt: img.alt ?? `${hotel.name} - ${hotel.city}`,
@@ -181,5 +181,18 @@ export const pageMetadataConfigs = {
 export const generateHotelsPageMetadata = (): Metadata =>
   generatePageMetadata(pageMetadataConfigs.hotels);
 
-export const generateHomePageMetadata = (): Metadata =>
-  generatePageMetadata(pageMetadataConfigs.home);
+export const generateHomePageMetadata = (seoContent?: {
+  title: string;
+  description: string;
+  keywords: string;
+}): Metadata => {
+  if (seoContent) {
+    return generatePageMetadata({
+      title: seoContent.title,
+      description: seoContent.description,
+      keywords: seoContent.keywords,
+      path: "/",
+    });
+  }
+  return generatePageMetadata(pageMetadataConfigs.home);
+};

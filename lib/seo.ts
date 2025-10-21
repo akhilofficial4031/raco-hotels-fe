@@ -1,4 +1,5 @@
 import { DefaultSeoProps } from "next-seo";
+import { getImageUrl } from "./utils";
 
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com";
@@ -149,8 +150,6 @@ export const generateHotelSchema = (hotel: {
   longitude: number;
   images: Array<{ url: string; alt: string }>;
 }) => {
-  const baseUrl = process.env.NEXT_BUCKET_URL ?? "";
-
   return {
     "@context": "https://schema.org",
     "@type": "Hotel",
@@ -177,9 +176,7 @@ export const generateHotelSchema = (hotel: {
       latitude: hotel.latitude,
       longitude: hotel.longitude,
     },
-    image: hotel.images.map(
-      (img) => `${baseUrl}/${img.url.replace("r2://", "")}`
-    ),
+    image: hotel.images.map((img) => getImageUrl(img.url)),
     url: `${siteUrl}/hotels/${hotel.name.toLowerCase().replace(/\s+/g, "-")}`,
     priceRange: "$$$",
     "@id": `${siteUrl}/hotels/${hotel.name.toLowerCase().replace(/\s+/g, "-")}#hotel`,

@@ -1,0 +1,224 @@
+{
+  "topBanner": {
+    "isVisible": true,
+    "text": "Raco Unveils Luxury Retreat Offers 2025",
+    "linkText": "Best Offers",
+    "linkUrl": "#"
+  },
+  "hero": {
+    "tagline": "- Timeless Historical Elegance -",
+    "title": {
+      "highlight": "A Serene & Exclusive",
+      "subtitle": "Boutique Hotel"
+    },
+    "description": "In a world that moves too fast, we believe in the art of slow living. Natural textures, warm lighting, and thoughtful.",
+    "primaryButton": {
+      "text": "Quick Booking",
+      "action": "booking"
+    },
+    "image": {
+      "src": "/hero/hero1.png",
+      "alt": "Hotel Interior"
+    }
+  },
+  "aboutUs": {
+    "sectionTag": "ABOUT US",
+    "title": "We create experiences, not just stays. Our hospitality is defined by warmth and passion for elegance.",
+    "description": "In a world that moves too fast, we believe in the art of slow living. Natural textures, warm lighting, and thoughtful spaces create an atmosphere of comfort and timeless elegance.",
+    "badge": {
+      "src": "/best-choice.png",
+      "alt": "Best Choice"
+    },
+    "primaryButton": {
+      "text": "About Us",
+      "action": "about"
+    },
+    "image": {
+      "src": "/about1.png",
+      "alt": "Hotel Poolside"
+    }
+  },
+  "ourStays": {
+    "sectionTag": "OUR STAYS",
+    "title": "DISCOVER OUR CURATED COLLECTION OF EXQUISITE STAYS",
+    "description": "In a world that moves too fast, we believe in the art of slow living. Natural textures, warm lighting, and thoughtful spaces create an atmosphere of comfort and timeless elegance."
+  },
+  "featuredStays": {
+    "title": "RACO CYBER RESIDENCY",
+    "description": "In a world that moves too fast, we believe in the art of slow living. Natural.",
+    "primaryButton": {
+      "text": "View All",
+      "action": "view-hotels"
+    }
+  },
+  "signatureExperiences": {
+    "sectionTag": "SIGNATURE EXPERIENCES",
+    "title": "SIGNATURE EXPERIENCES",
+    "description": "In a world that moves too fast, we believe in the art of slow living. Natural textures, warm lighting, and thoughtful spaces create an atmosphere of comfort and timeless elegance.",
+    "club": {
+      "name": "CLUB 19",
+      "tagline": "CLUB-19",
+      "title": "MEMBERS-ONLY LOUNGE: ELEGANT AND PRIVATE",
+      "description": "In a world that moves too fast, we believe in the art of slow living. Natural textures, warm lighting, and thoughtful spaces create an atmosphere of comfort and timeless elegance.",
+      "buttons": [
+        {
+          "text": "Explore More",
+          "type": "primary",
+          "action": "explore-club"
+        },
+        {
+          "text": "Reserve now",
+          "type": "secondary",
+          "action": "reserve-club"
+        }
+      ]
+    },
+    "images": [
+      {
+        "src": "/experience1.png",
+        "alt": "Dining area"
+      },
+      {
+        "src": "/experience2.png",
+        "alt": "Bar area"
+      }
+    ],
+    "badge": {
+      "src": "/celebrate-your-moments.png",
+      "alt": "Celebrate your moments"
+    }
+  },
+  "gravityBar": {
+    "sectionTag": "GRAVITY BAR",
+    "title": "ROOFTOP VIBES: LIVE MUSIC, COCKTAILS",
+    "description": "In a world that moves too fast, we believe in the art of slow living. Natural textures, warm lighting, and thoughtful spaces create an atmosphere of comfort and timeless elegance.",
+    "name": "GRAVITY BAR",
+    "image": {
+      "src": "/gravitybar.png",
+      "alt": "Gravity Bar"
+    },
+    "buttons": [
+      {
+        "text": "Explore More",
+        "type": "primary",
+        "action": "explore-gravity"
+      },
+      {
+        "text": "Reserve now",
+        "type": "secondary",
+        "action": "reserve-gravity"
+      }
+    ],
+    "badge": {
+      "src": "/celebrate-your-moments.png",
+      "alt": "Celebrate your moments"
+    }
+  },
+  "restaurant": {
+    "name": "PRIYAM RESTAURANT",
+    "sectionTag": "PRIYAM RESTAURANT",
+    "title": "CULINARY ELEGANCE: KERALA CUISINE WITH GLOBAL FUSION",
+    "description": "In a world that moves too fast, we believe in the art of slow living. Natural textures, warm lighting, and thoughtful spaces create an atmosphere of comfort and timeless elegance.",
+    "buttons": [
+      {
+        "text": "Explore More",
+        "type": "primary",
+        "action": "explore-restaurant"
+      },
+      {
+        "text": "Reserve now",
+        "type": "secondary",
+        "action": "reserve-restaurant"
+      }
+    ],
+    "images": [
+      {
+        "src": "/experience1.png",
+        "alt": "Priyam Restaurant Interior 1"
+      },
+      {
+        "src": "/experience2.png",
+        "alt": "Priyam Restaurant Interior 2"
+      }
+    ],
+    "badge": {
+      "src": "/celebrate-your-moments.png",
+      "alt": "Celebrate your moments"
+    }
+  },
+  "testimonials": {
+    "sectionTag": "TESTIMONIALS",
+    "title": "MEMORABLE STAYS, SHARED EXPERIENCES",
+    "items": [
+      {
+        "name": "Rahul S",
+        "location": "Sri Lanka",
+        "avatar": "/avatar.jpg",
+        "testimonial": "Raco Hotel made my work trip effortless. The Wi-Fi was reliable, the meeting spaces were well-equipped, and the staff went out of their way to help. Truly professional service."
+      },
+      {
+        "name": "Priya & Family",
+        "location": "Italy",
+        "avatar": "/avatar.jpg",
+        "testimonial": "Our family loved Raco Hotel! The kids enjoyed the pool, while we relaxed at the spa. The breakfast spread had something for everyone. We'll be back soon."
+      },
+      {
+        "name": "Ananya & Rohit",
+        "location": "Delhi",
+        "avatar": "/avatar.jpg",
+        "testimonial": "From the moment we arrived at Raco Hotel, we felt pampered. The rooms were spacious, the service top-class, and the rooftop dining experience was unforgettable."
+      },
+      {
+        "name": "John Doe",
+        "location": "USA",
+        "avatar": "/avatar.jpg",
+        "testimonial": "A fantastic stay! The concierge was incredibly helpful in planning our city tour. The hotel's location is perfect for exploring. Highly recommended for a luxurious getaway."
+      },
+      {
+        "name": "Jane Smith",
+        "location": "UK",
+        "avatar": "/avatar.jpg",
+        "testimonial": "The attention to detail at Raco Hotel is exceptional. From the welcome drink to the turndown service, every aspect of our stay was perfect. A truly five-star experience."
+      }
+    ]
+  },
+  "gallery": {
+    "sectionTag": "GALLERY",
+    "title": "MOMENTS AT RACO",
+    "images": [
+      {
+        "src": "/experience1.png",
+        "alt": "Gallery image 1"
+      },
+      {
+        "src": "/about1.png",
+        "alt": "Gallery image 2"
+      },
+      {
+        "src": "/experience2.png",
+        "alt": "Gallery image 3"
+      },
+      {
+        "src": "/gravitybar.png",
+        "alt": "Gallery image 4"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Explore More",
+        "type": "primary",
+        "action": "explore-gallery"
+      },
+      {
+        "text": "Follow Us",
+        "type": "secondary",
+        "action": "follow-social"
+      }
+    ]
+  },
+  "seo": {
+    "title": "Welcome to Raco Hotels - Your Gateway to Luxury",
+    "description": "Discover exceptional hospitality with Raco Hotels. Premium accommodations, world-class service, and unforgettable experiences across our global hotel portfolio.",
+    "keywords": "Raco Hotels, luxury hotels, premium accommodations, hotel group, hospitality, travel, boutique hotel, Kerala cuisine, rooftop bar, signature experiences"
+  }
+}

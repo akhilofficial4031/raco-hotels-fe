@@ -1,9 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { TopBannerContent } from "@/types/landing-page";
 
-const TopBanner = () => {
-  const [isVisible, setIsVisible] = useState(true);
+interface TopBannerProps {
+  content: TopBannerContent;
+}
+
+const TopBanner = ({ content }: TopBannerProps) => {
+  const [isVisible, setIsVisible] = useState(content.isVisible);
 
   if (!isVisible) {
     return null;
@@ -13,9 +18,9 @@ const TopBanner = () => {
     <div className="bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 flex items-center justify-center text-center text-sm relative dm-sans">
       <div className="flex items-center space-x-2">
         <span className="text-xs">▶</span>
-        <span>Raco Unveils Luxury Retreat Offers 2025</span>
-        <a href="#" className="underline hover:text-gray-200 ml-2">
-          Best Offers
+        <span>{content.text}</span>
+        <a href={content.linkUrl} className="underline hover:text-gray-200 ml-2">
+          {content.linkText}
         </a>
       </div>
       <button
