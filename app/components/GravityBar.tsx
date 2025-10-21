@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
 
+import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import { GravityBarContent } from "@/types/landing-page";
 
 interface GravityBarProps {
@@ -19,23 +19,33 @@ const GravityBar = ({ content }: GravityBarProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20 px-8 mb-8">
           {/* Section Header */}
           <div className="text-right mb-12 items-end">
-            <p className="font-semibold tracking-wider uppercase mb-4 text-right">
-              <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-                {content.sectionTag}
-              </span>
-            </p>
-            <h2 className="text-4xl md:text-5xl font-normal text-primary leading-tight text-right">
-              {content.title}
-            </h2>
-            <div className="">
-              <p className="text-gray-600 dm-sans mt-6 text-right">
-                {content.description}
+            <AnimatedContainer animationName="fadeLeft" delay={0.1}>
+              <p className="font-semibold tracking-wider uppercase mb-4 text-right">
+                <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
+                  {content.sectionTag}
+                </span>
               </p>
+            </AnimatedContainer>
+            <AnimatedContainer animationName="fadeLeft" delay={0.2}>
+              <h2 className="text-4xl md:text-5xl font-normal text-primary leading-tight text-right">
+                {content.title}
+              </h2>
+            </AnimatedContainer>
+            <AnimatedContainer animationName="fadeLeft" delay={0.3}>
+              <div className="">
+                <p className="text-gray-600 dm-sans mt-6 text-right">
+                  {content.description}
+                </p>
+              </div>
+            </AnimatedContainer>
+          </div>
+          <AnimatedContainer animationName="fadeRight" delay={0.4}>
+            <div className="bg-gradient-to-r from-primary to-secondary h-70 w-full flex items-center justify-center">
+              <h3 className="text-white text-3xl font-semibold">
+                {content.name}
+              </h3>
             </div>
-          </div>
-          <div className="bg-gradient-to-r from-primary to-secondary h-auto w-full flex items-center justify-center">
-            <h3 className="text-white text-3xl font-semibold">{content.name}</h3>
-          </div>
+          </AnimatedContainer>
         </div>
 
         {/* Main Content */}
@@ -75,9 +85,9 @@ const GravityBar = ({ content }: GravityBarProps) => {
             <button
               key={index}
               className={`px-6 py-2 rounded-full font-semibold transition-all ${
-                button.type === 'primary'
-                  ? 'bg-primary text-white hover:opacity-90'
-                  : 'bg-transparent text-primary border border-primary hover:bg-primary hover:text-white'
+                button.type === "primary"
+                  ? "bg-primary text-white hover:opacity-90"
+                  : "bg-transparent text-primary border border-primary hover:bg-primary hover:text-white"
               }`}
             >
               {button.text}

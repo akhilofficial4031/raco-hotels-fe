@@ -1,5 +1,3 @@
-"use client";
-
 import { Image } from "antd";
 import { GalleryContent } from "@/types/landing-page";
 
@@ -39,9 +37,9 @@ const Gallery = ({ content }: GalleryProps) => {
             <button
               key={index}
               className={`px-6 py-2 rounded-full font-semibold transition-all ${
-                button.type === 'primary'
-                  ? 'bg-primary text-white hover:opacity-90'
-                  : 'bg-transparent text-primary border border-primary hover:bg-primary hover:text-white'
+                button.type === "primary"
+                  ? "bg-primary text-white hover:opacity-90"
+                  : "bg-transparent text-primary border border-primary hover:bg-primary hover:text-white"
               }`}
             >
               {button.text}

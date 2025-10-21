@@ -16,7 +16,13 @@ type AnimationVariant =
   | "slideLeft"
   | "slideRight"
   | "scaleUp"
-  | "scaleDown";
+  | "scaleDown"
+  | "rotateIn"
+  | "skewIn"
+  | "bounceIn"
+  | "flipInX"
+  | "flipInY"
+  | "zoomIn";
 
 interface TextAnimateProps extends MotionProps {
   /**
@@ -296,6 +302,108 @@ const defaultItemAnimationVariants: Record<
       exit: {
         scale: 1.5,
         opacity: 0,
+        transition: { duration: 0.3 },
+      },
+    },
+  },
+  rotateIn: {
+    container: defaultContainerVariants,
+    item: {
+      hidden: { opacity: 0, rotate: -90 },
+      show: {
+        opacity: 1,
+        rotate: 0,
+        transition: { duration: 0.3 },
+      },
+      exit: {
+        opacity: 0,
+        rotate: 90,
+        transition: { duration: 0.3 },
+      },
+    },
+  },
+  skewIn: {
+    container: defaultContainerVariants,
+    item: {
+      hidden: { opacity: 0, skewX: -90 },
+      show: {
+        opacity: 1,
+        skewX: 0,
+        transition: { duration: 0.3 },
+      },
+      exit: {
+        opacity: 0,
+        skewX: 90,
+        transition: { duration: 0.3 },
+      },
+    },
+  },
+  bounceIn: {
+    container: defaultContainerVariants,
+    item: {
+      hidden: { opacity: 0, y: 50 },
+      show: {
+        opacity: 1,
+        y: 0,
+        transition: {
+          y: {
+            type: "spring",
+            damping: 10,
+            stiffness: 100,
+          },
+        },
+      },
+      exit: {
+        opacity: 0,
+        y: -50,
+        transition: { duration: 0.3 },
+      },
+    },
+  },
+  flipInX: {
+    container: defaultContainerVariants,
+    item: {
+      hidden: { opacity: 0, rotateX: -90 },
+      show: {
+        opacity: 1,
+        rotateX: 0,
+        transition: { duration: 0.3 },
+      },
+      exit: {
+        opacity: 0,
+        rotateX: 90,
+        transition: { duration: 0.3 },
+      },
+    },
+  },
+  flipInY: {
+    container: defaultContainerVariants,
+    item: {
+      hidden: { opacity: 0, rotateY: -90 },
+      show: {
+        opacity: 1,
+        rotateY: 0,
+        transition: { duration: 0.3 },
+      },
+      exit: {
+        opacity: 0,
+        rotateY: 90,
+        transition: { duration: 0.3 },
+      },
+    },
+  },
+  zoomIn: {
+    container: defaultContainerVariants,
+    item: {
+      hidden: { opacity: 0, scale: 0.5 },
+      show: {
+        opacity: 1,
+        scale: 1,
+        transition: { duration: 0.3 },
+      },
+      exit: {
+        opacity: 0,
+        scale: 0.5,
         transition: { duration: 0.3 },
       },
     },
