@@ -1,0 +1,68 @@
+"use client";
+
+import React, { useState, useEffect, useCallback } from "react";
+import useEmblaCarousel, {
+  EmblaCarouselType,
+  EmblaOptionsType,
+} from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { HotelImage } from "@/types/hotel";
+import { getImageUrl } from "@/lib/utils";
+import "./HeroCarousel.css";
+import Fade from "embla-carousel-fade";
+
+type PropType = {
+  slides: HotelImage[];
+  options?: EmblaOptionsType;
+};
+
+const HeroCarousel: React.FC<PropType> = ({ slides, options }) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel(options, [
+    Autoplay({
+      playOnInit: true,
+      delay: 5000,
+      stopOnInteraction: false,
+    }),
+    Fade(),
+  ]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setActiveIndex(emblaApi.selectedScrollSnap());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect(emblaApi);
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
+
+  return (
+    <div className="hero-carousel ">
+      <div className="hero-carousel__viewport" ref={emblaRef}>
+        <div className="hero-carousel__container">
+          {slides.map((image, index) => (
+            <div
+              className={`hero-carousel__slide ${
+                index === activeIndex ? "hero-carousel__slide--active" : ""
+              }`}
+              key={index}
+            >
+              <div className="hero-carousel__slide__img_wrapper">
+                <img
+                  className="hero-carousel__slide__img"
+                  src={getImageUrl(image.url)}
+                  alt={image.alt || "Hotel image"}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HeroCarousel;

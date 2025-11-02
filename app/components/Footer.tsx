@@ -1,0 +1,176 @@
+import Image from "next/image";
+import Link from "next/link";
+
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
+  const ourPropertiesLinks = [
+    {
+      href: "/hotels/grand-palace-hotel",
+      label: "Grand Palace Hotel - Paris, France",
+    },
+    {
+      href: "/hotels/serenity-cove-resort",
+      label: "Serenity Cove Resort - Maldives",
+    },
+    {
+      href: "/hotels/mountain-lodge-aspen",
+      label: "Mountain Lodge - Aspen, USA",
+    },
+    { href: "/hotels/urban-oasis-tokyo", label: "Urban Oasis - Tokyo, Japan" },
+  ];
+
+  const quickLinks = [
+    { href: "/about", label: "About Us" },
+    { href: "/contact", label: "Contact Us" },
+    { href: "/offers", label: "Special Offers" },
+    { href: "/dining", label: "Dining" },
+    { href: "/experiences", label: "Experiences" },
+    { href: "/faq", label: "FAQ" },
+  ];
+
+  return (
+    <footer className="bg-gray-800 text-white dm-sans">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Column 1: Logo and About */}
+          <div className="flex flex-col items-start">
+            <Link href="/" className="mb-4">
+              <Image
+                src="/logo.png"
+                alt="Raco Hotels"
+                width={150}
+                height={50}
+              />
+            </Link>
+            <p className="text-gray-400 text-sm">
+              Discover and book exclusive luxury hotels around the world.
+              Experience unparalleled service and comfort with Raco Hotels.
+            </p>
+          </div>
+
+          {/* Column 2: Our Properties */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Our Properties</h3>
+            <ul className="space-y-2">
+              {ourPropertiesLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-400 hover:text-white transition-colors text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/hotels"
+                  className="text-white hover:text-gray-300 transition-colors text-sm font-semibold"
+                >
+                  View All Properties &rarr;
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              {quickLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-400 hover:text-white transition-colors text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Contact and Social */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
+            <p className="text-gray-400 text-sm mb-4">
+              123 Luxury Lane, Suite 500
+              <br />
+              New York, NY 10001, USA
+            </p>
+            <p className="text-gray-400 text-sm mb-4">
+              <a
+                href="mailto:contact@racohotels.com"
+                className="hover:text-white transition-colors"
+              >
+                contact@racohotels.com
+              </a>
+              <br />
+              <a
+                href="tel:+12125551234"
+                className="hover:text-white transition-colors"
+              >
+                +1 (212) 555-1234
+              </a>
+            </p>
+            <div className="flex space-x-4">
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <i
+                  className="fa fa-facebook-f"
+                  style={{ fontSize: "20px" }}
+                ></i>
+              </a>
+              <a
+                href="#"
+                aria-label="Twitter"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <i className="fa fa-twitter" style={{ fontSize: "20px" }}></i>
+              </a>
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <i className="fa fa-instagram" style={{ fontSize: "20px" }}></i>
+              </a>
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <i className="fa fa-linkedin" style={{ fontSize: "20px" }}></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
+          <p>&copy; {currentYear} Raco Hotels. All rights reserved.</p>
+          <div className="mt-4">
+            <Link
+              href="/privacy-policy"
+              className="hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <span className="mx-2">|</span>
+            <Link
+              href="/terms-of-service"
+              className="hover:text-white transition-colors"
+            >
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

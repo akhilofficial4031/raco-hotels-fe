@@ -1,45 +1,51 @@
 "use client";
-
-import React, { useState } from "react";
-import { DatePicker, Select, Button } from "antd";
+import React from "react";
+import { DatePicker, InputNumber, Button } from "antd";
 import dayjs from "dayjs";
 
-const { Option } = Select;
+const { RangePicker } = DatePicker;
 
-const CheckAvailability = () => {
-  const [checkIn, setCheckIn] = useState<dayjs.Dayjs | null>(
-    dayjs().add(1, "day")
-  );
-  const [checkOut, setCheckOut] = useState<dayjs.Dayjs | null>(
-    dayjs().add(2, "day")
-  );
-  const [rooms, setRooms] = useState(1);
-  const [guests, setGuests] = useState("1 Adult, 0 Children");
+interface CheckAvailabilityProps {
+  dates: [dayjs.Dayjs | null, dayjs.Dayjs | null];
+  onDatesChange: (dates: [dayjs.Dayjs | null, dayjs.Dayjs | null]) => void;
+  rooms: number;
+  onRoomsChange: (rooms: number) => void;
+  adults: number;
+  onAdultsChange: (adults: number) => void;
+  children: number;
+  onChildrenChange: (children: number) => void;
+  onCheck: () => void;
+  loading: boolean;
+}
 
-  const handleCheckInChange = (date: dayjs.Dayjs | null) => {
-    setCheckIn(date);
-    if (date && checkOut && date.isAfter(checkOut)) {
-      setCheckOut(date.add(1, "day"));
-    }
-  };
-
-  const disabledCheckOutDate = (current: dayjs.Dayjs) => {
-    return current && checkIn ? current.isBefore(checkIn, "day") : false;
-  };
-
+const CheckAvailability: React.FC<CheckAvailabilityProps> = ({
+  dates,
+  onDatesChange,
+  rooms,
+  onRoomsChange,
+  adults,
+  onAdultsChange,
+  children = 0,
+  onChildrenChange,
+  onCheck,
+  loading,
+}) => {
   return (
     <div
-      className="bg-slate-800 text-white p-6 shadow-lg -mt-16 absolute -bottom-15 left-0 right-0 z-30"
+      className="bg-white/10 backdrop-blur-md border border-white/20 text-white p-6 shadow-2xl -mt-16 absolute -bottom-15 left-0 right-0 z-30 rounded-lg"
       style={{ maxWidth: "1200px", margin: "0 auto" }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
-        <div className="flex flex-col">
-          <label className="text-sm font-light text-gray-300 mb-1">
-            Check In
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+        <div className="flex flex-col col-span-2">
+          <label className="text-sm font-light text-white/80 mb-1">
+            Check In - Check Out
           </label>
-          <DatePicker
-            value={checkIn}
-            onChange={handleCheckInChange}
+          <RangePicker
+            value={dates}
+            size="large"
+            onChange={(d) =>
+              onDatesChange(d as [dayjs.Dayjs | null, dayjs.Dayjs | null])
+            }
             disabledDate={(current) =>
               current && current < dayjs().startOf("day")
             }
@@ -47,48 +53,51 @@ const CheckAvailability = () => {
           />
         </div>
         <div className="flex flex-col">
-          <label className="text-sm font-light text-gray-300 mb-1">
-            Check Out
-          </label>
-          <DatePicker
-            value={checkOut}
-            onChange={(date) => setCheckOut(date)}
-            disabledDate={disabledCheckOutDate}
-            className="w-full"
+          <label className="text-sm font-light text-white/80 mb-1">Rooms</label>
+          <InputNumber
+            min={1}
+            max={20}
+            value={rooms}
+            onChange={(value) => onRoomsChange(value ?? 1)}
+            className="!w-full"
+            size="large"
           />
         </div>
         <div className="flex flex-col">
-          <label className="text-sm font-light text-gray-300 mb-1">Rooms</label>
-          <Select
-            value={rooms}
-            onChange={(value) => setRooms(value)}
-            className="w-full"
-          >
-            <Option value={1}>1 Room</Option>
-            <Option value={2}>2 Rooms</Option>
-            <Option value={3}>3 Rooms</Option>
-          </Select>
+          <label className="text-sm font-light text-white/80 mb-1">
+            Adults
+          </label>
+          <InputNumber
+            min={1}
+            max={20}
+            value={adults}
+            onChange={(value) => onAdultsChange(value ?? 1)}
+            className="!w-full"
+            size="large"
+          />
         </div>
         <div className="flex flex-col">
-          <label className="text-sm font-light text-gray-300 mb-1">
-            Guests
+          <label className="text-sm font-light text-white/80 mb-1">
+            Children
           </label>
-          <Select
-            value={guests}
-            onChange={(value) => setGuests(value)}
-            className="w-full"
-          >
-            <Option value="1 Adult, 0 Children">1 Adult, 0 Children</Option>
-            <Option value="2 Adults, 0 Children">2 Adults, 0 Children</Option>
-            <Option value="2 Adults, 1 Child">2 Adults, 1 Child</Option>
-          </Select>
+          <InputNumber
+            min={0}
+            max={20}
+            value={children}
+            onChange={(value) => onChildrenChange(value ?? 1)}
+            className="!w-full"
+            size="large"
+          />
         </div>
         <Button
           type="primary"
           size="large"
-          className="w-full bg-[#C3A177] hover:bg-[#b39267] border-none text-white h-full mt-5"
+          onClick={onCheck}
+          loading={loading}
+          disabled={!dates[0] || !dates[1] || loading}
+          className="w-full !bg-primary !text-white hover:!opacity-90 border-none h-full mt-5 rounded-full font-semibold transition-opacity"
         >
-          Check Availability
+          {loading ? "Checking..." : "Check Availability"}
         </Button>
       </div>
     </div>

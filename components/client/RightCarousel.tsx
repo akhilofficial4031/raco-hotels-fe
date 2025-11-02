@@ -11,6 +11,7 @@ import Link from "next/link";
 import "../embla-carousel/embla.css";
 import {
   NextButton,
+  PrevButton,
   usePrevNextButtons,
 } from "../embla-carousel/EmblaCarouselArrowButtons";
 
@@ -35,10 +36,18 @@ const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
     // Autoplay(),
   ]);
 
-  const { onNextButtonClick } = usePrevNextButtons(emblaApi);
+  const {
+    prevBtnDisabled,
+    nextBtnDisabled,
+    onPrevButtonClick,
+    onNextButtonClick,
+  } = usePrevNextButtons(emblaApi);
 
   return (
-    <div className="embla overflow-hidden relative" ref={emblaRef}>
+    <div
+      className="embla overflow-hidden relative featured-stays-carousel"
+      ref={emblaRef}
+    >
       <div className="embla__container flex">
         {hotels.map((hotel) => (
           <div
@@ -47,7 +56,7 @@ const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
           >
             <div className="bg-white rounded-lg overflow-hidden w-full">
               <Link href={`/hotels/${hotel.slug}`}>
-                <div className="relative h-56">
+                <div className="relative h-80">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     className="absolute inset-0 w-full h-full object-cover"
@@ -101,8 +110,11 @@ const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
           </div>
         ))}
       </div>
-      <div className="absolute top-1/2 -translate-y-1/2 right-0 z-10">
-        <NextButton onClick={onNextButtonClick} />
+      <div className="absolute top-1/2 -translate-y-1/2 left-4 z-10">
+        <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+      </div>
+      <div className="absolute top-1/2 -translate-y-1/2 right-4 z-10">
+        <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
       </div>
     </div>
   );

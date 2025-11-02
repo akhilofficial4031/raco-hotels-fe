@@ -1,5 +1,11 @@
 import { ApiResponse } from "@/types/api";
-import { HotelDetailsResponse, HotelResponse } from "@/types/hotel";
+import {
+  AvailabilityApiResponse,
+  HotelDetailsResponse,
+  HotelResponse,
+  RoomType,
+  RoomTypesApiResponse,
+} from "@/types/hotel";
 import { getFetcher } from "./fetcher";
 
 /**
@@ -38,6 +44,17 @@ export async function getHotelBySlug(
   return getFetcher<ApiResponse<HotelDetailsResponse>>(
     `/api/hotels/slug/${slug}`
   );
+}
+
+/**
+ * Fetch a specific hotel by ID
+ * @param id - Hotel ID
+ * @returns Promise<ApiResponse<HotelDetailsResponse>>
+ * */
+export async function getHotelById(
+  id: number
+): Promise<ApiResponse<HotelDetailsResponse>> {
+  return getFetcher<ApiResponse<HotelDetailsResponse>>(`/api/hotels/${id}`);
 }
 
 /**
@@ -87,5 +104,84 @@ export async function getActiveHotels() {
     console.error("Error fetching active hotels:", error);
     // Return empty array as fallback
     return [];
+  }
+}
+
+/**
+ * Fetch all room types for a specific hotel by ID
+ * @param hotelId - The ID of the hotel
+ * @returns Promise<RoomTypesApiResponse>
+ */
+export async function getHotelRoomTypes(
+  hotelId: number
+): Promise<RoomTypesApiResponse> {
+  return getFetcher<RoomTypesApiResponse>(`/api/room-types/hotel/${hotelId}`);
+}
+
+/**
+ * Fetch a specific room type by ID
+ * @param id - Room Type ID
+ * @returns Promise<ApiResponse<{ roomType: RoomType }>>
+ * */
+export async function getRoomTypeById(
+  id: number
+): Promise<ApiResponse<{ roomType: RoomType }>> {
+  return getFetcher<ApiResponse<{ roomType: RoomType }>>(
+    `/api/room-types/${id}`
+  );
+}
+
+/**
+ * Check room availability for a specific room type and date range
+ * @param hotelId - Hotel ID
+ * @param roomTypeId - Room Type ID
+ * @param checkInDate - Check-in date in YYYY-MM-DD format
+ * @param checkOutDate - Check-out date in YYYY-MM-DD format
+ * @returns Promise<AvailabilityApiResponse>
+ */
+export async function checkRoomAvailability(
+  hotelId: number,
+  roomTypeId: number,
+  checkInDate: string,
+  checkOutDate: string
+): Promise<AvailabilityApiResponse> {
+  const params = new URLSearchParams({
+    hotelId: hotelId.toString(),
+    roomTypeId: roomTypeId.toString(),
+    checkInDate,
+    checkOutDate,
+  });
+
+  return getFetcher<AvailabilityApiResponse>(
+    `/api/availability?${params.toString()}`
+  );
+}
+
+/**
+ * Fetches available room types for a given hotel and date range.
+ * @param hotelId - The ID of the hotel.
+ * @param checkInDate - The check-in date in 'YYYY-MM-DD' format.
+ * @param checkOutDate - The check-out date in 'YYYY-MM-DD' format.
+ * @returns A promise that resolves to the availability API response.
+ */
+export async function getAvailableRoomTypes(
+  hotelId: number,
+  checkInDate: string,
+  checkOutDate: string
+): Promise<AvailabilityApiResponse> {
+  const params = new URLSearchParams({
+    hotelId: hotelId.toString(),
+    checkInDate,
+    checkOutDate,
+  });
+  const endpoint = `/api/availability?${params.toString()}`;
+  try {
+    // Re-use the generic getFetcher for consistency
+    const response = await getFetcher<AvailabilityApiResponse>(endpoint);
+    return response;
+  } catch (error) {
+    // console.error("Error fetching available room types:", error);
+    // Re-throw the error to be handled by the calling component
+    throw new Error("Failed to fetch available room types");
   }
 }

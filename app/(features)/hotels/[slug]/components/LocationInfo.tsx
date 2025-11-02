@@ -7,8 +7,8 @@ interface Props {
 const LocationInfo = ({ locationInfo }: Props) => {
   const _baseUrl = process.env.NEXT_PUBLIC_BUCKET_URL;
   return (
-    <div className="py-24">
-      <h2 className="text-4xl font-serif text-purple-900 mb-16 text-center">
+    <div className="py-24 px-4">
+      <h2 className="text-4xl font-serif text-primary mb-16 text-center">
         Discover the Area
       </h2>
       <div className="space-y-24">
@@ -20,10 +20,10 @@ const LocationInfo = ({ locationInfo }: Props) => {
             }`}
           >
             <div className="md:w-1/2">
-              <h3 className="text-3xl font-serif text-purple-800">
+              <h3 className="text-3xl font-serif text-primary capitalize">
                 {info.heading}
               </h3>
-              <p className="text-lg text-gray-500 my-4 font-sans">
+              <p className="text-lg text-gray-500 my-4 font-sans capitalize">
                 {info.subHeading}
               </p>
               <p className="text-gray-700 leading-relaxed font-sans">

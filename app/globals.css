@@ -16,7 +16,121 @@ body {
   --color-primary: #640d5f;
   --color-secondary: #ffb200;
   --color-background-light: #fdf5ff;
+  --color-background-medium: #ede1f0;
   --color-pink-bg: #feeffd;
   --font-cinzel: "Cinzel", serif;
   --font-dm-sans: "DM Sans", sans-serif;
+}
+
+.embla-room {
+  position: relative;
+  height: 100%;
+}
+.embla-room__viewport {
+  overflow: hidden;
+  height: 100%;
+}
+.embla-room__container {
+  display: flex;
+  height: 100%;
+}
+.embla-room__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+}
+.embla-room__slide__img {
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.embla-room__dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+.embla-room__dot {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid var(--color-primary);
+  cursor: pointer;
+}
+.embla-room__dot--selected {
+  background-color: var(--color-primary);
+}
+
+.embla-room__button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 1;
+}
+
+.embla-room__button:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.embla-room__button--prev {
+  left: 1rem;
+}
+
+.embla-room__button--next {
+  right: 1rem;
+}
+
+.embla-room__button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.embla-room__button__svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.fullscreen-carousel.embla-room {
+  height: 100%;
+  width: 100%;
+}
+
+.fullscreen-carousel .embla-room__viewport {
+  height: 100%;
+}
+
+.fullscreen-carousel .embla-room__slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen-carousel .embla-room__slide__img {
+  width: auto;
+  height: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.embla__slide:not(.is-snapped) {
+  opacity: 0.16;
+}
+.featured-stays-carousel .embla__slide:not(.is-snapped) {
+  opacity: 0.5;
 }

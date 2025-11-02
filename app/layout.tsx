@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import "../font-awesome-4.7.0/css/font-awesome.css";
+import Footer from "./components/Footer";
 import SmoothScroll from "./components/SmoothScroll";
 import "./globals.css";
 
@@ -99,6 +100,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SmoothScroll>{children}</SmoothScroll>
+        <Footer />
       </body>
     </html>
   );
