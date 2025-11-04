@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import "../font-awesome-4.7.0/css/font-awesome.css";
 import Footer from "./components/Footer";
+import HeaderWrapper from "./components/HeaderWrapper";
 import SmoothScroll from "./components/SmoothScroll";
+import { getHotelsForNavigation } from "@/lib/hotels";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -72,11 +74,14 @@ export const viewport = {
   themeColor: "#8B5CF6",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch hotels data once for both Header and Footer
+  const hotels = await getHotelsForNavigation();
+
   return (
     <html lang="en" dir="ltr">
       <Head>
@@ -109,10 +114,11 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+        <HeaderWrapper hotels={hotels} />
         <SmoothScroll>
           <div id="main-content">{children}</div>
         </SmoothScroll>
-        <Footer />
+        <Footer hotels={hotels} />
       </body>
     </html>
   );

@@ -10,7 +10,6 @@ import AboutUs from "./components/AboutUs";
 import FeaturedStays from "./components/FeaturedStays";
 import Gallery from "./components/Gallery";
 import GravityBar from "./components/GravityBar";
-import HeaderWrapper from "./components/HeaderWrapper";
 import Hero from "./components/Hero";
 import OurStays from "./components/OurStays";
 import Restaurant from "./components/Restaurant";
@@ -56,7 +55,6 @@ export default async function Home() {
         }}
       />
       <TopBanner content={content.topBanner} />
-      <HeaderWrapper />
       <main id="main-content" role="main">
         <Hero content={content.hero} />
         <AboutUs content={content.aboutUs} />

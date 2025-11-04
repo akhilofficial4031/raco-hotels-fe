@@ -1,24 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
+import { HotelNavItem } from "@/types/hotel";
 
-const Footer = () => {
+interface FooterProps {
+  hotels: HotelNavItem[];
+}
+
+const Footer = ({ hotels }: FooterProps) => {
   const currentYear = new Date().getFullYear();
 
-  const ourPropertiesLinks = [
-    {
-      href: "/hotels/grand-palace-hotel",
-      label: "Grand Palace Hotel - Paris, France",
-    },
-    {
-      href: "/hotels/serenity-cove-resort",
-      label: "Serenity Cove Resort - Maldives",
-    },
-    {
-      href: "/hotels/mountain-lodge-aspen",
-      label: "Mountain Lodge - Aspen, USA",
-    },
-    { href: "/hotels/urban-oasis-tokyo", label: "Urban Oasis - Tokyo, Japan" },
-  ];
+  // Generate hotel links from API data
+  const ourPropertiesLinks = hotels.map((hotel) => ({
+    href: `/hotels/${hotel.slug}`,
+    label: `${hotel.name} - ${hotel.city}, ${hotel.state}`,
+  }));
 
   const quickLinks = [
     { href: "/about", label: "About Us" },
