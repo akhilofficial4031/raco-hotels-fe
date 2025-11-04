@@ -30,15 +30,15 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-800 text-white dm-sans">
+    <footer className="bg-gray-800 text-white dm-sans" role="contentinfo">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: Logo and About */}
           <div className="flex flex-col items-start">
-            <Link href="/" className="mb-4">
+            <Link href="/" className="mb-4" aria-label="Raco Hotels Home">
               <Image
                 src="/logo.png"
-                alt="Raco Hotels"
+                alt="Raco Hotels Logo"
                 width={150}
                 height={50}
               />
@@ -50,14 +50,16 @@ const Footer = () => {
           </div>
 
           {/* Column 2: Our Properties */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Our Properties</h3>
+          <nav aria-labelledby="properties-heading">
+            <h3 id="properties-heading" className="text-lg font-semibold mb-4">
+              Our Properties
+            </h3>
             <ul className="space-y-2">
               {ourPropertiesLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
+                    className="text-gray-400 hover:text-white transition-colors text-sm capitalize"
                   >
                     {link.label}
                   </Link>
@@ -72,11 +74,13 @@ const Footer = () => {
                 </Link>
               </li>
             </ul>
-          </div>
+          </nav>
 
           {/* Column 3: Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+          <nav aria-labelledby="quick-links-heading">
+            <h3 id="quick-links-heading" className="text-lg font-semibold mb-4">
+              Quick Links
+            </h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.label}>
@@ -89,7 +93,7 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Column 4: Contact and Social */}
           <div>
@@ -114,59 +118,93 @@ const Footer = () => {
                 +1 (212) 555-1234
               </a>
             </p>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                aria-label="Facebook"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <i
-                  className="fa fa-facebook-f"
-                  style={{ fontSize: "20px" }}
-                ></i>
-              </a>
-              <a
-                href="#"
-                aria-label="Twitter"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <i className="fa fa-twitter" style={{ fontSize: "20px" }}></i>
-              </a>
-              <a
-                href="#"
-                aria-label="Instagram"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <i className="fa fa-instagram" style={{ fontSize: "20px" }}></i>
-              </a>
-              <a
-                href="#"
-                aria-label="LinkedIn"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <i className="fa fa-linkedin" style={{ fontSize: "20px" }}></i>
-              </a>
-            </div>
+            <nav aria-label="Social media links">
+              <div className="flex space-x-4">
+                <a
+                  href="https://facebook.com/racohotels"
+                  aria-label="Follow us on Facebook"
+                  className="text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-800 rounded"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i
+                    className="fa fa-facebook-f"
+                    style={{ fontSize: "20px" }}
+                    aria-hidden="true"
+                  />
+                </a>
+                <a
+                  href="https://twitter.com/racohotels"
+                  aria-label="Follow us on Twitter"
+                  className="text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-800 rounded"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i
+                    className="fa fa-twitter"
+                    style={{ fontSize: "20px" }}
+                    aria-hidden="true"
+                  />
+                </a>
+                <a
+                  href="https://instagram.com/racohotels"
+                  aria-label="Follow us on Instagram"
+                  className="text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-800 rounded"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i
+                    className="fa fa-instagram"
+                    style={{ fontSize: "20px" }}
+                    aria-hidden="true"
+                  />
+                </a>
+                <a
+                  href="https://linkedin.com/company/racohotels"
+                  aria-label="Follow us on LinkedIn"
+                  className="text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-800 rounded"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i
+                    className="fa fa-linkedin"
+                    style={{ fontSize: "20px" }}
+                    aria-hidden="true"
+                  />
+                </a>
+              </div>
+            </nav>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
           <p>&copy; {currentYear} Raco Hotels. All rights reserved.</p>
-          <div className="mt-4">
+          <nav aria-label="Legal links" className="mt-4">
             <Link
               href="/privacy-policy"
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-800 rounded px-2 py-1"
             >
               Privacy Policy
             </Link>
-            <span className="mx-2">|</span>
+            <span className="mx-2" aria-hidden="true">
+              |
+            </span>
             <Link
               href="/terms-of-service"
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-800 rounded px-2 py-1"
             >
               Terms of Service
             </Link>
-          </div>
+            <span className="mx-2" aria-hidden="true">
+              |
+            </span>
+            <Link
+              href="/accessibility"
+              className="hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-800 rounded px-2 py-1"
+            >
+              Accessibility
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

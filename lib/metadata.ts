@@ -8,6 +8,7 @@ const BASE_METADATA = {
   locale: "en_US",
   twitterCard: "summary_large_image" as const,
   twitterCreator: "@racohotels",
+  twitterSite: "@racohotels",
 } as const;
 
 // Type definitions for metadata generation
@@ -82,6 +83,7 @@ const createTwitterMetadata = (params: BaseMetadataParams) => ({
   title: params.title,
   description: params.description,
   creator: BASE_METADATA.twitterCreator,
+  site: BASE_METADATA.twitterSite,
   images: params.images?.map((img) => img.url) ?? [],
 });
 

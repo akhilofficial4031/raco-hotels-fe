@@ -1,0 +1,30 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://raco-hotels.com
+
+# Sitemaps
+Sitemap: https://raco-hotels.com/sitemap.xml
+Sitemap: https://raco-hotels.com/server-sitemap.xml
+
+# Disallow paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /private/
+
+# Crawl delay
+Crawl-delay: 0
+
+# Googlebot specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bingbot specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+

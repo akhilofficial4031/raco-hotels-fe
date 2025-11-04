@@ -9,12 +9,12 @@ interface HeroProps {
 
 const Hero = ({ content }: HeroProps) => {
   return (
-    <section className="bg-background-light">
+    <section className="bg-background-light" aria-label="Hero section">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="text-center md:text-left py-12 md:py-24">
             <AnimatedContainer animationName="fadeUp" delay={0.1}>
-              <p className="text-lg font-dm-sans uppercase tracking-widest text-primary">
+              <p className="text-lg font-dm-sans uppercase tracking-widest text-primary" role="doc-subtitle">
                 {content.tagline}
               </p>
             </AnimatedContainer>
@@ -38,7 +38,10 @@ const Hero = ({ content }: HeroProps) => {
             </TextAnimate>
             <AnimatedContainer animationName="fadeUp" delay={0.4}>
               <div className="mt-8">
-                <button className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold">
+                <button 
+                  className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  aria-label={content.primaryButton.text}
+                >
                   {content.primaryButton.text}
                 </button>
               </div>
@@ -52,6 +55,7 @@ const Hero = ({ content }: HeroProps) => {
               width={500}
               height={500}
               className="w-full h-full object-cover"
+              priority
             />
           </div>
         </div>

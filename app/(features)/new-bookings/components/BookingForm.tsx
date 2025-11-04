@@ -1,18 +1,8 @@
 "use client";
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Checkbox, Col, DatePicker, Form, Input, Row, Select } from "antd";
+import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
-import {
-  Input,
-  Button,
-  DatePicker,
-  Select,
-  Checkbox,
-  Form,
-  Row,
-  Col,
-} from "antd";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -59,23 +49,48 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md dm-sans">
-      <h2 className="text-2xl font-serif text-primary mb-6">
+    <section
+      className="bg-white p-6 rounded-lg shadow-md dm-sans"
+      aria-labelledby="guest-info-heading"
+    >
+      <h2
+        id="guest-info-heading"
+        className="text-2xl font-serif text-primary mb-6"
+      >
         Guest Information
       </h2>
-      <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
+      <Form
+        onFinish={handleSubmit(onSubmit)}
+        layout="vertical"
+        aria-label="Guest information form"
+      >
         <Row gutter={24}>
           <Col xs={24} md={12}>
             <Form.Item
               label="Full Name"
               validateStatus={errors.fullName ? "error" : ""}
               help={errors.fullName?.message}
+              required
             >
               <Controller
                 name="fullName"
                 control={control}
-                render={({ field }) => <Input {...field} />}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    aria-required="true"
+                    aria-invalid={!!errors.fullName}
+                    aria-describedby={
+                      errors.fullName ? "fullName-error" : undefined
+                    }
+                  />
+                )}
               />
+              {errors.fullName ? (
+                <span id="fullName-error" className="sr-only">
+                  {errors.fullName.message}
+                </span>
+              ) : null}
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
@@ -83,12 +98,26 @@ const BookingForm = () => {
               label="Email"
               validateStatus={errors.email ? "error" : ""}
               help={errors.email?.message}
+              required
             >
               <Controller
                 name="email"
                 control={control}
-                render={({ field }) => <Input {...field} type="email" />}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="email"
+                    aria-required="true"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? "email-error" : undefined}
+                  />
+                )}
               />
+              {errors.email ? (
+                <span id="email-error" className="sr-only">
+                  {errors.email.message}
+                </span>
+              ) : null}
             </Form.Item>
           </Col>
           {/* ... Add other form fields in a similar way ... */}
@@ -101,12 +130,26 @@ const BookingForm = () => {
               label="Phone Number"
               validateStatus={errors.phone ? "error" : ""}
               help={errors.phone?.message}
+              required
             >
               <Controller
                 name="phone"
                 control={control}
-                render={({ field }) => <Input {...field} />}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="tel"
+                    aria-required="true"
+                    aria-invalid={!!errors.phone}
+                    aria-describedby={errors.phone ? "phone-error" : undefined}
+                  />
+                )}
               />
+              {errors.phone ? (
+                <span id="phone-error" className="sr-only">
+                  {errors.phone.message}
+                </span>
+              ) : null}
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
@@ -115,7 +158,11 @@ const BookingForm = () => {
                 name="dateOfBirth"
                 control={control}
                 render={({ field }) => (
-                  <DatePicker {...field} style={{ width: "100%" }} />
+                  <DatePicker
+                    {...field}
+                    style={{ width: "100%" }}
+                    aria-label="Select your date of birth"
+                  />
                 )}
               />
             </Form.Item>
@@ -126,7 +173,13 @@ const BookingForm = () => {
           <Controller
             name="specialRequests"
             control={control}
-            render={({ field }) => <TextArea {...field} rows={4} />}
+            render={({ field }) => (
+              <TextArea
+                {...field}
+                rows={4}
+                aria-label="Enter any special requests for your stay"
+              />
+            )}
           />
         </Form.Item>
 
@@ -135,17 +188,22 @@ const BookingForm = () => {
             name="marketingOptIn"
             control={control}
             render={({ field }) => (
-              <Checkbox {...field}>Sign up for marketing emails</Checkbox>
+              <Checkbox
+                {...field}
+                aria-label="Opt in to receive marketing emails"
+              >
+                Sign up for marketing emails
+              </Checkbox>
             )}
           />
         </Form.Item>
 
         {/* The submit button is in the PaymentDetails component, but if it were here, it would look like this: */}
-        {/* <Button type="primary" htmlType="submit" size="large" className="w-full !bg-primary">
+        {/* <Button type="primary" htmlType="submit" size="large" className="w-full !bg-primary" aria-label="Submit booking information">
           Submit Booking
         </Button> */}
       </Form>
-    </div>
+    </section>
   );
 };
 

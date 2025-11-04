@@ -197,3 +197,422 @@ export const generateBreadcrumbSchema = (
     })),
   };
 };
+
+// Organization structured data
+export const generateOrganizationSchema = () => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Raco Hotels",
+    url: siteUrl,
+    logo: `${siteUrl}/logo.png`,
+    description:
+      "Discover amazing hotels in premium locations worldwide. Book your perfect stay with Raco Hotels - luxury accommodations, exclusive deals, and exceptional service.",
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+1-212-555-1234",
+      contactType: "customer service",
+      email: "contact@racohotels.com",
+      areaServed: "Worldwide",
+      availableLanguage: ["English"],
+    },
+    sameAs: [
+      "https://facebook.com/racohotels",
+      "https://twitter.com/racohotels",
+      "https://instagram.com/racohotels",
+      "https://linkedin.com/company/racohotels",
+    ],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "123 Luxury Lane, Suite 500",
+      addressLocality: "New York",
+      addressRegion: "NY",
+      postalCode: "10001",
+      addressCountry: "US",
+    },
+  };
+};
+
+// Website structured data
+export const generateWebsiteSchema = () => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Raco Hotels",
+    url: siteUrl,
+    description:
+      "Discover amazing hotels in premium locations worldwide. Book your perfect stay with Raco Hotels.",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/hotels?search={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+};
+
+// Local Business schema for individual hotels
+export const generateLocalBusinessSchema = (hotel: {
+  name: string;
+  description: string;
+  addressLine1: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  countryCode: string;
+  phone: string;
+  email: string;
+  starRating: number;
+  latitude: number;
+  longitude: number;
+  images: Array<{ url: string; alt: string }>;
+  priceRange?: string;
+}) => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LodgingBusiness",
+    name: hotel.name,
+    description: hotel.description,
+    image: hotel.images.map((img) => getImageUrl(img.url)),
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: hotel.addressLine1,
+      addressLocality: hotel.city,
+      addressRegion: hotel.state,
+      postalCode: hotel.postalCode,
+      addressCountry: hotel.countryCode,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: hotel.latitude,
+      longitude: hotel.longitude,
+    },
+    telephone: hotel.phone,
+    email: hotel.email,
+    starRating: {
+      "@type": "Rating",
+      ratingValue: hotel.starRating,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    priceRange: hotel.priceRange ?? "$$$",
+    url: `${siteUrl}/hotels/${hotel.name.toLowerCase().replace(/\s+/g, "-")}`,
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: "Free WiFi" },
+      { "@type": "LocationFeatureSpecification", name: "Parking" },
+      { "@type": "LocationFeatureSpecification", name: "Restaurant" },
+    ],
+  };
+};
+
+// FAQ Schema
+export const generateFAQSchema = (
+  faqs: Array<{ question: string; answer: string }>
+) => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+};
+
+// ItemList Schema for Hotels Listing Page - Enables rich results with carousel
+export const generateHotelsListSchema = (
+  hotels: Array<{
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    city: string;
+    state: string;
+    countryCode: string;
+    images: Array<{ url: string; alt: string }>;
+    starRating: number;
+  }>
+) => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: hotels.map((hotel, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Hotel",
+        "@id": `${siteUrl}/hotels/${hotel.slug}#hotel`,
+        name: hotel.name,
+        description: hotel.description,
+        url: `${siteUrl}/hotels/${hotel.slug}`,
+        image:
+          hotel.images.length > 0
+            ? getImageUrl(hotel.images[0].url)
+            : `${siteUrl}/logo.png`,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: hotel.city,
+          addressRegion: hotel.state,
+          addressCountry: hotel.countryCode,
+        },
+        starRating: {
+          "@type": "Rating",
+          ratingValue: hotel.starRating,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      },
+    })),
+  };
+};
+
+// CollectionPage Schema for Hotels Listing
+export const generateCollectionPageSchema = () => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Hotels - Browse Our Premium Collection",
+    description:
+      "Explore our curated collection of luxury hotels worldwide. Find the perfect accommodation for your next business trip or vacation with Raco Hotels.",
+    url: `${siteUrl}/hotels`,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Raco Hotels",
+      url: siteUrl,
+    },
+  };
+};
+
+// Enhanced Hotel Schema with Room Offers
+export const generateEnhancedHotelSchema = (
+  hotel: {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    addressLine1: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    countryCode: string;
+    phone: string;
+    email: string;
+    starRating: number;
+    latitude: number;
+    longitude: number;
+    checkInTime: string;
+    checkOutTime: string;
+    images: Array<{ url: string; alt: string }>;
+    amenities?: Array<{ name: string; icon: string }>;
+    features?: Array<{ name: string; description: string }>;
+  },
+  roomTypes?: Array<{
+    id: number;
+    name: string;
+    description: string;
+    basePriceCents: number;
+    currencyCode: string;
+    baseOccupancy: number;
+    maxOccupancy: number;
+    sizeSqft: number;
+    bedType: string;
+  }>
+) => {
+  const baseSchema = {
+    "@context": "https://schema.org",
+    "@type": "LodgingBusiness",
+    "@id": `${siteUrl}/hotels/${hotel.slug}#lodging`,
+    name: hotel.name,
+    description: hotel.description,
+    url: `${siteUrl}/hotels/${hotel.slug}`,
+    image: hotel.images.map((img) => getImageUrl(img.url)),
+    telephone: hotel.phone,
+    email: hotel.email,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: hotel.addressLine1,
+      addressLocality: hotel.city,
+      addressRegion: hotel.state,
+      postalCode: hotel.postalCode,
+      addressCountry: hotel.countryCode,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: hotel.latitude,
+      longitude: hotel.longitude,
+    },
+    starRating: {
+      "@type": "Rating",
+      ratingValue: hotel.starRating,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    checkinTime: hotel.checkInTime,
+    checkoutTime: hotel.checkOutTime,
+    amenityFeature: hotel.amenities?.map((amenity) => ({
+      "@type": "LocationFeatureSpecification",
+      name: amenity.name,
+      value: true,
+    })) ?? [
+      {
+        "@type": "LocationFeatureSpecification",
+        name: "Free WiFi",
+        value: true,
+      },
+      { "@type": "LocationFeatureSpecification", name: "Parking", value: true },
+      {
+        "@type": "LocationFeatureSpecification",
+        name: "Restaurant",
+        value: true,
+      },
+    ],
+    potentialAction: {
+      "@type": "ReserveAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/hotels/${hotel.slug}`,
+        actionPlatform: [
+          "http://schema.org/DesktopWebPlatform",
+          "http://schema.org/MobileWebPlatform",
+        ],
+      },
+      result: {
+        "@type": "LodgingReservation",
+        name: `Reserve a room at ${hotel.name}`,
+      },
+    },
+  };
+
+  // Add room offers if available
+  if (roomTypes && roomTypes.length > 0) {
+    return {
+      ...baseSchema,
+      makesOffer: roomTypes.map((room) => ({
+        "@type": "Offer",
+        name: room.name,
+        description: room.description,
+        price: (room.basePriceCents / 100).toFixed(2),
+        priceCurrency: room.currencyCode,
+        availability: "https://schema.org/InStock",
+        url: `${siteUrl}/hotels/${hotel.slug}`,
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: (room.basePriceCents / 100).toFixed(2),
+          priceCurrency: room.currencyCode,
+          unitText: "per night",
+        },
+        itemOffered: {
+          "@type": "Product",
+          name: room.name,
+          description: room.description,
+          additionalProperty: [
+            {
+              "@type": "PropertyValue",
+              name: "Occupancy",
+              value: `${room.baseOccupancy}-${room.maxOccupancy} guests`,
+            },
+            {
+              "@type": "PropertyValue",
+              name: "Size",
+              value: `${room.sizeSqft} sq ft`,
+            },
+            {
+              "@type": "PropertyValue",
+              name: "Bed Type",
+              value: room.bedType,
+            },
+          ],
+        },
+      })),
+    };
+  }
+
+  return baseSchema;
+};
+
+// Product Schema for Individual Room Types
+export const generateRoomProductSchema = (
+  hotel: { name: string; slug: string; city: string; countryCode: string },
+  room: {
+    id: number;
+    name: string;
+    description: string;
+    basePriceCents: number;
+    currencyCode: string;
+    baseOccupancy: number;
+    maxOccupancy: number;
+    sizeSqft: number;
+    bedType: string;
+    images: Array<{ url: string; alt: string }>;
+  }
+) => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${room.name} at ${hotel.name}`,
+    description: room.description,
+    image: room.images.map((img) => getImageUrl(img.url)),
+    offers: {
+      "@type": "Offer",
+      price: (room.basePriceCents / 100).toFixed(2),
+      priceCurrency: room.currencyCode,
+      availability: "https://schema.org/InStock",
+      url: `${siteUrl}/hotels/${hotel.slug}`,
+      priceValidUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0], // 90 days from now
+      seller: {
+        "@type": "Organization",
+        name: "Raco Hotels",
+      },
+    },
+    brand: {
+      "@type": "Brand",
+      name: "Raco Hotels",
+    },
+    additionalProperty: [
+      {
+        "@type": "PropertyValue",
+        name: "Base Occupancy",
+        value: room.baseOccupancy,
+      },
+      {
+        "@type": "PropertyValue",
+        name: "Maximum Occupancy",
+        value: room.maxOccupancy,
+      },
+      {
+        "@type": "PropertyValue",
+        name: "Room Size",
+        value: `${room.sizeSqft} sq ft`,
+      },
+      {
+        "@type": "PropertyValue",
+        name: "Bed Type",
+        value: room.bedType,
+      },
+    ],
+  };
+};
+
+// AggregateRating Schema (use when reviews are available)
+export const generateAggregateRatingSchema = (ratings: {
+  ratingValue: number;
+  reviewCount: number;
+  bestRating?: number;
+  worstRating?: number;
+}) => {
+  return {
+    "@type": "AggregateRating",
+    ratingValue: ratings.ratingValue,
+    reviewCount: ratings.reviewCount,
+    bestRating: ratings.bestRating ?? 5,
+    worstRating: ratings.worstRating ?? 1,
+  };
+};

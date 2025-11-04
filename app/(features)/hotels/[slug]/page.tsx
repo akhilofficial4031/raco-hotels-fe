@@ -6,6 +6,7 @@ import {
 } from "@/lib/metadata";
 import {
   generateBreadcrumbSchema,
+  generateEnhancedHotelSchema,
   generateHotelSchema,
   siteUrl,
 } from "@/lib/seo";
@@ -14,29 +15,35 @@ import type { Metadata } from "next";
 import HotelDetailsClient from "./components/HotelDetailsClient";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export const generateMetadata = withMetadataErrorHandling(
   async ({ params }: Props): Promise<Metadata> => {
-    const hotelResponse = await getHotelBySlug(params.slug);
+    const { slug } = await params;
+    const hotelResponse = await getHotelBySlug(slug);
     const hotel = hotelResponse.data.hotel;
-    return generateHotelMetadata({ hotel, slug: params.slug });
+    return generateHotelMetadata({ hotel, slug });
   },
   "Hotel Details"
 );
 
 const HotelDetailsPage = async ({ params }: Props) => {
-  const { slug } = params;
+  const { slug } = await params;
   const hotelResponse = await getHotelBySlug(slug);
   const hotel = hotelResponse.data.hotel;
 
   const roomTypesResponse = await getHotelRoomTypes(hotel.id);
   const roomTypes = roomTypesResponse.data.roomTypes;
 
+  // Generate enhanced structured data with room offers
+  const enhancedHotelSchema = generateEnhancedHotelSchema(hotel, roomTypes);
+  
+  // Keep the basic hotel schema for backward compatibility
   const hotelSchema = generateHotelSchema(hotel);
+  
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: siteUrl },
     { name: "Hotels", url: `${siteUrl}/hotels` },
@@ -46,7 +53,7 @@ const HotelDetailsPage = async ({ params }: Props) => {
   return (
     <>
       <SEOHead
-        structuredData={[hotelSchema, breadcrumbSchema]}
+        structuredData={[enhancedHotelSchema, hotelSchema, breadcrumbSchema]}
         title={`${hotel.name} - ${hotel.city}, ${hotel.countryCode}`}
         description={`Book ${hotel.name} in ${hotel.city}, ${hotel.countryCode}. ${hotel.description.slice(
           0,
@@ -67,6 +74,28 @@ const HotelDetailsPage = async ({ params }: Props) => {
           locale: "en_US",
           type: "website",
         }}
+        additionalMetaTags={[
+          {
+            property: "og:type",
+            content: "hotel",
+          },
+          {
+            name: "geo.region",
+            content: `${hotel.countryCode}-${hotel.state}`,
+          },
+          {
+            name: "geo.placename",
+            content: hotel.city,
+          },
+          {
+            name: "geo.position",
+            content: `${hotel.latitude};${hotel.longitude}`,
+          },
+          {
+            name: "ICBM",
+            content: `${hotel.latitude}, ${hotel.longitude}`,
+          },
+        ]}
       />
       <HotelDetailsClient hotel={hotel} initialRoomTypes={roomTypes} />
     </>
