@@ -1,22 +1,21 @@
-import { LandingPageContent } from "@/types/landing-page";
+import { LandingPageContent, CMSHomepageResponse } from "@/types/landing-page";
+import { getFetcher } from "@/lib/fetcher";
 import fs from "fs";
 import path from "path";
 
 /**
- * Fetches landing page content from the mock JSON file
- * In production, this would fetch from a CMS API
+ * Fetches landing page content from the CMS API
  */
 export async function getLandingPageContent(): Promise<LandingPageContent> {
   try {
-    // In production, this would be an API call to your CMS
-    // For now, we're reading from a local JSON file
-    const filePath = path.join(
-      process.cwd(),
-      "mock",
-      "landing-page-content.json"
-    );
-    const fileContents = fs.readFileSync(filePath, "utf8");
-    const content: LandingPageContent = JSON.parse(fileContents);
+    // Fetch from CMS API
+    const response: CMSHomepageResponse = await getFetcher<CMSHomepageResponse>("/api/public/homepage");
+
+    if (!response.success || !response.data) {
+      throw new Error("Invalid CMS API response");
+    }
+
+    const content = response.data;
 
     // Validate the content structure (basic validation)
     if (!content.hero || !content.aboutUs || !content.seo) {
@@ -26,10 +25,24 @@ export async function getLandingPageContent(): Promise<LandingPageContent> {
     return content;
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error("Error fetching landing page content:", error);
+    console.warn("CMS API unavailable, falling back to mock data:", error instanceof Error ? error.message : error);
 
-    // Return fallback content in case of error
-    return getFallbackContent();
+    // Fallback to mock data if CMS is unavailable
+    try {
+      const filePath = path.join(
+        process.cwd(),
+        "mock",
+        "landing-page-content.json"
+      );
+      const fileContents = fs.readFileSync(filePath, "utf8");
+      const content: LandingPageContent = JSON.parse(fileContents);
+      console.log("Successfully loaded mock data as fallback");
+      return content;
+    } catch (fallbackError) {
+      // eslint-disable-next-line no-console
+      console.error("Error loading fallback content, using hardcoded fallback:", fallbackError);
+      return getFallbackContent();
+    }
   }
 }
 
@@ -54,7 +67,7 @@ function getFallbackContent(): LandingPageContent {
         "Discover exceptional hospitality and luxury accommodations.",
       primaryButton: {
         text: "Book Now",
-        action: "booking",
+        type: "primary",
       },
       image: {
         src: "/hero/hero1.png",
@@ -71,7 +84,7 @@ function getFallbackContent(): LandingPageContent {
       },
       primaryButton: {
         text: "Learn More",
-        action: "about",
+        type: "primary",
       },
       image: {
         src: "/about1.png",
@@ -88,7 +101,7 @@ function getFallbackContent(): LandingPageContent {
       description: "Exceptional stays await.",
       primaryButton: {
         text: "View All",
-        action: "view-hotels",
+        type: "primary",
       },
     },
     signatureExperiences: {
@@ -101,8 +114,8 @@ function getFallbackContent(): LandingPageContent {
         title: "MEMBERS LOUNGE",
         description: "Private and elegant.",
         buttons: [
-          { text: "Explore", type: "primary", action: "explore" },
-          { text: "Reserve", type: "secondary", action: "reserve" },
+          { text: "Explore", type: "primary" },
+          { text: "Reserve", type: "secondary" },
         ],
       },
       images: [{ src: "/experience1.png", alt: "Experience" }],
@@ -120,7 +133,7 @@ function getFallbackContent(): LandingPageContent {
         src: "/gravitybar.png",
         alt: "Bar",
       },
-      buttons: [{ text: "Explore", type: "primary", action: "explore" }],
+      buttons: [{ text: "Explore", type: "primary" }],
       badge: {
         src: "/celebrate-your-moments.png",
         alt: "Celebrate",
@@ -131,7 +144,7 @@ function getFallbackContent(): LandingPageContent {
       sectionTag: "DINING",
       title: "CULINARY EXCELLENCE",
       description: "Fine dining experience.",
-      buttons: [{ text: "Explore", type: "primary", action: "explore" }],
+      buttons: [{ text: "Explore", type: "primary" }],
       images: [{ src: "/experience1.png", alt: "Restaurant" }],
       badge: {
         src: "/celebrate-your-moments.png",
@@ -147,6 +160,7 @@ function getFallbackContent(): LandingPageContent {
           location: "Location",
           avatar: "/avatar.jpg",
           testimonial: "Excellent service.",
+          rating: 5,
         },
       ],
     },
@@ -154,7 +168,7 @@ function getFallbackContent(): LandingPageContent {
       sectionTag: "GALLERY",
       title: "MOMENTS",
       images: [{ src: "/experience1.png", alt: "Gallery" }],
-      buttons: [{ text: "View More", type: "primary", action: "gallery" }],
+      buttons: [{ text: "View More", type: "primary" }],
     },
     seo: {
       title: "Raco Hotels - Luxury Accommodations",
@@ -183,8 +197,14 @@ export async function getCachedLandingPageContent(): Promise<LandingPageContent>
   }
 
   // Fetch fresh content
-  contentCache = await getLandingPageContent();
-  cacheTimestamp = now;
-
-  return contentCache;
+  try {
+    contentCache = await getLandingPageContent();
+    cacheTimestamp = now;
+    return contentCache;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Unexpected error in getCachedLandingPageContent:", error);
+    // Return fallback content if everything fails
+    return getFallbackContent();
+  }
 }
