@@ -77,8 +77,7 @@ export async function GET() {
 
     return getServerSideSitemap(allFields);
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Error generating server sitemap:", error);
+    // Error logging removed
 
     // Return minimal sitemap in case of error
     const siteUrl =

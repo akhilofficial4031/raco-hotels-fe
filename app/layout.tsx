@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Head from "next/head";
+import { Geist, Geist_Mono, Cinzel, DM_Sans } from "next/font/google";
 import "../font-awesome-4.7.0/css/font-awesome.css";
 import Footer from "./components/Footer";
 import HeaderWrapper from "./components/HeaderWrapper";
 import SmoothScroll from "./components/SmoothScroll";
+import { WebVitals } from "./components/WebVitals";
+import ResourceHints from "./components/ResourceHints";
 import { getHotelsForNavigation } from "@/lib/hotels";
 import "./globals.css";
 
@@ -16,6 +17,20 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -66,6 +81,14 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  other: {
+    "format-detection": "telephone=no",
+  },
 };
 
 export const viewport = {
@@ -84,29 +107,13 @@ export default async function RootLayout({
 
   return (
     <html lang="en" dir="ltr">
-      <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          rel="canonical"
-          href={process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com"}
-        />
-        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <meta name="format-detection" content="telephone=no" />
-      </Head>
+      <head>
+        <ResourceHints />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} ${dmSans.variable} antialiased`}
       >
+        <WebVitals />
         {/* Skip to main content link for accessibility */}
         <a
           href="#main-content"

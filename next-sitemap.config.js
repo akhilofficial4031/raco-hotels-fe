@@ -23,8 +23,7 @@ module.exports = {
         lastmod: hotel.updatedAt || new Date().toISOString(),
       }));
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error("Error fetching hotels for sitemap:", error);
+      // Error logging removed
       return [];
     }
   },
@@ -59,8 +58,7 @@ async function getHotelsForSitemap() {
     // For now, we'll return an empty array and handle this in the server-side sitemap
     return [];
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Failed to fetch hotels for sitemap:", error);
+    // Error logging removed
     return [];
   }
 }

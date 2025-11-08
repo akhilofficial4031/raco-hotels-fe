@@ -1,4 +1,6 @@
 import { LocationInfo as LocationInfoType } from "@/types/hotel";
+import Image from "next/image";
+import { getImageUrl } from "@/lib/utils";
 
 interface Props {
   locationInfo: LocationInfoType[] | null | undefined;
@@ -62,12 +64,14 @@ const LocationInfo = ({ locationInfo }: Props) => {
                   key={i}
                   className="rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
                 >
-                  <img
-                    src={`${image.url}`}
+                  <Image
+                    src={getImageUrl(image.url)}
                     alt={image.alt}
                     width={400}
                     height={300}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    sizes="(max-width: 768px) 50vw, 25vw"
                   />
                 </div>
               ))}

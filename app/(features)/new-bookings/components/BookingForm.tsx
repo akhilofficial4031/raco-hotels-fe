@@ -44,7 +44,7 @@ const BookingForm = () => {
   });
 
   const onSubmit = (data: BookingFormValues) => {
-    console.log(data);
+    // Form data logging removed
     // Here you would call the booking API
   };
 

@@ -23,8 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const content = await getCachedLandingPageContent();
     return generateHomePageMetadata(content.seo);
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Error generating metadata:", error);
+    // Error logging removed
     return generateHomePageMetadata();
   }
 }

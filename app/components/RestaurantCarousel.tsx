@@ -3,11 +3,12 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaOptionsType } from "embla-carousel";
 import { usePrevNextButtons } from "@/components/embla-carousel/EmblaCarouselArrowButtons";
-import { Image } from "@/types/landing-page";
+import { Image as ImageType } from "@/types/landing-page";
 import "@/components/embla-carousel/embla.css";
+import Image from "next/image";
 
 interface RestaurantCarouselProps {
-  images: Image[];
+  images: ImageType[];
 }
 
 const RestaurantCarousel = ({ images }: RestaurantCarouselProps) => {
@@ -19,12 +20,14 @@ const RestaurantCarousel = ({ images }: RestaurantCarouselProps) => {
     <div className="relative overflow-hidden" ref={emblaRef}>
       <div className="flex">
         {images.map((image, index) => (
-          <div className="flex-[0_0_100%] min-w-0" key={index}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className="flex-[0_0_100%] min-w-0 relative h-[500px]" key={index}>
+            <Image
               src={image.src}
               alt={image.alt}
-              className="w-full h-[500px] object-cover"
+              fill
+              sizes="100vw"
+              style={{ objectFit: "cover" }}
+              priority={index === 0}
             />
           </div>
         ))}

@@ -36,11 +36,10 @@ export async function getLandingPageContent(): Promise<LandingPageContent> {
       );
       const fileContents = fs.readFileSync(filePath, "utf8");
       const content: LandingPageContent = JSON.parse(fileContents);
-      console.log("Successfully loaded mock data as fallback");
+      // Mock data loading logging removed
       return content;
     } catch (fallbackError) {
-      // eslint-disable-next-line no-console
-      console.error("Error loading fallback content, using hardcoded fallback:", fallbackError);
+      // Fallback error logging removed
       return getFallbackContent();
     }
   }
@@ -202,8 +201,7 @@ export async function getCachedLandingPageContent(): Promise<LandingPageContent>
     cacheTimestamp = now;
     return contentCache;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Unexpected error in getCachedLandingPageContent:", error);
+    // Error logging removed
     // Return fallback content if everything fails
     return getFallbackContent();
   }

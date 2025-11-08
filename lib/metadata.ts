@@ -152,8 +152,7 @@ export const withMetadataErrorHandling = <T extends unknown[]>(
     try {
       return await metadataGenerator(...args);
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`Error generating metadata for ${fallbackType}:`, error);
+      // Error logging removed
       return generateFallbackMetadata(fallbackType);
     }
   };

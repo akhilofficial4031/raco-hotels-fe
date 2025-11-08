@@ -16,15 +16,7 @@ import {
 } from "../embla-carousel/EmblaCarouselArrowButtons";
 
 const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
-  // Debug logging
-  console.log("RightCarousel: Received hotels:", hotels.length);
-  hotels.forEach((hotel, index) => {
-    console.log(`Hotel ${index}:`, {
-      name: hotel.name,
-      imagesCount: hotel.images?.length || 0,
-      firstImageUrl: hotel.images?.[0]?.url || "No image URL",
-    });
-  });
+  // Debug logging removed
 
   const options: EmblaOptionsType = {
     loop: true,

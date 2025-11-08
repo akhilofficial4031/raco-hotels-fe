@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
@@ -16,6 +15,7 @@ import {
   NextButton,
   usePrevNextButtons,
 } from "./RoomCarouselArrowButtons";
+import Image from "next/image";
 
 type PropType = {
   slides: RoomImage[];
@@ -74,10 +74,14 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
           <div className="embla-room__container">
             {slides.map((image) => (
               <div className="embla-room__slide" key={image.id}>
-                <img
+                <Image
                   className={`embla-room__slide__img ${!isModal && "h-42"}`}
                   src={getImageUrl(image.url)}
                   alt={image.alt ?? `Room image ${image.id}`}
+                  fill
+                  sizes={isModal ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
+                  style={{ objectFit: "cover" }}
+                  priority={!isModal}
                 />
               </div>
             ))}

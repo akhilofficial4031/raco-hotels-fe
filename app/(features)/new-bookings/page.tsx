@@ -35,7 +35,7 @@ const NewBookingsPageContent = () => {
         setLoading(true);
         const hotelRes = await getHotelById(parseInt(hotelId, 10));
         const roomTypeRes = await getRoomTypeById(parseInt(roomTypeId, 10));
-        console.log("hotelRes", hotelRes);
+        // Hotel response logging removed
 
         if (hotelRes.data.hotel) {
           // Prepend base URL to hotel images
@@ -58,8 +58,7 @@ const NewBookingsPageContent = () => {
           setError("Room type not found.");
         }
       } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error("Failed to fetch booking details:", err);
+        // Error logging removed
         setError("Failed to fetch booking details.");
       } finally {
         setLoading(false);
