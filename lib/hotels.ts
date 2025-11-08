@@ -179,7 +179,7 @@ export async function getAvailableRoomTypes(
     // Re-use the generic getFetcher for consistency
     const response = await getFetcher<AvailabilityApiResponse>(endpoint);
     return response;
-  } catch (error) {
+  } catch (_error) {
     // console.error("Error fetching available room types:", error);
     // Re-throw the error to be handled by the calling component
     throw new Error("Failed to fetch available room types");

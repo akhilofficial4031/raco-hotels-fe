@@ -1,7 +1,7 @@
 import { Hotel, RoomType } from "@/types/hotel";
 import React from "react";
 import {
-  ClockCircleOutlined,
+  // ClockCircleOutlined, // Not used
   HomeOutlined,
   UserOutlined,
   CalendarOutlined,

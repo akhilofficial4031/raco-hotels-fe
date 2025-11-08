@@ -2,16 +2,16 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import type { UseEmblaCarouselType } from "embla-carousel-react";
+import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { HotelImage } from "@/types/hotel";
+import { Image } from "@/types/hotel";
 import { getImageUrl } from "@/lib/utils";
 import "./HeroCarousel.css";
 import Fade from "embla-carousel-fade";
 
 type PropType = {
-  slides: HotelImage[];
-  options?: any;
+  slides: Image[];
+  options?: EmblaOptionsType;
 };
 
 const HeroCarousel: React.FC<PropType> = ({ slides, options }) => {
@@ -26,7 +26,7 @@ const HeroCarousel: React.FC<PropType> = ({ slides, options }) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const onSelect = useCallback((emblaApi: UseEmblaCarouselType) => {
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
     setActiveIndex(emblaApi.selectedScrollSnap());
   }, []);
 

@@ -30,6 +30,7 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [rooms, setRooms] = useState(1);
   const [adults, setAdults] = useState(1);
+  const [childrenCount, setChildrenCount] = useState(0);
 
   const handleCheckAvailability = async () => {
     if (!hotel || !dates[0] || !dates[1]) {
@@ -119,6 +120,8 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
               onRoomsChange={setRooms}
               adults={adults}
               onAdultsChange={setAdults}
+              children={childrenCount} // eslint-disable-line react/no-children-prop
+              onChildrenChange={setChildrenCount}
               onCheck={handleCheckAvailability}
               loading={isChecking}
             />

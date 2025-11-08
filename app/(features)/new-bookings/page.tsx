@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import BookingForm from "./components/BookingForm";
 import PaymentDetails from "./components/PaymentDetails";
 import BookingSummary from "./components/BookingSummary";
@@ -20,8 +20,8 @@ const NewBookingsPageContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-  const BUCKET_BASE_URL = process.env.NEXT_PUBLIC_BUCKET_URL || "";
+  // const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? ""; // Not used
+  const BUCKET_BASE_URL = process.env.NEXT_PUBLIC_BUCKET_URL ?? "";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,7 +119,11 @@ const NewBookingsPageContent = () => {
 };
 
 const NewBookingsPage = () => {
-  return <NewBookingsPageContent />;
+  return (
+    <Suspense fallback={<RacoLoader />}>
+      <NewBookingsPageContent />
+    </Suspense>
+  );
 };
 
 export default NewBookingsPage;

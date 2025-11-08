@@ -62,7 +62,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
           "No rooms available for your selected dates. Please try different dates."
         );
       }
-    } catch (error) {
+    } catch (_error) {
       // console.error("Error checking availability:", error);
       message.error("Failed to check availability. Please try again.");
       setIsAvailable(null);
