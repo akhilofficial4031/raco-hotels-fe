@@ -1,11 +1,17 @@
 import { LocationInfo as LocationInfoType } from "@/types/hotel";
 
 interface Props {
-  locationInfo: LocationInfoType[];
+  locationInfo: LocationInfoType[] | null | undefined;
 }
 
 const LocationInfo = ({ locationInfo }: Props) => {
   const _baseUrl = process.env.NEXT_PUBLIC_BUCKET_URL;
+
+  // Return null if locationInfo is null, undefined, or empty
+  if (!locationInfo || locationInfo.length === 0) {
+    return null;
+  }
+
   return (
     <div className="py-24 px-4">
       <h2 className="text-4xl font-serif text-primary mb-16 text-center">
@@ -62,6 +68,8 @@ const LocationInfo = ({ locationInfo }: Props) => {
                     width={400}
                     height={300}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    sizes="(max-width: 768px) 50vw, 25vw"
                   />
                 </div>
               ))}

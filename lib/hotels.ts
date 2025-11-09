@@ -78,8 +78,7 @@ export async function getHotelsForNavigation() {
 
     return activeHotels;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Error fetching hotels for navigation:", error);
+    // Error logging removed
     // Return empty array as fallback to prevent header from breaking
     return [];
   }
@@ -100,8 +99,7 @@ export async function getActiveHotels() {
 
     return activeHotels;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Error fetching active hotels:", error);
+    // Error logging removed
     // Return empty array as fallback
     return [];
   }
@@ -161,6 +159,7 @@ export async function getAvailableRoomTypesForHotel(
     return response;
   } catch (_error) {
     // console.error("Error fetching available room types:", error);
+    // Re-throw the error to be handled by the calling component
     throw new Error("Failed to fetch available room types");
   }
 }

@@ -9,19 +9,19 @@ interface AboutUsProps {
 
 const AboutUs = ({ content }: AboutUsProps) => {
   return (
-    <section className="bg-white py-16 md:py-24">
+    <section className="bg-white py-16 md:py-24" aria-labelledby="about-us-heading">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
             <AnimatedContainer animationName="fadeUp" delay={0.1}>
               <div className="mb-12 text-center lg:text-left">
-                <p className="font-semibold tracking-wider uppercase mb-4">
+                <p className="font-semibold tracking-wider uppercase mb-4" role="doc-subtitle">
                   <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
                     {content.sectionTag}
                   </span>
                 </p>
-                <h2 className="text-4xl md:text-5xl font-normal text-gray-800 leading-tight mt-4">
+                <h2 id="about-us-heading" className="text-4xl md:text-5xl font-normal text-gray-800 leading-tight mt-4">
                   {content.title}
                 </h2>
               </div>
@@ -50,7 +50,10 @@ const AboutUs = ({ content }: AboutUsProps) => {
                 </AnimatedContainer>
                 <AnimatedContainer animationName="fadeUp" delay={0.4}>
                   <div className="mt-8">
-                    <button className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold">
+                    <button 
+                      className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                      aria-label={content.primaryButton.text}
+                    >
                       {content.primaryButton.text}
                     </button>
                   </div>
@@ -68,14 +71,19 @@ const AboutUs = ({ content }: AboutUsProps) => {
                 width={300}
                 height={250}
                 className="rounded-lg object-cover"
+                loading="lazy"
               />
-              <button className="absolute bottom-4 right-4 bg-white/50 backdrop-blur-sm p-3 rounded-full text-gray-800 hover:bg-white transition-all">
+              <button 
+                className="absolute bottom-4 right-4 bg-white/50 backdrop-blur-sm p-3 rounded-full text-gray-800 hover:bg-white transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                aria-label="View more about us"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"

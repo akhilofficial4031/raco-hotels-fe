@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import BookingSummary from "./components/BookingSummary";
 import BookingStepper from "./components/BookingStepper";
 import { useSearchParams } from "next/navigation";
@@ -131,7 +131,11 @@ const NewBookingsPageContent = () => {
 };
 
 const NewBookingsPage = () => {
-  return <NewBookingsPageContent />;
+  return (
+    <Suspense fallback={<RacoLoader />}>
+      <NewBookingsPageContent />
+    </Suspense>
+  );
 };
 
 export default NewBookingsPage;

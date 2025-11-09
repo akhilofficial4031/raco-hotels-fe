@@ -1,18 +1,17 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import useEmblaCarousel, {
-  EmblaCarouselType,
-  EmblaOptionsType,
-} from "embla-carousel-react";
+import useEmblaCarousel from "embla-carousel-react";
+import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { HotelImage } from "@/types/hotel";
+import { Image as ImageType } from "@/types/hotel";
 import { getImageUrl } from "@/lib/utils";
 import "./HeroCarousel.css";
 import Fade from "embla-carousel-fade";
+import Image from "next/image";
 
 type PropType = {
-  slides: HotelImage[];
+  slides: ImageType[];
   options?: EmblaOptionsType;
 };
 
@@ -51,10 +50,14 @@ const HeroCarousel: React.FC<PropType> = ({ slides, options }) => {
               key={index}
             >
               <div className="hero-carousel__slide__img_wrapper">
-                <img
+                <Image
                   className="hero-carousel__slide__img"
                   src={getImageUrl(image.url)}
                   alt={image.alt || "Hotel image"}
+                  fill
+                  sizes="100vw"
+                  style={{ objectFit: "cover" }}
+                  priority={index === 0}
                 />
               </div>
             </div>

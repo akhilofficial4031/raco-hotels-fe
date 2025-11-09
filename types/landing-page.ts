@@ -1,7 +1,6 @@
 export interface Button {
   text: string;
-  type?: 'primary' | 'secondary';
-  action: string;
+  type?: "primary" | "secondary";
 }
 
 export interface Image {
@@ -90,6 +89,7 @@ export interface Testimonial {
   location: string;
   avatar: string;
   testimonial: string;
+  rating?: number;
 }
 
 export interface TestimonialsContent {
@@ -123,4 +123,11 @@ export interface LandingPageContent {
   testimonials: TestimonialsContent;
   gallery: GalleryContent;
   seo: SEOContent;
+}
+
+// CMS API Response Types
+export interface CMSHomepageResponse {
+  success: boolean;
+  data: LandingPageContent;
+  message?: string;
 }
