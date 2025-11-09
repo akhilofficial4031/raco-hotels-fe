@@ -4,7 +4,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { message } from "antd";
 import { Hotel, RoomType } from "@/types/hotel";
-import { getAvailableRoomTypes } from "@/lib/hotels";
+import { useRouter } from "next/navigation";
 import CheckAvailability from "./CheckAvailability";
 import LocationInfo from "./LocationInfo";
 import RoomTypes from "./RoomTypes";
@@ -21,40 +21,30 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   hotel,
   initialRoomTypes,
 }) => {
+  const router = useRouter();
   const [dates, setDates] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
     dayjs().add(1, "day"),
     dayjs().add(2, "day"),
   ]);
-  const [isChecking, setIsChecking] = useState(false);
-  const [availableRooms, setAvailableRooms] = useState<RoomType[]>([]);
+  const [availableRooms, _setAvailableRooms] = useState<RoomType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [rooms, setRooms] = useState(1);
   const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
 
   const handleCheckAvailability = async () => {
     if (!hotel || !dates[0] || !dates[1]) {
       message.error("Please select valid dates.");
       return;
     }
-    setIsChecking(true);
-    try {
-      const checkIn = dates[0].format("YYYY-MM-DD");
-      const checkOut = dates[1].format("YYYY-MM-DD");
-      const res = await getAvailableRoomTypes(hotel.id, checkIn, checkOut);
-
-      if (res.success && res.data.results.length > 0) {
-        setAvailableRooms(res.data.results as unknown as RoomType[]);
-        setIsModalVisible(true);
-        message.success("Rooms are available for your selected dates!");
-      } else {
-        setAvailableRooms([]);
-        message.warning("No rooms available for the selected dates.");
-      }
-    } catch (_error) {
-      message.error("Failed to check availability. Please try again.");
-    } finally {
-      setIsChecking(false);
-    }
+    const checkIn = dates[0].format("YYYY-MM-DD");
+    const checkOut = dates[1].format("YYYY-MM-DD");
+    const params = new URLSearchParams({
+      hotelId: hotel.id.toString(),
+      checkIn,
+      checkOut,
+    });
+    router.push(`/available-rooms?${params.toString()}`);
   };
 
   const handleProceedToBooking = (_roomType: RoomType) => {
@@ -119,9 +109,12 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
               onRoomsChange={setRooms}
               adults={adults}
               onAdultsChange={setAdults}
+              onChildrenChange={setChildren}
               onCheck={handleCheckAvailability}
-              loading={isChecking}
-            />
+              loading={false}
+            >
+              {children}
+            </CheckAvailability>
           </AnimatedContainer>
         </div>
         <div className="pt-44 pb-16 bg-white">

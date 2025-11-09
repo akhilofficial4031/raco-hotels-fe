@@ -192,3 +192,43 @@ export interface AvailabilityApiResponse {
   success: boolean;
   data: AvailabilityData;
 }
+
+export interface AvailableRoomDetails {
+  roomId: number;
+  roomNumber: string;
+  floor: string;
+  roomDescription: string;
+  status: string;
+}
+
+export interface AvailableRoomType {
+  roomTypeId: number;
+  roomTypeName: string;
+  roomTypeSlug: string;
+  description: string;
+  baseOccupancy: number;
+  maxOccupancy: number;
+  basePriceCents: number;
+  currencyCode: string;
+  sizeSqft: number;
+  bedType: string;
+  smokingAllowed: boolean;
+  totalRooms: number;
+  availableRooms: number;
+  images: RoomImage[];
+  rooms: AvailableRoomDetails[];
+}
+
+export interface AvailableRoomTypesData {
+  hotelId: number;
+  checkInDate: string;
+  checkOutDate: string;
+  roomTypes: AvailableRoomType[];
+  totalRoomTypesAvailable: number;
+}
+
+export interface AvailableRoomTypesApiResponse {
+  success: boolean;
+  data: AvailableRoomTypesData;
+  message: string;
+}

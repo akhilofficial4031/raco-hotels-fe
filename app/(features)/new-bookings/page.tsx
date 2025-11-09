@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import BookingForm from "./components/BookingForm";
-import PaymentDetails from "./components/PaymentDetails";
 import BookingSummary from "./components/BookingSummary";
+import BookingStepper from "./components/BookingStepper";
 import { useSearchParams } from "next/navigation";
 import { getHotelById, getRoomTypeById } from "@/lib/hotels";
 import { Hotel, RoomType } from "@/types/hotel";
@@ -20,8 +19,7 @@ const NewBookingsPageContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-  const BUCKET_BASE_URL = process.env.NEXT_PUBLIC_BUCKET_URL || "";
+  const BUCKET_BASE_URL = process.env.NEXT_PUBLIC_BUCKET_URL ?? "";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +33,6 @@ const NewBookingsPageContent = () => {
         setLoading(true);
         const hotelRes = await getHotelById(parseInt(hotelId, 10));
         const roomTypeRes = await getRoomTypeById(parseInt(roomTypeId, 10));
-        console.log("hotelRes", hotelRes);
 
         if (hotelRes.data.hotel) {
           // Prepend base URL to hotel images
@@ -57,9 +54,7 @@ const NewBookingsPageContent = () => {
         } else {
           setError("Room type not found.");
         }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error("Failed to fetch booking details:", err);
+      } catch (_err) {
         setError("Failed to fetch booking details.");
       } finally {
         setLoading(false);
@@ -67,7 +62,7 @@ const NewBookingsPageContent = () => {
     };
 
     fetchData();
-  }, [hotelId, roomTypeId]);
+  }, [hotelId, roomTypeId, BUCKET_BASE_URL]);
 
   if (loading) {
     return (
@@ -82,7 +77,7 @@ const NewBookingsPageContent = () => {
     return <div>Could not load booking information.</div>;
 
   return (
-    <div className="bg-background-light min-h-screen dm-sans">
+    <div className="bg-gray-50 min-h-screen montserrat">
       {hotel.images?.length > 0 && (
         <div
           className="h-[50vh] bg-cover bg-center relative"
@@ -90,26 +85,43 @@ const NewBookingsPageContent = () => {
         >
           <div className="absolute inset-0 bg-black opacity-50" />
           <div className="container mx-auto h-full flex items-center justify-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-cinzel text-white z-10">
-              Booking confirmation
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl cinzel text-white z-10">
+              Book {hotel.name}
             </h1>
           </div>
         </div>
       )}
       <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          <div className="lg:col-span-3 space-y-8">
-            <BookingForm />
-          </div>
+        <div className="flex justify-between items-center mb-8">
+          <button className="text-gray-700 hover:text-gray-900 font-semibold flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Back
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="sticky top-8 space-y-8">
+            <BookingStepper hotel={hotel} roomType={roomType} />
+          </div>
+          <div className="lg:col-span-1">
+            <div className="sticky top-8">
               <BookingSummary
                 hotel={hotel}
                 roomType={roomType}
                 checkIn={checkIn}
                 checkOut={checkOut}
               />
-              <PaymentDetails roomType={roomType} />
             </div>
           </div>
         </div>

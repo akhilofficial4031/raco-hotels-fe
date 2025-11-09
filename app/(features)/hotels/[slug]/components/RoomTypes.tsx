@@ -1,7 +1,7 @@
 "use client";
 import { getImageUrl } from "@/lib/utils";
-import { RoomType, AvailableRoom } from "@/types/hotel";
-import { checkRoomAvailability } from "@/lib/hotels";
+import { RoomType, AvailableRoomDetails } from "@/types/hotel";
+import { getAvailableRoomTypesForHotel } from "@/lib/hotels";
 import Image from "next/image";
 import React, { useState } from "react";
 import { DatePicker, Button, Modal, Spin, message } from "antd";
@@ -24,7 +24,9 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
     dayjs().add(2, "day"),
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const [availableRooms, setAvailableRooms] = useState<AvailableRoom[]>([]);
+  const [availableRooms, setAvailableRooms] = useState<AvailableRoomDetails[]>(
+    []
+  );
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const router = useRouter();
 
@@ -44,17 +46,21 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
       const checkInDate = dates[0].format("YYYY-MM-DD");
       const checkOutDate = dates[1].format("YYYY-MM-DD");
 
-      const response = await checkRoomAvailability(
+      const response = await getAvailableRoomTypesForHotel(
         hotelId,
-        selectedRoom.id,
         checkInDate,
-        checkOutDate
+        checkOutDate,
+        selectedRoom.id
       );
 
-      if (response.success && response.data.results.length > 0) {
-        setAvailableRooms(response.data.results);
+      if (
+        response.success &&
+        response.data.roomTypes.length > 0 &&
+        response.data.roomTypes[0].availableRooms > 0
+      ) {
+        setAvailableRooms(response.data.roomTypes[0].rooms);
         setIsAvailable(true);
-        message.success(` available for your selected dates!`);
+        message.success(`Rooms are available for your selected dates!`);
       } else {
         setAvailableRooms([]);
         setIsAvailable(false);
@@ -62,7 +68,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
           "No rooms available for your selected dates. Please try different dates."
         );
       }
-    } catch (error) {
+    } catch (_error) {
       // console.error("Error checking availability:", error);
       message.error("Failed to check availability. Please try again.");
       setIsAvailable(null);
@@ -225,7 +231,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                 <div className="flex items-center">
                   <i className="fa fa-check-circle text-green-500 mr-2" />
                   <span className="text-green-700 font-medium">
-                    Great! available for your selected dates.
+                    Great! Rooms are available for your selected dates.
                   </span>
                 </div>
               </div>

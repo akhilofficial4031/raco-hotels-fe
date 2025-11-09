@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/types/api";
 import {
-  AvailabilityApiResponse,
+  AvailableRoomTypesApiResponse,
   HotelDetailsResponse,
   HotelResponse,
   RoomType,
@@ -132,56 +132,35 @@ export async function getRoomTypeById(
 }
 
 /**
- * Check room availability for a specific room type and date range
- * @param hotelId - Hotel ID
- * @param roomTypeId - Room Type ID
- * @param checkInDate - Check-in date in YYYY-MM-DD format
- * @param checkOutDate - Check-out date in YYYY-MM-DD format
- * @returns Promise<AvailabilityApiResponse>
- */
-export async function checkRoomAvailability(
-  hotelId: number,
-  roomTypeId: number,
-  checkInDate: string,
-  checkOutDate: string
-): Promise<AvailabilityApiResponse> {
-  const params = new URLSearchParams({
-    hotelId: hotelId.toString(),
-    roomTypeId: roomTypeId.toString(),
-    checkInDate,
-    checkOutDate,
-  });
-
-  return getFetcher<AvailabilityApiResponse>(
-    `/api/availability?${params.toString()}`
-  );
-}
-
-/**
  * Fetches available room types for a given hotel and date range.
  * @param hotelId - The ID of the hotel.
  * @param checkInDate - The check-in date in 'YYYY-MM-DD' format.
  * @param checkOutDate - The check-out date in 'YYYY-MM-DD' format.
+ * @param roomTypeId - (Optional) The ID of the room type to check.
  * @returns A promise that resolves to the availability API response.
  */
-export async function getAvailableRoomTypes(
+export async function getAvailableRoomTypesForHotel(
   hotelId: number,
   checkInDate: string,
-  checkOutDate: string
-): Promise<AvailabilityApiResponse> {
+  checkOutDate: string,
+  roomTypeId?: number
+): Promise<AvailableRoomTypesApiResponse> {
   const params = new URLSearchParams({
     hotelId: hotelId.toString(),
     checkInDate,
     checkOutDate,
   });
-  const endpoint = `/api/availability?${params.toString()}`;
+
+  if (roomTypeId) {
+    params.append("roomTypeId", roomTypeId.toString());
+  }
+
+  const endpoint = `/api/rooms/availability?${params.toString()}`;
   try {
-    // Re-use the generic getFetcher for consistency
-    const response = await getFetcher<AvailabilityApiResponse>(endpoint);
+    const response = await getFetcher<AvailableRoomTypesApiResponse>(endpoint);
     return response;
-  } catch (error) {
+  } catch (_error) {
     // console.error("Error fetching available room types:", error);
-    // Re-throw the error to be handled by the calling component
     throw new Error("Failed to fetch available room types");
   }
 }

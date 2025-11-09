@@ -8399,6 +8399,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"moment@npm:^2.30.1":
+  version: 2.30.1
+  resolution: "moment@npm:2.30.1"
+  checksum: 10c0/865e4279418c6de666fca7786607705fd0189d8a7b7624e2e56be99290ac846f90878a6f602e34b4e0455c549b85385b1baf9966845962b313699e7cb847543a
+  languageName: node
+  linkType: hard
+
 "motion-dom@npm:^12.23.21":
   version: 12.23.21
   resolution: "motion-dom@npm:12.23.21"
@@ -9102,6 +9109,7 @@ __metadata:
     eslint-plugin-unused-imports: "npm:^4.2.0"
     lenis: "npm:^1.3.11"
     lucide-react: "npm:^0.544.0"
+    moment: "npm:^2.30.1"
     motion: "npm:^12.23.22"
     next: "npm:15.4.6"
     next-seo: "npm:^6.8.0"

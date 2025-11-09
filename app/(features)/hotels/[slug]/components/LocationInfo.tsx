@@ -57,7 +57,7 @@ const LocationInfo = ({ locationInfo }: Props) => {
                   className="rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
                 >
                   <img
-                    src={`${image.url}`}
+                    src={`${_baseUrl}/${image.url.replace("r2://", "")}`}
                     alt={image.alt}
                     width={400}
                     height={300}

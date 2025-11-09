@@ -32,6 +32,7 @@ const HotelDetailsPage = async ({ params }: Props) => {
   const { slug } = params;
   const hotelResponse = await getHotelBySlug(slug);
   const hotel = hotelResponse.data.hotel;
+  console.log("hotel", hotel);
 
   const roomTypesResponse = await getHotelRoomTypes(hotel.id);
   const roomTypes = roomTypesResponse.data.roomTypes;
