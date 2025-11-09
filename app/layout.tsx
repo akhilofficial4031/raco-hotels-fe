@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-<<<<<<< HEAD
 import { Montserrat, Cinzel, DM_Sans } from "next/font/google";
 import Head from "next/head";
-=======
-import { Geist, Geist_Mono, Cinzel, DM_Sans } from "next/font/google";
->>>>>>> e322bb55794fbb28612ce5348f5580fec37e83a3
 import "../font-awesome-4.7.0/css/font-awesome.css";
 import Footer from "./components/Footer";
 import HeaderWrapper from "./components/HeaderWrapper";
