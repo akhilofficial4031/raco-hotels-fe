@@ -69,13 +69,17 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
     const onNext = isModal ? onNextButtonClickModal : onNextButtonClick;
 
     return (
-      <div className={`embla-room ${isModal ? "fullscreen-carousel" : ""}`}>
+      <div
+        className={`embla-room ${
+          isModal ? "fullscreen-carousel" : "h-56 md:!h-64"
+        }`}
+      >
         <div className="embla-room__viewport" ref={ref}>
           <div className="embla-room__container">
             {slides.map((image) => (
               <div className="embla-room__slide" key={image.id}>
                 <Image
-                  className={`embla-room__slide__img ${!isModal && "h-42"}`}
+                  className="embla-room__slide__img"
                   src={getImageUrl(image.url)}
                   alt={image.alt ?? `Room image ${image.id}`}
                   fill
@@ -105,7 +109,7 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative h-56 md:h-96">
       {renderCarousel(false)}
       <button
         onClick={showModal}
