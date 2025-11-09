@@ -51,7 +51,7 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
                 />
               )}
             </div>
-            <div className="p-6 mt-8">
+            <div className="p-6 mt-2">
               <h3 className="text-2xl font-semibold font-serif text-primary capitalize">
                 {roomType.roomTypeName}
               </h3>
