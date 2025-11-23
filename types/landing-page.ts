@@ -12,7 +12,7 @@ export interface TopBannerContent {
   isVisible: boolean;
   text: string;
   linkText: string;
-  linkUrl: string;
+  onClick: () => void;
 }
 
 export interface HeroContent {

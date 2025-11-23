@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { TopBannerContent } from "@/types/landing-page";
+import { Button } from "antd";
 
 interface TopBannerProps {
   content: TopBannerContent;
@@ -19,12 +20,13 @@ const TopBanner = ({ content }: TopBannerProps) => {
       <div className="flex items-center space-x-2">
         <span className="text-xs">▶</span>
         <span>{content.text}</span>
-        <a
-          href={content.linkUrl}
-          className="underline hover:text-gray-200 ml-2"
+        <Button
+          type="text"
+          onClick={content.onClick}
+          className="underline !hover:text-gray-100 !text-gray-200 ml-2 cursor-pointer"
         >
           {content.linkText}
-        </a>
+        </Button>
       </div>
       <button
         onClick={() => setIsVisible(false)}

@@ -72,7 +72,7 @@ const Header = ({ hotels = [] }: HeaderProps) => {
     isVisible: true,
     text: "Book directly with us and get a complimentary bottle of wine.",
     linkText: "Book Now",
-    linkUrl: "/offers",
+    onClick: openModal,
   };
 
   return (
