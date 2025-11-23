@@ -6,7 +6,6 @@ import Footer from "./components/Footer";
 import HeaderWrapper from "./components/HeaderWrapper";
 import SmoothScroll from "./components/SmoothScroll";
 import { WebVitals } from "./components/WebVitals";
-import ResourceHints from "./components/ResourceHints";
 import { getHotelsForNavigation } from "@/lib/hotels";
 import "./globals.css";
 
@@ -126,7 +125,7 @@ export default async function RootLayout({
         <SmoothScroll>
           <div id="main-content">{children}</div>
         </SmoothScroll>
-        <Footer hotels={hotels} />
+        <Footer />
       </body>
     </html>
   );

@@ -1,9 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getCachedLandingPageContent } from "@/lib/landing-page";
 import { generateHomePageMetadata } from "@/lib/metadata";
-import {
-  generateOrganizationSchema,
-  generateWebsiteSchema,
-} from "@/lib/seo";
+import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/seo";
 import type { Metadata } from "next";
 import Script from "next/script";
 import AboutUs from "./components/AboutUs";
@@ -53,7 +51,7 @@ export default async function Home() {
           __html: JSON.stringify(websiteSchema),
         }}
       />
-      <TopBanner content={content.topBanner} />
+      {/* <TopBanner content={content.topBanner} /> */}
       <main id="main-content" role="main">
         <Hero content={content.hero} />
         <AboutUs content={content.aboutUs} />

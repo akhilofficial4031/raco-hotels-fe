@@ -7,14 +7,23 @@ interface GalleryProps {
 
 const Gallery = ({ content }: GalleryProps) => {
   return (
-    <section className="bg-background-light py-16 md:py-24" aria-labelledby="gallery-heading">
+    <section
+      className="bg-background-light py-16 md:py-24"
+      aria-labelledby="gallery-heading"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <p className="font-semibold tracking-wider uppercase bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text mb-4" role="doc-subtitle">
+          <p
+            className="font-semibold tracking-wider uppercase bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text mb-4"
+            role="doc-subtitle"
+          >
             {content.sectionTag}
           </p>
-          <h2 id="gallery-heading" className="text-4xl md:text-5xl font-normal text-primary leading-tight">
+          <h2
+            id="gallery-heading"
+            className="text-4xl md:text-5xl font-normal text-primary leading-tight"
+          >
             {content.title}
           </h2>
         </div>
@@ -22,7 +31,7 @@ const Gallery = ({ content }: GalleryProps) => {
         {/* Image Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="list">
           {content.images.map((image, index) => (
-            <div key={index} role="listitem">
+            <div key={index} role="listitem" className="gallery-item">
               <Image
                 src={image.src}
                 alt={image.alt}
@@ -34,7 +43,10 @@ const Gallery = ({ content }: GalleryProps) => {
         </div>
 
         {/* Action Buttons */}
-        <nav aria-label="Gallery actions" className="flex justify-center space-x-4 mt-8">
+        <nav
+          aria-label="Gallery actions"
+          className="flex justify-center space-x-4 mt-8"
+        >
           {content.buttons.map((button, index) => (
             <button
               key={index}

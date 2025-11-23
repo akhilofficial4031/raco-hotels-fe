@@ -24,6 +24,8 @@ body {
   --color-background-light: #fdf5ff;
   --color-background-medium: #ede1f0;
   --color-pink-bg: #feeffd;
+  --color-footer-dark-bg: #2b0b2a;
+  --color-footer-cta-bg: #8d3daf;
   --font-montserrat: var(--font-montserrat), sans-serif;
   --font-cinzel: var(--font-cinzel), serif;
   --font-dm-sans: var(--font-dm-sans), sans-serif;
@@ -239,4 +241,12 @@ input[type="button"]:not(:disabled),
 input[type="submit"]:not(:disabled),
 input[type="reset"]:not(:disabled) {
   cursor: pointer;
+}
+
+.gallery-item {
+  .ant-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }

@@ -9,57 +9,68 @@ interface AboutUsProps {
 
 const AboutUs = ({ content }: AboutUsProps) => {
   return (
-    <section className="bg-white py-16 md:py-24" aria-labelledby="about-us-heading">
+    <section
+      className="bg-white py-16 md:py-24"
+      aria-labelledby="about-us-heading"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div>
+        <p
+          className="font-semibold tracking-wider uppercase mb-4"
+          role="doc-subtitle"
+        >
+          <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
+            {content.sectionTag}
+          </span>
+        </p>
+        <div className="grid grid-cols-4">
+          <div className="col-span-1" />
+          <div className="col-span-2">
             <AnimatedContainer animationName="fadeUp" delay={0.1}>
               <div className="mb-12 text-center lg:text-left">
-                <p className="font-semibold tracking-wider uppercase mb-4" role="doc-subtitle">
-                  <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-                    {content.sectionTag}
-                  </span>
-                </p>
-                <h2 id="about-us-heading" className="text-4xl md:text-5xl font-normal text-gray-800 leading-tight mt-4">
+                <h2
+                  id="about-us-heading"
+                  className="text-4xl md:text-5xl font-normal text-gray-800 leading-tight mt-4"
+                >
                   {content.title}
                 </h2>
               </div>
             </AnimatedContainer>
-
-            <div className="flex flex-col sm:flex-row items-center gap-8 lg:items-start">
-              <AnimatedContainer animationName="zoomIn" delay={0.2}>
-                <div className="flex-shrink-0 pt-8">
-                  <img
-                    src={content.badge.src}
-                    alt={content.badge.alt}
-                    width={150}
-                    height={150}
-                    className="mx-auto"
-                  />
-                </div>
-              </AnimatedContainer>
-              <div className="flex-grow flex flex-col items-center">
-                <AnimatedContainer animationName="fadeIn" delay={0.3}>
-                  <div className="relative flex items-center justify-center w-60 h-60">
-                    <div className="absolute inset-0 border border-gray-200 rounded-full" />
-                    <p className="text-center text-gray-600 dm-sans text-sm p-8">
-                      {content.description}
-                    </p>
-                  </div>
-                </AnimatedContainer>
-                <AnimatedContainer animationName="fadeUp" delay={0.4}>
-                  <div className="mt-8">
-                    <button 
-                      className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                      aria-label={content.primaryButton.text}
-                    >
-                      {content.primaryButton.text}
-                    </button>
-                  </div>
-                </AnimatedContainer>
+          </div>
+          <div className="col-span-1" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+          {/* Left Content */}
+          <div className="flex items-start justify-center h-full">
+            <AnimatedContainer animationName="zoomIn" delay={0.2}>
+              <div className="flex-shrink-0 pt-8">
+                <img
+                  src={content.badge.src}
+                  alt={content.badge.alt}
+                  width={150}
+                  height={150}
+                  className="mx-auto"
+                />
               </div>
-            </div>
+            </AnimatedContainer>
+          </div>
+          <div className="flex flex-col items-start">
+            <AnimatedContainer animationName="fadeIn" delay={0.3}>
+              <div>
+                <p className="text-left text-gray-600 dm-sans w-3/4 text-sm">
+                  {content.description}
+                </p>
+              </div>
+            </AnimatedContainer>
+            <AnimatedContainer animationName="fadeUp" delay={0.4}>
+              <div className="mt-8">
+                <button
+                  className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  aria-label={content.primaryButton.text}
+                >
+                  {content.primaryButton.text}
+                </button>
+              </div>
+            </AnimatedContainer>
           </div>
 
           {/* Right Image Gallery */}
@@ -73,7 +84,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
                 className="rounded-lg object-cover"
                 loading="lazy"
               />
-              <button 
+              {/* <button
                 className="absolute bottom-4 right-4 bg-white/50 backdrop-blur-sm p-3 rounded-full text-gray-800 hover:bg-white transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 aria-label="View more about us"
               >
@@ -92,7 +103,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
                     d="M14 5l7 7m0 0l-7 7m7-7H3"
                   />
                 </svg>
-              </button>
+              </button> */}
             </div>
           </AnimatedContainer>
         </div>

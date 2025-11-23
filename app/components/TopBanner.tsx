@@ -17,7 +17,7 @@ const TopBanner = ({ content }: TopBannerProps) => {
 
   return (
     <AnimatedContainer animationName="fadeDown">
-      <div className="bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 flex items-center justify-center text-center text-sm relative dm-sans">
+      <div className="bg-gradient-to-r fixed top-0 left-0 right-0 z-50 from-primary to-secondary text-white py-3 px-4 flex items-center justify-center text-center text-sm  dm-sans">
         <div className="flex items-center space-x-2">
           <span className="text-xs">▶</span>
           <span>{content.text}</span>
