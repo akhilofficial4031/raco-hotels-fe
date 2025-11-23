@@ -14,7 +14,7 @@ const GravityBar = ({ content }: GravityBarProps) => {
         <img
           src={content.badge.src}
           alt={content.badge.alt}
-          className="w-32 z-50 h-auto object-cover absolute top-62 left-1/2 -translate-x-1/2"
+          className="w-32 z-20 h-auto object-cover absolute top-62 left-1/2 -translate-x-1/2"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20 px-8 mb-8">
           {/* Section Header */}

@@ -19,7 +19,7 @@ const Restaurant = ({ content }: RestaurantProps) => {
               {content.name}
             </h2>
             {/* Overlapping Circular Badge */}
-            <div className="absolute z-50 -bottom-24 left-1/2 -translate-x-1/2 w-32 h-32 md:w-40 md:h-40 pointer-events-none">
+            <div className="absolute z-10 -bottom-24 left-1/2 -translate-x-1/2 w-32 h-32 md:w-40 md:h-40 pointer-events-none">
               <img
                 src={content.badge.src}
                 alt={content.badge.alt}
