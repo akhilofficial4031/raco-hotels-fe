@@ -16,7 +16,7 @@ const TopBanner = ({ content }: TopBannerProps) => {
   }
 
   return (
-    <div className="bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 flex items-center justify-center text-center text-sm  dm-sans">
+    <div className="bg-gradient-to-r from-primary to-secondary text-white py-1 px-4 flex items-center justify-center text-center text-sm  dm-sans">
       <div className="flex items-center space-x-2">
         <span className="text-xs">▶</span>
         <span>{content.text}</span>
