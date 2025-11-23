@@ -1,13 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import { HeroContent } from "@/types/landing-page";
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import { TextAnimate } from "@/components/ui/text-animate";
+import { useQuickBooking } from "@/contexts/QuickBookingContext";
 
 interface HeroProps {
   content: HeroContent;
 }
 
 const Hero = ({ content }: HeroProps) => {
+  const { openModal } = useQuickBooking();
   return (
     <section className="bg-background-light" aria-label="Hero section">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,7 +42,8 @@ const Hero = ({ content }: HeroProps) => {
             </TextAnimate>
             <AnimatedContainer animationName="fadeUp" delay={0.4}>
               <div className="mt-8">
-                <button 
+                <button
+                  onClick={openModal}
                   className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   aria-label={content.primaryButton.text}
                 >

@@ -22,14 +22,14 @@ const AboutUs = ({ content }: AboutUsProps) => {
             {content.sectionTag}
           </span>
         </p>
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-1 md:grid-cols-4">
           <div className="col-span-1" />
           <div className="col-span-2">
             <AnimatedContainer animationName="fadeUp" delay={0.1}>
-              <div className="mb-12 text-center lg:text-left">
+              <div className="mb-12 text-center md:text-left">
                 <h2
                   id="about-us-heading"
-                  className="text-4xl md:text-5xl font-normal text-gray-800 leading-tight mt-4"
+                  className="text-2xl md:text-5xl font-normal text-gray-800 leading-tight mt-4"
                 >
                   {content.title}
                 </h2>
@@ -40,7 +40,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
           {/* Left Content */}
-          <div className="flex items-start justify-center h-full">
+          <div className="flex items-center md:items-start justify-center h-full">
             <AnimatedContainer animationName="zoomIn" delay={0.2}>
               <div className="flex-shrink-0 pt-8">
                 <img
@@ -53,10 +53,10 @@ const AboutUs = ({ content }: AboutUsProps) => {
               </div>
             </AnimatedContainer>
           </div>
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-center md:items-start">
             <AnimatedContainer animationName="fadeIn" delay={0.3}>
               <div>
-                <p className="text-left text-gray-600 dm-sans w-3/4 text-sm">
+                <p className="text-center md:text-left text-gray-600 dm-sans w-full md:w-3/4 text-sm">
                   {content.description}
                 </p>
               </div>

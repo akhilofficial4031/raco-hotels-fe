@@ -126,7 +126,7 @@ export default function AnimatedContainer({
     <motion.div
       initial="initial"
       whileInView="whileInView"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       variants={variant}
     >
       {children}

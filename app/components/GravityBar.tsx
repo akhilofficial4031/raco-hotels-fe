@@ -9,8 +9,8 @@ interface GravityBarProps {
 
 const GravityBar = ({ content }: GravityBarProps) => {
   return (
-    <section className="bg-background-light py-16 md:py-24">
-      <div className="relative">
+    <section className="bg-background-light py-16 md:py-24 ">
+      <div className="relative container mx-auto">
         <img
           src={content.badge.src}
           alt={content.badge.alt}

@@ -77,7 +77,7 @@ export async function getHotelsForNavigation() {
       }));
 
     return activeHotels;
-  } catch (error) {
+  } catch (_error) {
     // Error logging removed
     // Return empty array as fallback to prevent header from breaking
     return [];
@@ -98,7 +98,7 @@ export async function getActiveHotels() {
     );
 
     return activeHotels;
-  } catch (error) {
+  } catch (_error) {
     // Error logging removed
     // Return empty array as fallback
     return [];

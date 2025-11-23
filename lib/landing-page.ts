@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { LandingPageContent, CMSHomepageResponse } from "@/types/landing-page";
 import { getFetcher } from "@/lib/fetcher";
 import fs from "fs";
@@ -7,9 +8,13 @@ import path from "path";
  * Fetches landing page content from the CMS API
  */
 export async function getLandingPageContent(): Promise<LandingPageContent> {
+  console.log("getLandingPageContent");
   try {
     // Fetch from CMS API
-    const response: CMSHomepageResponse = await getFetcher<CMSHomepageResponse>("/api/public/homepage");
+    const response: CMSHomepageResponse = await getFetcher<CMSHomepageResponse>(
+      "/api/public/homepage"
+    );
+    console.log("response", response);
 
     if (!response.success || !response.data) {
       throw new Error("Invalid CMS API response");
@@ -25,7 +30,10 @@ export async function getLandingPageContent(): Promise<LandingPageContent> {
     return content;
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.warn("CMS API unavailable, falling back to mock data:", error instanceof Error ? error.message : error);
+    console.warn(
+      "CMS API unavailable, falling back to mock data:",
+      error instanceof Error ? error.message : error
+    );
 
     // Fallback to mock data if CMS is unavailable
     try {
@@ -189,7 +197,6 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
  */
 export async function getCachedLandingPageContent(): Promise<LandingPageContent> {
   const now = Date.now();
-
   // Return cached content if it's still valid
   if (contentCache && now - cacheTimestamp < CACHE_DURATION) {
     return contentCache;
@@ -198,6 +205,7 @@ export async function getCachedLandingPageContent(): Promise<LandingPageContent>
   // Fetch fresh content
   try {
     contentCache = await getLandingPageContent();
+    console.log("contentCache132", contentCache);
     cacheTimestamp = now;
     return contentCache;
   } catch (error) {

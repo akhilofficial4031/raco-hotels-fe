@@ -7,7 +7,9 @@ import HeaderWrapper from "./components/HeaderWrapper";
 import SmoothScroll from "./components/SmoothScroll";
 import { WebVitals } from "./components/WebVitals";
 import { getHotelsForNavigation } from "@/lib/hotels";
+import { QuickBookingProvider } from "@/contexts/QuickBookingContext";
 import "./globals.css";
+import ResourceHints from "./components/ResourceHints";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -95,12 +97,10 @@ export const viewport = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  // Fetch hotels data once for both Header and Footer
+}) {
   const hotels = await getHotelsForNavigation();
-
   return (
     <html lang="en">
       <Head>
@@ -111,21 +111,17 @@ export default async function RootLayout({
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
       </Head>
       <body
-        className={`${montserrat.variable} ${cinzel.variable} ${dmSans.variable}`}
+        className={`${montserrat.variable} ${cinzel.variable} ${dmSans.variable} min-h-screen`}
       >
-        <WebVitals />
-        {/* Skip to main content link for accessibility */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-        >
-          Skip to main content
-        </a>
-        <HeaderWrapper hotels={hotels} />
-        <SmoothScroll>
-          <div id="main-content">{children}</div>
-        </SmoothScroll>
-        <Footer />
+        <QuickBookingProvider hotels={hotels}>
+          <SmoothScroll>
+            <ResourceHints />
+            <WebVitals />
+            <HeaderWrapper hotels={hotels} />
+            <main>{children}</main>
+            <Footer />
+          </SmoothScroll>
+        </QuickBookingProvider>
       </body>
     </html>
   );

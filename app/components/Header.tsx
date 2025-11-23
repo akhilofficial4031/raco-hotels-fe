@@ -4,6 +4,7 @@ import { HotelNavItem, NavLink } from "@/types/hotel";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useQuickBooking } from "@/contexts/QuickBookingContext";
 
 interface HeaderProps {
   hotels?: HotelNavItem[];
@@ -13,6 +14,7 @@ const Header = ({ hotels = [] }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { openModal } = useQuickBooking();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -65,7 +67,10 @@ const Header = ({ hotels = [] }: HeaderProps) => {
   ];
 
   return (
-    <header className="bg-white text-gray-800 shadow-md dm-sans" role="banner">
+    <header
+      className="bg-white text-gray-800 dm-sans  sticky top-0 z-50"
+      role="banner"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
@@ -153,12 +158,13 @@ const Header = ({ hotels = [] }: HeaderProps) => {
 
           <div className="hidden md:flex items-center space-x-4">
             <button
+              onClick={openModal}
               className="bg-primary cursor-pointer text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               aria-label="Book a hotel room now"
             >
               Book Now
             </button>
-            <div className="flex items-center space-x-2">
+            {/* <div className="flex items-center space-x-2">
               <Image
                 src="/globe.svg"
                 alt=""
@@ -167,7 +173,7 @@ const Header = ({ hotels = [] }: HeaderProps) => {
                 aria-hidden="true"
               />
               <span aria-label="Language: English">Eng</span>
-            </div>
+            </div> */}
           </div>
 
           <div className="md:hidden flex items-center">
@@ -238,6 +244,7 @@ const Header = ({ hotels = [] }: HeaderProps) => {
               </Link>
             ))}
             <button
+              onClick={openModal}
               className="w-full text-left bg-primary text-white px-4 py-3 rounded-md hover:opacity-90 transition-opacity mt-4 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               aria-label="Book a hotel room now"
             >
