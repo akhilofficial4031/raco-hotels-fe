@@ -36,7 +36,7 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      "https://raco-hotels.com/server-sitemap.xml", // For server-side generated content
+      `${process.env.NEXT_PUBLIC_SITE_URL || "https://raco-hotels.com"}/server-sitemap.xml`, // For server-side generated content
     ],
   },
   transform: async (config, path) => {

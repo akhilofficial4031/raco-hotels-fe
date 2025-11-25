@@ -210,13 +210,16 @@ export const generateOrganizationSchema = () => {
       "Discover amazing hotels in premium locations worldwide. Book your perfect stay with Raco Hotels - luxury accommodations, exclusive deals, and exceptional service.",
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+1-212-555-1234",
+      // TODO: Update with real Raco Residency phone number
+      telephone: "+1-555-0199",
       contactType: "customer service",
+      // TODO: Update with real Raco Residency email
       email: "contact@racohotels.com",
       areaServed: "Worldwide",
       availableLanguage: ["English"],
     },
     sameAs: [
+      // TODO: Update with real Raco Residency social links
       "https://facebook.com/racohotels",
       "https://twitter.com/racohotels",
       "https://instagram.com/racohotels",
@@ -224,11 +227,12 @@ export const generateOrganizationSchema = () => {
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "123 Luxury Lane, Suite 500",
-      addressLocality: "New York",
-      addressRegion: "NY",
-      postalCode: "10001",
-      addressCountry: "US",
+      // TODO: Update with real Raco Residency address
+      streetAddress: "123 Residency Street",
+      addressLocality: "City Name",
+      addressRegion: "State",
+      postalCode: "00000",
+      addressCountry: "Country",
     },
   };
 };
@@ -242,14 +246,6 @@ export const generateWebsiteSchema = () => {
     url: siteUrl,
     description:
       "Discover amazing hotels in premium locations worldwide. Book your perfect stay with Raco Hotels.",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${siteUrl}/hotels?search={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
   };
 };
 
@@ -476,7 +472,7 @@ export const generateEnhancedHotelSchema = (
       "@type": "ReserveAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${siteUrl}/hotels/${hotel.slug}`,
+        urlTemplate: `${siteUrl}/new-bookings?hotelId=${hotel.id}`,
         actionPlatform: [
           "http://schema.org/DesktopWebPlatform",
           "http://schema.org/MobileWebPlatform",
@@ -500,7 +496,7 @@ export const generateEnhancedHotelSchema = (
         price: (room.basePriceCents / 100).toFixed(2),
         priceCurrency: room.currencyCode,
         availability: "https://schema.org/InStock",
-        url: `${siteUrl}/hotels/${hotel.slug}`,
+        url: `${siteUrl}/new-bookings?hotelId=${hotel.id}&roomTypeId=${room.id}`,
         priceSpecification: {
           "@type": "UnitPriceSpecification",
           price: (room.basePriceCents / 100).toFixed(2),
