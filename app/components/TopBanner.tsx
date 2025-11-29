@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { TopBannerContent } from "@/types/landing-page";
 import { Button } from "antd";
+import { useState } from "react";
 
 interface TopBannerProps {
   content: TopBannerContent;
@@ -22,6 +22,7 @@ const TopBanner = ({ content }: TopBannerProps) => {
         <span>{content.text}</span>
         <Button
           type="text"
+          href={content.linkUrl}
           onClick={content.onClick}
           className="underline !hover:text-gray-100 !text-gray-200 ml-2 cursor-pointer"
         >

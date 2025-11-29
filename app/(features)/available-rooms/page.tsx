@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
-import { useSearchParams } from "next/navigation";
-import { getHotelById, getAvailableRoomTypesForHotel } from "@/lib/hotels";
-import { Hotel, AvailableRoomType } from "@/types/hotel";
 import RacoLoader from "@/app/components/RacoLoader";
-import AvailableRoomTypeList from "./components/AvailableRoomTypeList";
+import { getAvailableRoomTypesForHotel, getHotelById } from "@/lib/hotels";
 import { getImageUrl } from "@/lib/utils";
+import { AvailableRoomType, Hotel } from "@/types/hotel";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import AvailableRoomTypeList from "./components/AvailableRoomTypeList";
 
 const AvailableRoomsPageContent = () => {
   const searchParams = useSearchParams();
@@ -46,8 +46,7 @@ const AvailableRoomsPageContent = () => {
         } else {
           setError("Could not fetch available rooms.");
         }
-      } catch (err) {
-        console.error("Failed to fetch data:", err);
+      } catch {
         setError("Failed to fetch data.");
       } finally {
         setLoading(false);
@@ -112,7 +111,17 @@ const AvailableRoomsPageContent = () => {
 };
 
 const AvailableRoomsPage = () => {
-  return <AvailableRoomsPageContent />;
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-screen">
+          <RacoLoader />
+        </div>
+      }
+    >
+      <AvailableRoomsPageContent />
+    </Suspense>
+  );
 };
 
 export default AvailableRoomsPage;

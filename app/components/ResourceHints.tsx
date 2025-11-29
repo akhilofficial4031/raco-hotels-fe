@@ -10,7 +10,7 @@ export default function ResourceHints() {
   return (
     <>
       {/* DNS prefetch for API endpoint */}
-      {apiBaseUrl && (
+      {!!apiBaseUrl && (
         <>
           <link rel="dns-prefetch" href={apiBaseUrl} />
           <link rel="preconnect" href={apiBaseUrl} crossOrigin="anonymous" />
@@ -18,7 +18,7 @@ export default function ResourceHints() {
       )}
 
       {/* DNS prefetch for image bucket */}
-      {bucketUrl && (
+      {!!bucketUrl && (
         <>
           <link rel="dns-prefetch" href={bucketUrl} />
           <link rel="preconnect" href={bucketUrl} crossOrigin="anonymous" />

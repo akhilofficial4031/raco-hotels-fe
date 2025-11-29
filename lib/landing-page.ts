@@ -8,13 +8,11 @@ import path from "path";
  * Fetches landing page content from the CMS API
  */
 export async function getLandingPageContent(): Promise<LandingPageContent> {
-  console.log("getLandingPageContent");
   try {
     // Fetch from CMS API
     const response: CMSHomepageResponse = await getFetcher<CMSHomepageResponse>(
       "/api/public/homepage"
     );
-    console.log("response", response);
 
     if (!response.success || !response.data) {
       throw new Error("Invalid CMS API response");
@@ -205,7 +203,6 @@ export async function getCachedLandingPageContent(): Promise<LandingPageContent>
   // Fetch fresh content
   try {
     contentCache = await getLandingPageContent();
-    console.log("contentCache132", contentCache);
     cacheTimestamp = now;
     return contentCache;
   } catch (error) {

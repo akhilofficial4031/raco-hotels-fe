@@ -34,7 +34,7 @@ export function WebVitals() {
             "Content-Type": "application/json",
           },
           keepalive: true,
-        }).catch((error) => {
+        }).catch((_error) => {
           // Web vitals error logging removed
         });
       }
@@ -50,7 +50,8 @@ export function WebVitals() {
       )[0] as PerformanceNavigationTiming;
 
       if (navigationEntry) {
-        const ttfb = navigationEntry.responseStart - navigationEntry.requestStart;
+        const _ttfb =
+          navigationEntry.responseStart - navigationEntry.requestStart;
         // TTFB logging removed
       }
 
@@ -58,9 +59,9 @@ export function WebVitals() {
       const resources = performance.getEntriesByType("resource");
       const images = resources.filter((r) =>
         r.name.match(/\.(jpg|jpeg|png|gif|webp|avif|svg)$/i)
-      );
-      const totalImageSize = images.reduce(
-        (acc, img: PerformanceResourceTiming) => acc + (img.transferSize || 0),
+      ) as PerformanceResourceTiming[];
+      const _totalImageSize = images.reduce(
+        (acc, img) => acc + (img.transferSize || 0),
         0
       );
 
@@ -72,4 +73,3 @@ export function WebVitals() {
 
   return null;
 }
-

@@ -43,7 +43,7 @@ const BookingForm = () => {
     resolver: zodResolver(bookingFormSchema),
   });
 
-  const onSubmit = (data: BookingFormValues) => {
+  const onSubmit = (_data: BookingFormValues) => {
     // Form data logging removed
     // Here you would call the booking API
   };

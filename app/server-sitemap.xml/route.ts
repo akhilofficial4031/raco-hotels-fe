@@ -76,7 +76,7 @@ export async function GET() {
     const allFields = [...additionalFields, ...hotelSitemapFields];
 
     return getServerSideSitemap(allFields);
-  } catch (error) {
+  } catch (_error) {
     // Error logging removed
 
     // Return minimal sitemap in case of error

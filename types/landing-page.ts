@@ -12,7 +12,8 @@ export interface TopBannerContent {
   isVisible: boolean;
   text: string;
   linkText: string;
-  onClick: () => void;
+  linkUrl?: string;
+  onClick?: () => void;
 }
 
 export interface HeroContent {

@@ -151,7 +151,7 @@ export const withMetadataErrorHandling = <T extends unknown[]>(
   return async (...args: T): Promise<Metadata> => {
     try {
       return await metadataGenerator(...args);
-    } catch (error) {
+    } catch (_error) {
       // Error logging removed
       return generateFallbackMetadata(fallbackType);
     }
