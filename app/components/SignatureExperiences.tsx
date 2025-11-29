@@ -2,6 +2,7 @@
 "use client";
 
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
+import { getImageUrl } from "@/lib/utils";
 import { SignatureExperiencesContent } from "@/types/landing-page";
 
 interface SignatureExperiencesProps {
@@ -85,7 +86,7 @@ const SignatureExperiences = ({ content }: SignatureExperiencesProps) => {
 
           {/* Overlapping Circular Badge */}
           <img
-            src={content.badge.src}
+            src={getImageUrl(content.badge.src)}
             alt={content.badge.alt}
             className="w-32 h-auto object-cover absolute top-52 left-1/2 -translate-x-1/2"
           />

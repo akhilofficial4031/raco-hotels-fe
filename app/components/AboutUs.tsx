@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
+import { getImageUrl } from "@/lib/utils";
 import { AboutUsContent } from "@/types/landing-page";
+import Image from "next/image";
 
 interface AboutUsProps {
   content: AboutUsContent;
@@ -44,7 +46,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
             <AnimatedContainer animationName="zoomIn" delay={0.2}>
               <div className="flex-shrink-0 pt-8">
                 <img
-                  src={content.badge.src}
+                  src={getImageUrl(content.badge.src)}
                   alt={content.badge.alt}
                   width={150}
                   height={150}
@@ -76,8 +78,8 @@ const AboutUs = ({ content }: AboutUsProps) => {
           {/* Right Image Gallery */}
           <AnimatedContainer animationName="fadeLeft" delay={0.2}>
             <div className="relative">
-              <img
-                src={content.image.src}
+              <Image
+                src={getImageUrl(content.image.src)}
                 alt={content.image.alt}
                 width={300}
                 height={250}

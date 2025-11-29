@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { HeroContent } from "@/types/landing-page";
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { useQuickBooking } from "@/contexts/QuickBookingContext";
+import { getImageUrl } from "@/lib/utils";
+import { HeroContent } from "@/types/landing-page";
+import Image from "next/image";
 
 interface HeroProps {
   content: HeroContent;
@@ -58,7 +59,7 @@ const Hero = ({ content }: HeroProps) => {
 
           <div className="relative h-full">
             <Image
-              src={content.image.src}
+              src={getImageUrl(content.image.src)}
               alt={content.image.alt}
               width={500}
               height={500}
