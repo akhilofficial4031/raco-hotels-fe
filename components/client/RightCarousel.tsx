@@ -46,7 +46,7 @@ const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
             className="embla__slide flex-[0_0_50%] md:flex-[0_0_50%] min-w-0 pl-4"
             key={hotel.id}
           >
-            <div className="bg-white rounded-lg overflow-hidden w-full">
+            <div className="bg-white overflow-hidden w-full">
               <Link href={`/hotels/${hotel.slug}`}>
                 <div className="relative h-80">
                   {/* eslint-disable-next-line @next/next/no-img-element */}

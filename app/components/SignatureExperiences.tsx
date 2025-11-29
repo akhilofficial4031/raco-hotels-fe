@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import { SignatureExperiencesContent } from "@/types/landing-page";
 
 interface SignatureExperiencesProps {
@@ -21,57 +22,65 @@ const SignatureExperiences = ({ content }: SignatureExperiencesProps) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end my-8">
           <div />
           <div />
-          <p className="text-gray-600 dm-sans">
-            {content.description}
-          </p>
+          <p className="text-gray-600 dm-sans">{content.description}</p>
         </div>
 
         {/* Main Content Grid */}
         <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column */}
           <div className="space-y-8">
-            <div className="bg-gradient-to-r from-primary to-secondary h-64 flex items-center justify-center">
-              <h3 className="text-white text-4xl font-semibold">{content.club.name}</h3>
-            </div>
-            <img
-              src={content.images[1]?.src || "/experience2.png"}
-              alt={content.images[1]?.alt || "Bar area"}
-              className="w-full h-auto object-cover"
-            />
+            <AnimatedContainer animationName="fadeLeft" delay={0.1}>
+              <div className="bg-gradient-to-r from-primary to-secondary h-64 flex items-center justify-center">
+                <h3 className="text-white text-4xl font-semibold">
+                  {content.club.name}
+                </h3>
+              </div>
+            </AnimatedContainer>
+            <AnimatedContainer animationName="fadeLeft" delay={0.1}>
+              <img
+                src={content.images[1]?.src || "/experience2.png"}
+                alt={content.images[1]?.alt || "Bar area"}
+                className="w-full h-auto object-cover"
+              />
+            </AnimatedContainer>
           </div>
 
           {/* Right Column */}
           <div className="space-y-4">
-            <img
-              src={content.images[0]?.src || "/experience1.png"}
-              alt={content.images[0]?.alt || "Dining area"}
-              className="w-full h-auto object-cover"
-            />
-            <div className="bg-background-light p-8">
-              <p className="font-semibold tracking-wider uppercase text-primary mb-2">
-                {content.club.tagline}
-              </p>
-              <h3 className="text-3xl font-normal text-primary leading-tight mb-4">
-                {content.club.title}
-              </h3>
-              <p className="text-gray-600 dm-sans mb-6">
-                {content.club.description}
-              </p>
-              <div className="flex space-x-4">
-                {content.club.buttons.map((button, index) => (
-                  <button
-                    key={index}
-                    className={`px-6 py-2 rounded-full font-semibold transition-all ${
-                      button.type === 'primary'
-                        ? 'bg-primary text-white hover:opacity-90'
-                        : 'bg-transparent text-primary border border-primary hover:bg-primary hover:text-white'
-                    }`}
-                  >
-                    {button.text}
-                  </button>
-                ))}
+            <AnimatedContainer animationName="fadeRight" delay={0.1}>
+              <img
+                src={content.images[0]?.src || "/experience1.png"}
+                alt={content.images[0]?.alt || "Dining area"}
+                className="w-full h-auto object-cover"
+              />
+            </AnimatedContainer>
+            <AnimatedContainer animationName="zoomIn" delay={0.1}>
+              <div className="bg-background-light p-8">
+                <p className="font-semibold tracking-wider uppercase text-primary mb-2">
+                  {content.club.tagline}
+                </p>
+                <h3 className="text-3xl font-normal text-primary leading-tight mb-4">
+                  {content.club.title}
+                </h3>
+                <p className="text-gray-600 dm-sans mb-6">
+                  {content.club.description}
+                </p>
+                <div className="flex space-x-4">
+                  {content.club.buttons.map((button, index) => (
+                    <button
+                      key={index}
+                      className={`px-6 py-2 rounded-full font-semibold transition-all ${
+                        button.type === "primary"
+                          ? "bg-primary text-white hover:opacity-90"
+                          : "bg-transparent text-primary border border-primary hover:bg-primary hover:text-white"
+                      }`}
+                    >
+                      {button.text}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            </AnimatedContainer>
           </div>
 
           {/* Overlapping Circular Badge */}

@@ -101,40 +101,40 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
               </div>
             </AnimatedContainer>
           </div>
-          <AnimatedContainer animationName="zoomIn" delay={1.2}>
-            <CheckAvailability
-              dates={dates}
-              onDatesChange={setDates}
-              rooms={rooms}
-              onRoomsChange={setRooms}
-              adults={adults}
-              onAdultsChange={setAdults}
-              onChildrenChange={setChildren}
-              onCheck={handleCheckAvailability}
-              loading={false}
-            >
-              {children}
-            </CheckAvailability>
-          </AnimatedContainer>
+          {/* <AnimatedContainer animationName="zoomIn" delay={1.2}> */}
+          <CheckAvailability
+            dates={dates}
+            onDatesChange={setDates}
+            rooms={rooms}
+            onRoomsChange={setRooms}
+            adults={adults}
+            onAdultsChange={setAdults}
+            onChildrenChange={setChildren}
+            onCheck={handleCheckAvailability}
+            loading={false}
+          >
+            {children}
+          </CheckAvailability>
+          {/* </AnimatedContainer> */}
         </div>
         <div className="pt-44 pb-16 bg-white">
-          <AnimatedContainer animationName="fadeUp" delay={0.5}>
-            <div className="container mx-auto px-4 text-center">
-              <i
-                className="fa fa-building-o text-4xl text-secondary"
-                aria-hidden="true"
-              />
-              <p className="mt-4 text-sm font-semibold tracking-widest text-primary">
-                WELCOME TO {hotel.name.toUpperCase()}
-              </p>
-              <h2 className="mt-4 text-5xl font-serif text-primary">
-                A Serene & Exclusive Experience
-              </h2>
-              <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-500 leading-relaxed font-sans">
-                {hotel.description}
-              </p>
-            </div>
-          </AnimatedContainer>
+          {/* <AnimatedContainer animationName="fadeUp" delay={0.5}> */}
+          <div className="container mx-auto px-4 text-center">
+            <i
+              className="fa fa-building-o text-4xl text-secondary"
+              aria-hidden="true"
+            />
+            <p className="mt-4 text-sm font-semibold tracking-widest text-primary">
+              WELCOME TO {hotel.name.toUpperCase()}
+            </p>
+            <h2 className="mt-4 text-5xl font-serif text-primary">
+              A Serene & Exclusive Experience
+            </h2>
+            <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-500 leading-relaxed font-sans">
+              {hotel.description}
+            </p>
+          </div>
+          {/* </AnimatedContainer> */}
         </div>
         <div className="pb-16">
           {initialRoomTypes && initialRoomTypes.length > 0 ? (
