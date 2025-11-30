@@ -29,11 +29,11 @@ const Step1Amenities: React.FC<Step1AmenitiesProps> = ({ hotel, roomType }) => {
           );
         })}
       </div>
-      <div className="text-sm text-gray-600">
+      {/* <div className="text-sm text-gray-600">
         <p className="mb-2">
           <strong>Breakfast included</strong>
         </p>
-      </div>
+      </div> */}
 
       {/* House Rules */}
       <div>
@@ -42,13 +42,15 @@ const Step1Amenities: React.FC<Step1AmenitiesProps> = ({ hotel, roomType }) => {
           <div className="flex items-center space-x-2">
             <span className="text-gray-600">⏰ Check-in time</span>
             <span className="text-gray-800">
-              From {hotel.checkInTime || "3 PM"}
+              From{" "}
+              <span className="font-bold">{hotel.checkInTime || "3 PM"}</span>
             </span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-gray-600">⏰ Check-out time</span>
             <span className="text-gray-800">
-              Until {hotel.checkOutTime || "11 AM"}
+              Until{" "}
+              <span className="font-bold">{hotel.checkOutTime || "11 AM"}</span>
             </span>
           </div>
         </div>

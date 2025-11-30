@@ -56,15 +56,8 @@ const Header = ({ hotels = [] }: HeaderProps) => {
           ? hotelDropdownItems
           : [{ href: "/hotels", label: "View All Properties" }],
     },
-    {
-      href: "#",
-      label: "Dining & Experiences",
-      dropdown: [
-        { href: "/dining", label: "Dining" },
-        { href: "/experiences", label: "Experiences" },
-      ],
-    },
-    { href: "/offers", label: "Offers" },
+
+    // { href: "/offers", label: "Offers" },
     { href: "/contact", label: "Contact" },
   ];
 

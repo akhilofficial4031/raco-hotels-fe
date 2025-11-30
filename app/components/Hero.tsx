@@ -15,9 +15,9 @@ const Hero = ({ content }: HeroProps) => {
   const { openModal } = useQuickBooking();
   return (
     <section className="bg-background-light" aria-label="Hero section">
-      <div className="mx-auto px-4 sm:pr-0 sm:pl-6 lg:pl-8">
+      <div className="mx-auto pl-4 pr-4 sm:pr-0 sm:pl-6 lg:pl-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div className="text-center md:text-left py-12 md:py-24">
+          <div className="text-center md:text-left py-12 md:py-24 pl-0 md:pl-36 md:pr-8">
             <AnimatedContainer animationName="fadeUp" delay={0.1}>
               <p
                 className="text-lg font-dm-sans uppercase tracking-widest text-primary"

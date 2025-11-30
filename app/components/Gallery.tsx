@@ -1,11 +1,13 @@
 import { Image } from "antd";
 import { GalleryContent } from "@/types/landing-page";
+import { getImageUrl } from "@/lib/utils";
 
 interface GalleryProps {
   content: GalleryContent;
 }
 
 const Gallery = ({ content }: GalleryProps) => {
+  console.log("content", content);
   return (
     <section
       className="bg-background-light py-16 md:py-24"
@@ -33,7 +35,7 @@ const Gallery = ({ content }: GalleryProps) => {
           {content.images.map((image, index) => (
             <div key={index} role="listitem" className="gallery-item">
               <Image
-                src={image.src}
+                src={getImageUrl(image.src)}
                 alt={image.alt}
                 className="!w-full !h-100 object-cover transform group-hover:scale-110 transition-transform duration-300"
                 loading="lazy"

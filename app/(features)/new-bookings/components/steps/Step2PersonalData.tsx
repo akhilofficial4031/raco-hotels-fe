@@ -1,55 +1,17 @@
 "use client";
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import {
-  Input,
-  DatePicker,
-  Select,
-  Checkbox,
-  Form,
-  Row,
-  Col,
-} from "antd";
+import { useFormContext, Controller } from "react-hook-form";
+import { Input, DatePicker, Select, Checkbox, Form, Row, Col } from "antd";
+import { BookingFormValues } from "../form-schema";
 
 const { Option } = Select;
 const { TextArea } = Input;
-
-const personalDataSchema = z.object({
-  fullName: z.string().min(1, "Full name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Phone number is required"),
-  alternatePhone: z.string().optional(),
-  dateOfBirth: z.any().optional(),
-  gender: z.string().optional(),
-  nationality: z.string().optional(),
-  idType: z.string().optional(),
-  idNumber: z.string().optional(),
-  addressLine1: z.string().optional(),
-  addressLine2: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  country: z.string().optional(),
-  postalCode: z.string().optional(),
-  dietaryPreferences: z.string().optional(),
-  specialRequests: z.string().optional(),
-  emergencyContactName: z.string().optional(),
-  emergencyContactPhone: z.string().optional(),
-  loyaltyNumber: z.string().optional(),
-  marketingOptIn: z.boolean().optional(),
-  notes: z.string().optional(),
-});
-
-type PersonalDataValues = z.infer<typeof personalDataSchema>;
 
 const Step2PersonalData = () => {
   const {
     control,
     formState: { errors },
-  } = useForm<PersonalDataValues>({
-    resolver: zodResolver(personalDataSchema),
-  });
+  } = useFormContext<BookingFormValues>();
 
   return (
     <Form layout="vertical">

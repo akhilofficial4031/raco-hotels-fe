@@ -57,10 +57,10 @@ export default async function Home() {
         <AboutUs content={content.aboutUs} />
         <OurStays content={content.ourStays} />
         <FeaturedStays content={content.featuredStays} />
-        <SignatureExperiences content={content.signatureExperiences} />
-        <GravityBar content={content.gravityBar} />
-        <Restaurant content={content.restaurant} />
-        <Testimonials content={content.testimonials} />
+        {/* <SignatureExperiences content={content.signatureExperiences} /> */}
+        {/* <GravityBar content={content.gravityBar} /> */}
+        {/* <Restaurant content={content.restaurant} /> */}
+        {/* <Testimonials content={content.testimonials} /> */}
         <Gallery content={content.gallery} />
       </main>
     </>

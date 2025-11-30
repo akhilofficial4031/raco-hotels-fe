@@ -1,7 +1,9 @@
 "use client";
 import { RoomType, Addon } from "@/types/hotel";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Button, Checkbox, Input, Divider } from "antd";
+import { useFormContext, Controller } from "react-hook-form";
+import { BookingFormValues } from "../form-schema";
 
 interface Step3PaymentDetailsProps {
   roomType: RoomType;
@@ -18,22 +20,9 @@ const formatCurrency = (amount: number, currencyCode: string) => {
 const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   roomType,
 }) => {
-  const [selectedAddons, setSelectedAddons] = useState<Addon[]>([]);
-  const [totalAmount, setTotalAmount] = useState(roomType?.basePriceCents || 0);
-
-  useEffect(() => {
-    if (roomType?.basePriceCents) {
-      setTotalAmount(roomType.basePriceCents);
-    }
-  }, [roomType?.basePriceCents]);
-
-  const handleAddonToggle = (addon: Addon) => {
-    setSelectedAddons((prev) =>
-      prev.find((a) => a.id === addon.id)
-        ? prev.filter((a) => a.id !== addon.id)
-        : [...prev, addon]
-    );
-  };
+  const { control, watch, setValue } = useFormContext<BookingFormValues>();
+  const selectedAddons: Addon[] = watch("addons", []);
+  const totalAmount = watch("totalAmount", roomType?.basePriceCents || 0);
 
   useEffect(() => {
     const addonsTotal = selectedAddons.reduce(
@@ -41,13 +30,20 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
       0
     );
     const basePrice = roomType?.basePriceCents || 0;
-    setTotalAmount(basePrice + addonsTotal);
-  }, [selectedAddons, roomType?.basePriceCents]);
+    setValue("totalAmount", basePrice + addonsTotal);
+  }, [selectedAddons, roomType?.basePriceCents, setValue]);
 
-  const handleSubmit = () => {
-    console.log("Selected addons:", selectedAddons);
-    console.log("Total amount:", totalAmount);
-    // Handle payment submission
+  const handleAddonToggle = (addon: Addon) => {
+    const currentAddons: Addon[] = selectedAddons || [];
+    const addonIndex = currentAddons.findIndex((a) => a.id === addon.id);
+    if (addonIndex > -1) {
+      setValue(
+        "addons",
+        currentAddons.filter((a) => a.id !== addon.id)
+      );
+    } else {
+      setValue("addons", [...currentAddons, addon]);
+    }
   };
 
   if (!roomType) {
@@ -87,7 +83,8 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
             >
               <span>{addon.name}</span>
               <span>
-                + {formatCurrency(addon.priceCents, addon.currencyCode)}
+                +{" "}
+                {formatCurrency(addon.priceCents, addon.currencyCode || "INR")}
               </span>
             </div>
           ))}
@@ -114,10 +111,14 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
               <Checkbox
                 key={addon.id}
                 onChange={() => handleAddonToggle(addon)}
+                checked={selectedAddons.some((a) => a.id === addon.id)}
               >
                 {addon.name} -{" "}
                 <span className="font-semibold">
-                  {formatCurrency(addon.priceCents, addon.currencyCode)}
+                  {formatCurrency(
+                    addon.priceCents,
+                    addon.currencyCode || "INR"
+                  )}
                 </span>
               </Checkbox>
             ))}
@@ -129,7 +130,13 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
       <div>
         <h3 className="text-lg font-semibold text-gray-800 mb-3">Promo Code</h3>
         <div className="flex gap-2">
-          <Input placeholder="Enter promo code" />
+          <Controller
+            name="promoCode"
+            control={control}
+            render={({ field }) => (
+              <Input {...field} placeholder="Enter promo code" />
+            )}
+          />
           <Button type="primary" className="!bg-primary">
             Apply
           </Button>
@@ -143,7 +150,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
         </Button>
         <Button
           type="primary"
-          onClick={handleSubmit}
+          htmlType="submit"
           size="large"
           className="flex-1 !bg-primary"
         >

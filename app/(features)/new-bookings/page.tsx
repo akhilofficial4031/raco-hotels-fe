@@ -3,8 +3,12 @@ import React, { Suspense, useEffect, useState } from "react";
 import BookingSummary from "./components/BookingSummary";
 import BookingStepper from "./components/BookingStepper";
 import { useSearchParams } from "next/navigation";
-import { getHotelById, getRoomTypeById } from "@/lib/hotels";
-import { Hotel, RoomType } from "@/types/hotel";
+import {
+  getHotelById,
+  getRoomTypeById,
+  getAvailableRoomTypesForHotel,
+} from "@/lib/hotels";
+import { Hotel, RoomType, AvailableRoomType } from "@/types/hotel";
 import RacoLoader from "@/app/components/RacoLoader";
 
 const NewBookingsPageContent = () => {
@@ -16,6 +20,7 @@ const NewBookingsPageContent = () => {
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [roomType, setRoomType] = useState<RoomType | null>(null);
+  const [availableRooms, setAvailableRooms] = useState<AvailableRoomType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,8 +28,8 @@ const NewBookingsPageContent = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!hotelId || !roomTypeId) {
-        setError("Missing hotel or room type information.");
+      if (!hotelId || !roomTypeId || !checkIn || !checkOut) {
+        setError("Missing hotel, room type, or date information.");
         setLoading(false);
         return;
       }
@@ -54,6 +59,20 @@ const NewBookingsPageContent = () => {
         } else {
           setError("Room type not found.");
         }
+
+        // Check room availability
+        const availableRoomsRes = await getAvailableRoomTypesForHotel(
+          parseInt(hotelId, 10),
+          checkIn,
+          checkOut
+        );
+        console.log("availableRoomsRes", availableRoomsRes);
+
+        if (availableRoomsRes.success) {
+          setAvailableRooms(availableRoomsRes.data.roomTypes);
+        } else {
+          setError("Could not fetch available rooms.");
+        }
       } catch (_err) {
         setError("Failed to fetch booking details.");
       } finally {
@@ -62,7 +81,7 @@ const NewBookingsPageContent = () => {
     };
 
     fetchData();
-  }, [hotelId, roomTypeId, BUCKET_BASE_URL]);
+  }, [hotelId, roomTypeId, checkIn, checkOut, BUCKET_BASE_URL]);
 
   if (loading) {
     return (
@@ -115,7 +134,7 @@ const NewBookingsPageContent = () => {
             <BookingStepper hotel={hotel} roomType={roomType} />
           </div>
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
+            <div className="sticky top-30">
               <BookingSummary
                 hotel={hotel}
                 roomType={roomType}
