@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 "use client";
 import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { LocationInfo as LocationInfoType } from "@/types/hotel";
 
 interface Props {

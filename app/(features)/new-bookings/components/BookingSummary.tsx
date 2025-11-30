@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Hotel, RoomType } from "@/types/hotel";
 import React from "react";
 import {

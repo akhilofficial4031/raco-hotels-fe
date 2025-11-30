@@ -33,17 +33,16 @@ const HotelDetailsPage = async ({ params }: Props) => {
   const { slug } = await params;
   const hotelResponse = await getHotelBySlug(slug);
   const hotel = hotelResponse.data.hotel;
-  console.log("hotel", hotel);
 
   const roomTypesResponse = await getHotelRoomTypes(hotel.id);
   const roomTypes = roomTypesResponse.data.roomTypes;
 
   // Generate enhanced structured data with room offers
   const enhancedHotelSchema = generateEnhancedHotelSchema(hotel, roomTypes);
-  
+
   // Keep the basic hotel schema for backward compatibility
   const hotelSchema = generateHotelSchema(hotel);
-  
+
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: siteUrl },
     { name: "Hotels", url: `${siteUrl}/hotels` },
@@ -60,7 +59,7 @@ const HotelDetailsPage = async ({ params }: Props) => {
           __html: JSON.stringify(enhancedHotelSchema),
         }}
       />
-      
+
       {/* Structured Data - Basic Hotel Schema */}
       <Script
         id="hotel-schema"
@@ -69,7 +68,7 @@ const HotelDetailsPage = async ({ params }: Props) => {
           __html: JSON.stringify(hotelSchema),
         }}
       />
-      
+
       {/* Structured Data - Breadcrumb Schema */}
       <Script
         id="breadcrumb-schema"
@@ -78,7 +77,7 @@ const HotelDetailsPage = async ({ params }: Props) => {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      
+
       <HotelDetailsClient hotel={hotel} initialRoomTypes={roomTypes} />
     </>
   );

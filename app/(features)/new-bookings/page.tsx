@@ -20,7 +20,9 @@ const NewBookingsPageContent = () => {
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [roomType, setRoomType] = useState<RoomType | null>(null);
-  const [availableRooms, setAvailableRooms] = useState<AvailableRoomType[]>([]);
+  const [_availableRooms, setAvailableRooms] = useState<AvailableRoomType[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -66,7 +68,6 @@ const NewBookingsPageContent = () => {
           checkIn,
           checkOut
         );
-        console.log("availableRoomsRes", availableRoomsRes);
 
         if (availableRoomsRes.success) {
           setAvailableRooms(availableRoomsRes.data.roomTypes);

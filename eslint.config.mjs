@@ -40,7 +40,6 @@ const eslintConfig = [
       // React rules that work with Next.js preset
       "react/jsx-no-leaked-render": "error",
       "react/jsx-no-useless-fragment": "error",
-      "react/no-array-index-key": "warn",
       "react/no-unstable-nested-components": "error",
       "react/self-closing-comp": "error",
       "react/jsx-boolean-value": ["error", "never"],

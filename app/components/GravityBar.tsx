@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable @next/next/no-img-element */
 
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
