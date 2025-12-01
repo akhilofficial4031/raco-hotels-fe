@@ -232,3 +232,10 @@ export interface AvailableRoomTypesApiResponse {
   data: AvailableRoomTypesData;
   message: string;
 }
+
+export interface AttractionData {
+  name: string;
+  location: string;
+  link: string;
+  image: string;
+}

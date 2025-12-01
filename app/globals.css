@@ -19,16 +19,37 @@ body {
 }
 
 @theme {
-  --color-primary: #640d5f;
+  /* --color-primary: #640d5f; */
+  --color-primary: #d98e24;
+  --color-primary-light: #f2c33c;
   --color-secondary: #ffb200;
-  --color-background-light: #fdf5ff;
+  --color-background-light: #f2ece3;
   --color-background-medium: #ede1f0;
   --color-pink-bg: #feeffd;
-  --color-footer-dark-bg: #2b0b2a;
-  --color-footer-cta-bg: #8d3daf;
+  --color-footer-dark-bg: #2e2922;
+  --color-footer-cta-bg: #d98e24;
+  --color-text-dark: #2f2f2f;
+  --color-text-light: #5a5958;
+  --color-text-button: #2e2922;
+  --color-gradient-from: #7e6231;
+  --color-gradient-via: #8d6e37;
+  --color-gradient-to: #e4b159;
+  --color-tag-bg: #e3d19d;
+  --color-border: #d1c2ae;
   --font-montserrat: var(--font-montserrat), sans-serif;
   --font-cinzel: var(--font-cinzel), serif;
   --font-dm-sans: var(--font-dm-sans), sans-serif;
+}
+@layer components {
+  .btn-primary {
+    @apply bg-[var(--color-primary-light)] text-[var(--color-text-button)] px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2;
+  }
+  .gradient-primary {
+    @apply bg-gradient-to-r from-[var(--color-gradient-from)] via-[var(--color-gradient-via)] to-[var(--color-gradient-to)];
+  }
+  .tag-head {
+    @apply bg-[var(--color-tag-bg)] text-[var(--color-text-button)] px-4 py-2 rounded-xl;
+  }
 }
 
 .embla-room {

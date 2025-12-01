@@ -11,7 +11,12 @@ import RoomTypes from "./RoomTypes";
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import AvailableRoomsModal from "./AvailableRoomsModal";
 import HeroCarousel from "./HeroCarousel";
-
+import OurStays from "@/app/components/OurStays";
+import {
+  hotelAttractions,
+  hotelAttractionsData,
+} from "../../constants/our-attractions";
+import AttractionCarousel from "@/components/client/AttractionCarousel";
 interface HotelDetailsClientProps {
   hotel: Hotel;
   initialRoomTypes: RoomType[];
@@ -56,11 +61,12 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
     <>
       <div className="bg-background-light">
         <div className="relative h-screen w-full">
+          <div className="absolute bg-black opacity-70 z-10 w-full h-full" />
+
           <HeroCarousel slides={hotel.images} options={{ loop: true }} />
-          <div className="absolute inset-0 bg-black opacity-40 z-10" />
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center h-full text-white text-center">
             <AnimatedContainer animationName="fadeIn" delay={0.3}>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl tracking-wider">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl tracking-wider !font-cinzel">
                 {hotel.name}
               </h1>
             </AnimatedContainer>
@@ -120,14 +126,10 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
         <div className="pt-44 pb-16 bg-white">
           {/* <AnimatedContainer animationName="fadeUp" delay={0.5}> */}
           <div className="container mx-auto px-4 text-center">
-            <i
-              className="fa fa-building-o text-4xl text-secondary"
-              aria-hidden="true"
-            />
             <p className="mt-4 text-sm font-semibold tracking-widest text-primary">
               WELCOME TO {hotel.name.toUpperCase()}
             </p>
-            <h2 className="mt-4 text-5xl font-serif text-primary">
+            <h2 className="mt-4 text-5xl text-text-dark !font-cinzel">
               A Serene & Exclusive Experience
             </h2>
             <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-500 leading-relaxed font-sans">
@@ -136,13 +138,21 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
           </div>
           {/* </AnimatedContainer> */}
         </div>
-        <div className="pb-16">
+        <OurStays content={hotelAttractions} />
+        <div className="container mx-auto px-4 text-center py-16 border-t border-border">
+          <AttractionCarousel attractions={hotelAttractionsData} />
+        </div>
+
+        <div className="">
           {initialRoomTypes && initialRoomTypes.length > 0 ? (
-            <div className="mt-16 max-w-7xl mx-auto px-4 py-16">
-              <RoomTypes roomTypes={initialRoomTypes} hotelId={hotel.id} />
+            <div className="bg-white">
+              <div className="pt-16 max-w-7xl mx-auto px-4 py-16 ">
+                <RoomTypes roomTypes={initialRoomTypes} hotelId={hotel.id} />
+              </div>
             </div>
           ) : null}
-          <div className="bg-white">
+
+          <div>
             <div className="max-w-7xl mx-auto px-4">
               <LocationInfo locationInfo={hotel.locationInfo} />
             </div>

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { Image } from "antd";
 import { GalleryContent } from "@/types/landing-page";
 import { getImageUrl } from "@/lib/utils";

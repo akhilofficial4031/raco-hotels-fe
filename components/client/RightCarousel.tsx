@@ -46,7 +46,7 @@ const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
             className="embla__slide flex-[0_0_50%] md:flex-[0_0_50%] min-w-0 pl-4"
             key={hotel.id}
           >
-            <div className="bg-white overflow-hidden w-full">
+            <div className="bg-transparent overflow-hidden w-full">
               <Link href={`/hotels/${hotel.slug}`}>
                 <div className="relative h-80">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -56,44 +56,48 @@ const RightCarousel: React.FC<{ hotels: Hotel[] }> = ({ hotels }) => {
                     alt={hotel.images[0]?.alt || hotel.name}
                   />
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-primary mb-2">
-                    {hotel.name}
-                  </h3>
-                  <div className="flex items-center text-sm text-gray-600 dm-sans mb-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-2 text-primary"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {hotel.city}, {hotel.state}
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-semibold text-primary">
-                      View
-                    </span>
-                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                <div className="py-4 flex">
+                  <div className="w-2/3">
+                    <h3 className="text-lg font-semibold text-text-dark mb-2">
+                      {hotel.name}
+                    </h3>
+                    <div className="flex items-center text-sm text-gray-600 dm-sans mb-4">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                        className="h-4 w-4 mr-2 text-text-light"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
                       >
                         <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          fillRule="evenodd"
+                          d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                          clipRule="evenodd"
                         />
                       </svg>
+                      {hotel.city}, {hotel.state}
+                    </div>
+                  </div>
+                  <div className="flex items-start justify-end w-1/3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-text-dark">
+                        View
+                      </span>
+                      <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>

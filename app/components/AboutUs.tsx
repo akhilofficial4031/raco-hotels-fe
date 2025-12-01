@@ -27,7 +27,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
         <div className="grid grid-cols-1 md:grid-cols-4">
           <div className="col-span-1" />
           <div className="col-span-2">
-            <AnimatedContainer animationName="fadeUp" delay={0.1}>
+            <AnimatedContainer animationName="fadeIn" delay={0.1}>
               <div className="mb-12 text-center md:text-left">
                 <h2
                   id="about-us-heading"
@@ -43,7 +43,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
           {/* Left Content */}
           <div className="flex items-center md:items-start justify-center h-full">
-            <AnimatedContainer animationName="zoomIn" delay={0.2}>
+            <AnimatedContainer animationName="fadeIn" delay={0.2}>
               <div className="flex-shrink-0 pt-8">
                 <img
                   src={getImageUrl(content.badge.src)}
@@ -63,11 +63,11 @@ const AboutUs = ({ content }: AboutUsProps) => {
                 </p>
               </div>
             </AnimatedContainer>
-            <AnimatedContainer animationName="fadeUp" delay={0.4}>
+            <AnimatedContainer animationName="fadeIn" delay={0.4}>
               <div className="mt-8">
                 <button
-                  className="bg-primary text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   aria-label={content.primaryButton.text}
+                  className="btn-primary"
                 >
                   {content.primaryButton.text}
                 </button>
@@ -76,7 +76,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
           </div>
 
           {/* Right Image Gallery */}
-          <AnimatedContainer animationName="fadeLeft" delay={0.2}>
+          <AnimatedContainer animationName="fadeIn" delay={0.2}>
             <div className="relative">
               <Image
                 src={getImageUrl(content.image.src)}

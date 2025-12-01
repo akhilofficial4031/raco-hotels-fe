@@ -15,7 +15,7 @@ const LocationInfo = ({ locationInfo }: Props) => {
 
   return (
     <div className="py-24 px-4">
-      <h2 className="text-4xl font-serif text-primary mb-16 text-center">
+      <h2 className="text-4xl font-cinzel text-text-dark mb-16 text-center">
         Discover the Area
       </h2>
       <div className="space-y-24">
@@ -27,7 +27,7 @@ const LocationInfo = ({ locationInfo }: Props) => {
             }`}
           >
             <div className="md:w-1/2">
-              <h3 className="text-3xl font-serif text-primary capitalize">
+              <h3 className="text-3xl font-cinzel text-primary capitalize">
                 {info.heading}
               </h3>
               <p className="text-lg text-gray-500 my-4 font-sans capitalize">
@@ -40,7 +40,7 @@ const LocationInfo = ({ locationInfo }: Props) => {
                 {info.bulletPoints.map((point, i) => (
                   <li key={i} className="flex items-start">
                     <svg
-                      className="w-5 h-5 text-purple-500 mr-3 mt-1 flex-shrink-0"
+                      className="w-5 h-5 text-primary mr-3 mt-1 flex-shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"

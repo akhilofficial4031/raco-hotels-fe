@@ -99,14 +99,14 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
   return (
     <>
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-serif text-primary text-center mb-12">
+        <h2 className="text-4xl font-cinzel text-text-dark text-center mb-12">
           Our Rooms & Suites
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {roomTypes.map((roomType) => (
             <div
               key={roomType.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:shadow-xl transition-transform duration-300"
+              className="bg-white shadow-lg overflow-hidden transform hover:shadow-xl transition-transform duration-300"
             >
               <div className="relative h-64">
                 {roomType.images && roomType.images.length > 1 ? (
@@ -121,7 +121,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                 )}
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-semibold font-serif text-primary">
+                <h3 className="text-2xl font-semibold font-cinzel text-text-dark">
                   {roomType.name}{" "}
                   {/* <i className="fa fa-info-circle ml-2 font-thin text-sm" /> */}
                 </h3>
@@ -153,7 +153,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                   </div>
                 </div>
                 <div className="mt-6 flex justify-between items-center">
-                  <p className="text-2xl font-bold text-primary">
+                  <p className="text-2xl font-semibold font-cinzel text-text-light">
                     {new Intl.NumberFormat("en-IN", {
                       style: "currency",
                       currency: roomType.currencyCode,

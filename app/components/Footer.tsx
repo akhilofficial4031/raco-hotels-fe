@@ -1,10 +1,12 @@
 "use client";
+import { useQuickBooking } from "@/contexts/QuickBookingContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Footer = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const { openModal } = useQuickBooking();
 
   const toggleVisibility = () => {
     if (window.scrollY > 300) {
@@ -58,6 +60,18 @@ const Footer = () => {
       style={{ backgroundColor: "var(--color-background-light)" }}
       role="contentinfo"
     >
+      <div className="relative bg-[url('/footer-bg.jpg')] bg-cover bg-center h-96 w-full flex items-center justify-center">
+        <div className="bg-black/50 absolute top-0 left-0 w-full h-full" />
+        <div className="relative z-10 flex flex-col items-center justify-center gap-4">
+          <p className="text-white text-5xl font-cinzel text-center">
+            Your next unforgettable
+            <br /> escape awaits.
+          </p>
+          <button className="btn-primary" onClick={openModal}>
+            Book Now
+          </button>
+        </div>
+      </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0 w-full bg-footer-dark-bg rounded-4xl mb-12">
           <div className="p-8 items-center justify-center mb-12  col-span-2">
@@ -66,9 +80,7 @@ const Footer = () => {
                 className="font-semibold tracking-wider uppercase mb-4 font-cinzel text-2xl"
                 role="doc-subtitle"
               >
-                <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-                  DO YOU NEED HELP?
-                </span>
+                <span className="text-white">DO YOU NEED HELP?</span>
               </p>
               <p className="text-gray-300">
                 In a world that moves too fast, we believe in the art of slow
@@ -79,7 +91,7 @@ const Footer = () => {
           </div>
           <div className="flex bg-footer-cta-bg items-center rounded-l-[72px] justify-center rounded-r-4xl relative">
             {/* <div className="bg-footer-cta-bg rounded-l-full h-[400px] w-40 absolute -left-10" /> */}
-            <button className="px-8 py-4 rounded-lg font-semibold flex items-center gap-2 transition-transform transform hover:scale-105 text-white">
+            <button className="px-8 py-4 rounded-lg font-semibold flex items-center gap-2 transition-transform transform hover:scale-105 text-text-dark">
               Get consultation <i className="fa fa-arrow-right" />
             </button>
           </div>
@@ -169,7 +181,7 @@ const Footer = () => {
           <div className="col-span-2 md:col-span-1 flex flex-col items-start md:items-end text-left md:text-right">
             <Link href="/" className="mb-4" aria-label="Raco Hotels Home">
               <Image
-                src="/logo.png"
+                src="/raco-logo.png"
                 alt="Raco Hotels Logo"
                 width={120}
                 height={40}

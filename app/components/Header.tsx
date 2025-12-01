@@ -81,10 +81,10 @@ const Header = ({ hotels = [] }: HeaderProps) => {
                 aria-label="Raco Hotels Home"
               >
                 <Image
-                  src="/logo.png"
+                  src="/raco-logo.png"
                   alt="Raco Hotels Logo"
-                  width={120}
-                  height={40}
+                  width={80}
+                  height={30}
                   priority
                 />
               </Link>
@@ -160,7 +160,7 @@ const Header = ({ hotels = [] }: HeaderProps) => {
             <div className="hidden md:flex items-center space-x-4">
               <button
                 onClick={openModal}
-                className="bg-primary cursor-pointer text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                className="btn-primary"
                 aria-label="Book a hotel room now"
               >
                 Book Now
