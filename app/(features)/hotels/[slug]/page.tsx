@@ -59,7 +59,6 @@ const HotelDetailsPage = async ({ params }: Props) => {
           __html: JSON.stringify(enhancedHotelSchema),
         }}
       />
-
       {/* Structured Data - Basic Hotel Schema */}
       <Script
         id="hotel-schema"
@@ -68,7 +67,6 @@ const HotelDetailsPage = async ({ params }: Props) => {
           __html: JSON.stringify(hotelSchema),
         }}
       />
-
       {/* Structured Data - Breadcrumb Schema */}
       <Script
         id="breadcrumb-schema"
@@ -77,7 +75,6 @@ const HotelDetailsPage = async ({ params }: Props) => {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-
       <HotelDetailsClient hotel={hotel} initialRoomTypes={roomTypes} />
     </>
   );
