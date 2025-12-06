@@ -159,6 +159,7 @@ export interface RoomType {
   amenities: RoomAmenity[];
   rooms: Room[];
   addons?: Addon[];
+  offerRate?: number;
 }
 
 export interface RoomTypesData {

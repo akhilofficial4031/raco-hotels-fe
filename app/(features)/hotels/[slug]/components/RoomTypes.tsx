@@ -153,16 +153,45 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                   </div>
                 </div>
                 <div className="mt-6 flex justify-between items-center">
-                  <p className="text-2xl font-semibold font-cinzel text-text-light">
-                    {new Intl.NumberFormat("en-IN", {
-                      style: "currency",
-                      currency: roomType.currencyCode,
-                      minimumFractionDigits: 0,
-                    }).format(roomType.basePriceCents / 100)}
-                    <span className="text-sm font-normal text-gray-500">
-                      /night
-                    </span>
-                  </p>
+                  <div className="flex flex-col gap-1">
+                    {/* Always reserve space for strike-through price to maintain consistent card heights */}
+                    <p className="text-sm font-normal text-gray-500 h-5">
+                      {roomType.offerRate !== null &&
+                      roomType.offerRate !== undefined ? (
+                        <span className="line-through">
+                          {new Intl.NumberFormat("en-IN", {
+                            style: "currency",
+                            currency: roomType.currencyCode,
+                            minimumFractionDigits: 0,
+                          }).format(roomType.basePriceCents / 100)}
+                        </span>
+                      ) : (
+                        <span className="invisible">Placeholder</span>
+                      )}
+                    </p>
+                    <p
+                      className={`text-2xl font-semibold font-cinzel ${
+                        roomType.offerRate !== null &&
+                        roomType.offerRate !== undefined
+                          ? "text-green-600"
+                          : "text-text-light"
+                      }`}
+                    >
+                      {new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: roomType.currencyCode,
+                        minimumFractionDigits: 0,
+                      }).format(
+                        roomType.offerRate !== null &&
+                          roomType.offerRate !== undefined
+                          ? roomType.offerRate / 100
+                          : roomType.basePriceCents / 100
+                      )}
+                      <span className="text-sm font-normal text-gray-500 ml-1">
+                        /night
+                      </span>
+                    </p>
+                  </div>
                   <button
                     type="button"
                     onClick={() => showModal(roomType)}
