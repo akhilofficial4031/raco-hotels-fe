@@ -14,7 +14,7 @@ const Step2PersonalData = () => {
   } = useFormContext<BookingFormValues>();
 
   return (
-    <Form layout="vertical">
+    <div className="ant-form ant-form-vertical">
       <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item
@@ -246,7 +246,7 @@ const Step2PersonalData = () => {
           )}
         />
       </Form.Item>
-    </Form>
+    </div>
   );
 };
 

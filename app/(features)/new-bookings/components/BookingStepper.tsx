@@ -1,33 +1,185 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Hotel, RoomType } from "@/types/hotel";
 import Step1Amenities from "./steps/Step1Amenities";
 import Step2PersonalData from "./steps/Step2PersonalData";
 import Step3PaymentDetails from "./steps/Step3PaymentDetails";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { bookingSchema, BookingFormValues } from "./form-schema";
+import { postFetcher } from "@/lib/fetcher";
+import { message } from "antd";
+import BookingConfirmationModal from "./BookingConfirmationModal";
+
+interface BookingResponse {
+  success: boolean;
+  data: {
+    booking: {
+      id: number;
+      referenceCode: string;
+      hotelId: number;
+      status: string;
+      source: string;
+      checkInDate: string;
+      checkOutDate: string;
+      numAdults: number;
+      numChildren: number;
+      totalAmountCents: number;
+      currencyCode: string;
+      taxAmountCents: number;
+      feeAmountCents: number;
+      discountAmountCents: number;
+      amountPaidCents: number;
+      balanceDueCents: number;
+      paymentStatus: string;
+      paymentMethod: string;
+      paymentProcessor: string;
+      notes?: string;
+      createdAt: string;
+    };
+  };
+}
 
 interface BookingStepperProps {
   hotel: Hotel;
   roomType: RoomType;
+  roomId: number;
+  checkInDate: string | null;
+  checkOutDate: string | null;
+  numAdults: number;
+  numChildren: number;
 }
 
-const BookingStepper: React.FC<BookingStepperProps> = ({ hotel, roomType }) => {
+const BookingStepper: React.FC<BookingStepperProps> = ({
+  hotel,
+  roomType,
+  roomId,
+  checkInDate,
+  checkOutDate,
+  numAdults,
+  numChildren,
+}) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [bookingResponse, setBookingResponse] =
+    useState<BookingResponse | null>(null);
   const methods = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
+    mode: "onSubmit",
     defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
       addons: [],
       totalAmount: roomType.basePriceCents || 0,
+      taxAmount: 0,
+      promoCode: "",
+      alternatePhone: "",
+      nationality: "",
+      idType: "",
+      idNumber: "",
+      addressLine1: "",
+      addressLine2: "",
+      city: "",
+      state: "",
+      country: "",
+      postalCode: "",
+      dietaryPreferences: "",
+      specialRequests: "",
+      emergencyContactName: "",
+      emergencyContactPhone: "",
+      loyaltyNumber: "",
+      notes: "",
+      marketingOptIn: false,
     },
   });
 
-  const onSubmit = (_data: BookingFormValues) => {
-    // Here you would call the booking API
-    // The form data is available in the 'data' object.
-    // For example:
-    // const { fullName, email, addons, promoCode } = data;
-    // api.bookRoom({ fullName, email, addons, promoCode });
+  const onSubmit = async (data: BookingFormValues) => {
+    if (!checkInDate || !checkOutDate) {
+      message.error("Check-in and check-out dates are required");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Transform form data to match API payload structure
+      const payload = {
+        hotelId: hotel.id,
+        bookingDetails: {
+          checkInDate,
+          checkOutDate,
+          numAdults,
+          numChildren,
+          status: "confirmed",
+        },
+        customerData: {
+          email: data.email,
+          fullName: data.fullName,
+          phone: data.phone,
+          alternatePhone: data.alternatePhone ?? "",
+          dateOfBirth: data.dateOfBirth
+            ? data.dateOfBirth.format("YYYY-MM-DD")
+            : "",
+          gender: data.gender ?? "male",
+          nationality: data.nationality ?? "",
+          idType: data.idType ?? "",
+          idNumber: data.idNumber ?? "",
+          addressLine1: data.addressLine1 ?? "",
+          addressLine2: data.addressLine2 ?? "",
+          city: data.city ?? "",
+          state: data.state ?? "",
+          country: data.country ?? "",
+          postalCode: data.postalCode ?? "",
+          dietaryPreferences: data.dietaryPreferences
+            ? [data.dietaryPreferences]
+            : [],
+          specialRequests: data.specialRequests ? [data.specialRequests] : [],
+          emergencyContactName: data.emergencyContactName ?? "",
+          emergencyContactPhone: data.emergencyContactPhone ?? "",
+          loyaltyNumber: data.loyaltyNumber ?? "",
+          marketingOptIn: data.marketingOptIn ?? false,
+          notes: data.notes ?? "",
+          firstBookingSource: "web",
+        },
+        selectedRooms: [
+          {
+            id: roomId,
+          },
+        ],
+        selectedAddons:
+          data.addons?.map((addonId) => ({
+            id: addonId,
+            priceCents:
+              roomType.addons?.find((a) => a.addonId === addonId)?.priceCents ??
+              0,
+          })) ?? [],
+        roomTypeDetails: {
+          id: roomType.id,
+          basePriceCents: roomType.basePriceCents ?? 0,
+        },
+        promoCode: data.promoCode ?? "",
+        amountPaidCents: 0, // This would be set based on payment processing
+        taxAmountCents: data.taxAmount ?? 0,
+        totalAmountCents: data.totalAmount ?? 0,
+      };
+
+      // Call the booking API
+      const result = await postFetcher<BookingResponse>(
+        "/api/bookings",
+        payload
+      );
+
+      // Store the booking response and show the confirmation modal
+      setBookingResponse(result);
+      setShowConfirmationModal(true);
+
+      message.success("Booking created successfully!");
+    } catch (_error) {
+      message.error("Failed to create booking. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const steps = [
@@ -44,16 +196,39 @@ const BookingStepper: React.FC<BookingStepperProps> = ({ hotel, roomType }) => {
     {
       number: 3,
       title: "Payment details",
-      component: <Step3PaymentDetails roomType={roomType} />,
+      component: (
+        <Step3PaymentDetails roomType={roomType} isSubmitting={isSubmitting} />
+      ),
     },
   ];
+
+  const onError = (errors: FieldErrors<BookingFormValues>) => {
+    message.error(
+      "Please fill in all required fields (Full Name, Email, Phone)"
+    );
+
+    // Scroll to first error
+    const firstErrorField = Object.keys(errors)[0];
+    if (firstErrorField) {
+      const element = document.getElementsByName(firstErrorField)[0];
+      element?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
 
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className="bg-white rounded-lg border border-gray-200"
+        onSubmit={methods.handleSubmit(onSubmit, onError)}
+        className="bg-white rounded-lg border border-gray-200 relative"
       >
+        {isSubmitting ? (
+          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2" />
+              <p className="text-gray-600">Creating your booking...</p>
+            </div>
+          </div>
+        ) : null}
         {steps.map((step, index) => (
           <div
             key={step.number}
@@ -68,6 +243,18 @@ const BookingStepper: React.FC<BookingStepperProps> = ({ hotel, roomType }) => {
           </div>
         ))}
       </form>
+
+      {/* Booking Confirmation Modal */}
+      <BookingConfirmationModal
+        isOpen={showConfirmationModal}
+        onClose={() => {
+          setShowConfirmationModal(false);
+          setBookingResponse(null);
+        }}
+        bookingResponse={bookingResponse}
+        hotelName={hotel.name}
+        customerName={methods.watch("fullName") || "Guest"}
+      />
     </FormProvider>
   );
 };

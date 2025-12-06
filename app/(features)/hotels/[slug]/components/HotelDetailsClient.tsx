@@ -17,6 +17,7 @@ import {
   hotelAttractionsData,
 } from "../../constants/our-attractions";
 import AttractionCarousel from "@/components/client/AttractionCarousel";
+import MapComponent from "@/components/client/MapComponent";
 interface HotelDetailsClientProps {
   hotel: Hotel;
   initialRoomTypes: RoomType[];
@@ -26,6 +27,7 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   hotel,
   initialRoomTypes,
 }) => {
+  console.log("hotel", hotel);
   const router = useRouter();
   const [dates, setDates] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
     dayjs().add(1, "day"),
@@ -158,6 +160,12 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
             </div>
           </div>
         </div>
+      </div>
+      <div className="container mx-auto px-4 py-16">
+        <h2 className="text-4xl font-cinzel text-text-dark mb-8 text-center">
+          Where we are
+        </h2>
+        <MapComponent latitude={hotel.latitude} longitude={hotel.longitude} />
       </div>
       <AvailableRoomsModal
         open={isModalVisible}

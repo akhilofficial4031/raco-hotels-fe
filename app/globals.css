@@ -271,3 +271,35 @@ input[type="reset"]:not(:disabled) {
     object-fit: cover;
   }
 }
+
+/* Booking Receipt Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  .booking-receipt {
+    width: 100% !important;
+    max-width: none !important;
+    box-shadow: none !important;
+  }
+
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+.booking-receipt {
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.booking-receipt * {
+  box-sizing: border-box;
+}

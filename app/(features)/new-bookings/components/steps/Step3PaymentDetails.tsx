@@ -1,5 +1,5 @@
 "use client";
-import { RoomType, Addon } from "@/types/hotel";
+import { RoomType } from "@/types/hotel";
 import React, { useEffect } from "react";
 import { Button, Checkbox, Input, Divider } from "antd";
 import { useFormContext, Controller } from "react-hook-form";
@@ -7,6 +7,7 @@ import { BookingFormValues } from "../form-schema";
 
 interface Step3PaymentDetailsProps {
   roomType: RoomType;
+  isSubmitting?: boolean;
 }
 
 const formatCurrency = (amount: number, currencyCode: string) => {
@@ -19,32 +20,27 @@ const formatCurrency = (amount: number, currencyCode: string) => {
 
 const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   roomType,
+  isSubmitting = false,
 }) => {
   const { control, watch, setValue } = useFormContext<BookingFormValues>();
-  const selectedAddons: Addon[] = watch("addons", []);
-  const totalAmount = watch("totalAmount", roomType?.basePriceCents || 0);
+  const selectedAddonIds: number[] = watch("addons", []);
+  const totalAmount = watch("totalAmount", roomType?.basePriceCents ?? 0);
+  const taxAmount = watch("taxAmount", 0);
 
   useEffect(() => {
-    const addonsTotal = selectedAddons.reduce(
-      (sum, addon) => sum + addon.priceCents,
-      0
-    );
-    const basePrice = roomType?.basePriceCents || 0;
-    setValue("totalAmount", basePrice + addonsTotal);
-  }, [selectedAddons, roomType?.basePriceCents, setValue]);
+    const TAX_RATE = 0.18;
+    const addonsTotal = selectedAddonIds.reduce((sum, addonId) => {
+      const addon = roomType.addons?.find((a) => a.id === addonId);
+      return sum + (addon?.priceCents ?? 0);
+    }, 0);
 
-  const handleAddonToggle = (addon: Addon) => {
-    const currentAddons: Addon[] = selectedAddons || [];
-    const addonIndex = currentAddons.findIndex((a) => a.id === addon.id);
-    if (addonIndex > -1) {
-      setValue(
-        "addons",
-        currentAddons.filter((a) => a.id !== addon.id)
-      );
-    } else {
-      setValue("addons", [...currentAddons, addon]);
-    }
-  };
+    const basePrice = roomType?.basePriceCents ?? 0;
+    const subtotal = basePrice + addonsTotal;
+    const tax = Math.round(subtotal * TAX_RATE);
+
+    setValue("taxAmount", tax);
+    setValue("totalAmount", subtotal + tax);
+  }, [selectedAddonIds, roomType?.addons, roomType?.basePriceCents, setValue]);
 
   if (!roomType) {
     return <div>Loading room details...</div>;
@@ -68,26 +64,36 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
             </span>
           </div>
           <div className="flex justify-between items-center text-gray-600">
-            <span>Tax</span>
-            <span>TBD</span>
-          </div>
-          <div className="flex justify-between items-center text-gray-600">
-            <span>Other Fees</span>
-            <span>TBD</span>
+            <span>Tax(18%)</span>
+            <span>
+              {formatCurrency(taxAmount ?? 0, roomType.currencyCode || "INR")}
+            </span>
           </div>
 
-          {selectedAddons.map((addon) => (
-            <div
-              key={addon.id}
-              className="flex justify-between items-center text-gray-600"
-            >
-              <span>{addon.name}</span>
-              <span>
-                +{" "}
-                {formatCurrency(addon.priceCents, addon.currencyCode || "INR")}
-              </span>
+          {selectedAddonIds.length > 0 && (
+            <div className="flex justify-between items-center text-gray-600">
+              <span>Add-ons</span>
             </div>
-          ))}
+          )}
+          {selectedAddonIds.map((addonId) => {
+            const addon = roomType.addons?.find((a) => a.addonId === addonId);
+            if (!addon) return null;
+            return (
+              <div
+                key={addon.id}
+                className="flex justify-between items-center text-gray-600 pl-8"
+              >
+                <span className="capitalize">{addon.name}</span>
+                <span>
+                  +{" "}
+                  {formatCurrency(
+                    addon.priceCents,
+                    addon.currencyCode || "INR"
+                  )}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         <Divider />
@@ -106,22 +112,40 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
           <h3 className="text-lg font-semibold text-gray-800 mb-3">
             Optional Add-ons
           </h3>
-          <div className="space-y-2">
-            {roomType.addons.map((addon) => (
-              <Checkbox
-                key={addon.id}
-                onChange={() => handleAddonToggle(addon)}
-                checked={selectedAddons.some((a) => a.id === addon.id)}
-              >
-                {addon.name} -{" "}
-                <span className="font-semibold">
-                  {formatCurrency(
-                    addon.priceCents,
-                    addon.currencyCode || "INR"
-                  )}
-                </span>
-              </Checkbox>
-            ))}
+          <div className="space-y-2 flex flex-col">
+            {roomType.addons?.map((addon) => {
+              const isChecked = selectedAddonIds.includes(addon.addonId);
+
+              return (
+                <Checkbox
+                  key={addon.id}
+                  checked={isChecked}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    const currentAddons = selectedAddonIds || [];
+
+                    if (checked) {
+                      // Add addon ID to the array
+                      setValue("addons", [...currentAddons, addon.addonId]);
+                    } else {
+                      // Remove addon ID from the array
+                      setValue(
+                        "addons",
+                        currentAddons.filter((id) => id !== addon.addonId)
+                      );
+                    }
+                  }}
+                >
+                  <span className="capitalize">{addon.name} - </span>
+                  <span className="font-semibold">
+                    {formatCurrency(
+                      addon.priceCents,
+                      addon.currencyCode || "INR"
+                    )}
+                  </span>
+                </Checkbox>
+              );
+            })}
           </div>
         </div>
       ) : null}
@@ -153,8 +177,10 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
           htmlType="submit"
           size="large"
           className="flex-1 !bg-primary"
+          loading={isSubmitting}
+          disabled={isSubmitting}
         >
-          Book now
+          {isSubmitting ? "Processing..." : "Book now"}
         </Button>
       </div>
     </div>

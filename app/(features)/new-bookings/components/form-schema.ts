@@ -34,9 +34,10 @@ export const addonSchema = z.object({
 });
 
 export const bookingSchema = personalDataSchema.extend({
-  addons: z.array(addonSchema),
+  addons: z.array(z.number()),
   promoCode: z.string().optional(),
   totalAmount: z.number(),
+  taxAmount: z.number().optional(),
 });
 
 export type BookingFormValues = z.infer<typeof bookingSchema>;

@@ -27,6 +27,7 @@ const NewBookingsPageContent = () => {
   const [error, setError] = useState<string | null>(null);
 
   const BUCKET_BASE_URL = process.env.NEXT_PUBLIC_BUCKET_URL ?? "";
+  const [roomId, setRoomId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +41,19 @@ const NewBookingsPageContent = () => {
         setLoading(true);
         const hotelRes = await getHotelById(parseInt(hotelId, 10));
         const roomTypeRes = await getRoomTypeById(parseInt(roomTypeId, 10));
+        const availableRoomResponse = await getAvailableRoomTypesForHotel(
+          parseInt(hotelId, 10),
+          checkIn,
+          checkOut,
+          parseInt(roomTypeId, 10)
+        );
+        if (availableRoomResponse.success) {
+          const roomId =
+            availableRoomResponse.data.roomTypes[0].rooms[0].roomId;
+          setRoomId(roomId);
+        } else {
+          setError("Could not fetch available room.");
+        }
 
         if (hotelRes.data.hotel) {
           // Prepend base URL to hotel images
@@ -132,7 +146,15 @@ const NewBookingsPageContent = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <BookingStepper hotel={hotel} roomType={roomType} />
+            <BookingStepper
+              hotel={hotel}
+              roomType={roomType}
+              roomId={roomId ?? 0}
+              checkInDate={checkIn}
+              checkOutDate={checkOut}
+              numAdults={parseInt(searchParams.get("adults") ?? "1", 10)}
+              numChildren={parseInt(searchParams.get("children") ?? "0", 10)}
+            />
           </div>
           <div className="lg:col-span-1">
             <div className="sticky top-30">

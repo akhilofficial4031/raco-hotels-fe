@@ -72,6 +72,7 @@ export interface Hotel {
 
 export interface Addon {
   id: number;
+  addonId: number;
   name: string;
   description: string;
   priceCents: number;
