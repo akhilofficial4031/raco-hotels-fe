@@ -1,7 +1,8 @@
 "use client";
+import { PaymentDetails } from "@/types/razorpay";
+import { CloseOutlined, DownloadOutlined } from "@ant-design/icons";
+import { Button, Divider, message, Modal } from "antd";
 import React from "react";
-import { Modal, Button, Divider, message } from "antd";
-import { DownloadOutlined, CloseOutlined } from "@ant-design/icons";
 
 interface BookingData {
   id: number;
@@ -40,6 +41,7 @@ interface BookingConfirmationModalProps {
   bookingResponse: BookingResponse | null;
   hotelName?: string;
   customerName?: string;
+  paymentDetails?: PaymentDetails | null;
 }
 
 const formatCurrency = (amountCents: number, currencyCode: string) => {
@@ -65,6 +67,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
   bookingResponse,
   hotelName = "Hotel Name",
   customerName = "Guest",
+  paymentDetails = null,
 }) => {
   const receiptRef = React.useRef<HTMLDivElement>(null);
 
@@ -493,26 +496,67 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                 <strong>Payment Status:</strong>
                 <span
                   className={`ml-1 px-2 py-1 rounded-full text-xs ${
-                    booking.paymentStatus === "completed"
+                    paymentDetails?.status === "success"
                       ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
+                      : booking.paymentStatus === "completed"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-yellow-100 text-yellow-800"
                   }`}
                   style={{
                     backgroundColor:
-                      booking.paymentStatus === "completed"
+                      paymentDetails?.status === "success"
                         ? "#dcfce7"
-                        : "#fef3c7",
+                        : booking.paymentStatus === "completed"
+                          ? "#dcfce7"
+                          : "#fef3c7",
                     color:
-                      booking.paymentStatus === "completed"
+                      paymentDetails?.status === "success"
                         ? "#166534"
-                        : "#92400e",
+                        : booking.paymentStatus === "completed"
+                          ? "#166534"
+                          : "#92400e",
                   }}
                 >
-                  {booking.paymentStatus.toUpperCase()}
+                  {paymentDetails?.status === "success"
+                    ? "PAID"
+                    : booking.paymentStatus.toUpperCase()}
                 </span>
               </div>
             </div>
           </div>
+
+          {/* Razorpay Payment Details */}
+          {Boolean(paymentDetails) && (
+            <div className="mb-4">
+              <h4 className="font-semibold text-gray-700 mb-2">
+                Payment Information
+              </h4>
+              <div className="text-sm space-y-1 bg-green-50 p-3 rounded-lg">
+                <div>
+                  <strong>Payment Gateway:</strong> Razorpay
+                </div>
+                {Boolean(paymentDetails?.paymentId) && (
+                  <div className="break-all">
+                    <strong>Transaction ID:</strong> {paymentDetails?.paymentId}
+                  </div>
+                )}
+                {Boolean(paymentDetails?.orderId) && (
+                  <div className="break-all">
+                    <strong>Order ID:</strong> {paymentDetails?.orderId}
+                  </div>
+                )}
+                {paymentDetails?.amount !== undefined && (
+                  <div>
+                    <strong>Amount Paid:</strong>{" "}
+                    {formatCurrency(
+                      paymentDetails.amount,
+                      paymentDetails.currency
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Payment Information */}
           {/* <div className="mb-4">

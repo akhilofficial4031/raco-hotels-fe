@@ -1,7 +1,15 @@
 "use client";
-import React from "react";
-import { useFormContext, Controller } from "react-hook-form";
-import { Input, DatePicker, Select, Checkbox, Form, Row, Col } from "antd";
+import {
+  Checkbox,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Row,
+  Select,
+} from "antd";
+import { Controller, useFormContext } from "react-hook-form";
 import { BookingFormValues } from "../form-schema";
 
 const { Option } = Select;
@@ -15,6 +23,8 @@ const Step2PersonalData = () => {
 
   return (
     <div className="ant-form ant-form-vertical">
+      {/* Personal Information */}
+      <Divider orientation="left">Personal Information</Divider>
       <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item
@@ -70,7 +80,7 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={12}>
+        <Col xs={24} md={8}>
           <Form.Item label="Date of Birth">
             <Controller
               name="dateOfBirth"
@@ -81,7 +91,7 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={12}>
+        <Col xs={24} md={8}>
           <Form.Item label="Gender">
             <Controller
               name="gender"
@@ -96,7 +106,7 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={12}>
+        <Col xs={24} md={8}>
           <Form.Item label="Nationality">
             <Controller
               name="nationality"
@@ -105,6 +115,11 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
+      </Row>
+
+      {/* Identity Documents */}
+      <Divider orientation="left">Identity Documents</Divider>
+      <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item label="ID Type">
             <Controller
@@ -129,7 +144,12 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={12}>
+      </Row>
+
+      {/* Address Details */}
+      <Divider orientation="left">Address Details</Divider>
+      <Row gutter={24}>
+        <Col xs={24}>
           <Form.Item label="Address Line 1">
             <Controller
               name="addressLine1"
@@ -138,7 +158,7 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={12}>
+        <Col xs={24}>
           <Form.Item label="Address Line 2">
             <Controller
               name="addressLine2"
@@ -147,7 +167,7 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={8}>
+        <Col xs={24} md={12}>
           <Form.Item label="City">
             <Controller
               name="city"
@@ -156,7 +176,7 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={8}>
+        <Col xs={24} md={12}>
           <Form.Item label="State">
             <Controller
               name="state"
@@ -165,7 +185,7 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={8}>
+        <Col xs={24} md={12}>
           <Form.Item label="Country">
             <Controller
               name="country"
@@ -183,15 +203,11 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={12}>
-          <Form.Item label="Dietary Preferences">
-            <Controller
-              name="dietaryPreferences"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
+      </Row>
+
+      {/* Emergency Contact */}
+      <Divider orientation="left">Emergency Contact</Divider>
+      <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item label="Emergency Contact Name">
             <Controller
@@ -210,6 +226,20 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
+      </Row>
+
+      {/* Preferences & Additional Info */}
+      <Divider orientation="left">Preferences & Additional Info</Divider>
+      <Row gutter={24}>
+        <Col xs={24} md={12}>
+          <Form.Item label="Dietary Preferences">
+            <Controller
+              name="dietaryPreferences"
+              control={control}
+              render={({ field }) => <Input {...field} />}
+            />
+          </Form.Item>
+        </Col>
         <Col xs={24} md={12}>
           <Form.Item label="Loyalty Number">
             <Controller
@@ -219,30 +249,38 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
+        <Col xs={24}>
+          <Form.Item label="Special Requests">
+            <Controller
+              name="specialRequests"
+              control={control}
+              render={({ field }) => <TextArea {...field} rows={4} />}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24}>
+          <Form.Item label="Notes">
+            <Controller
+              name="notes"
+              control={control}
+              render={({ field }) => <TextArea {...field} rows={3} />}
+            />
+          </Form.Item>
+        </Col>
       </Row>
-
-      <Form.Item label="Special Requests">
-        <Controller
-          name="specialRequests"
-          control={control}
-          render={({ field }) => <TextArea {...field} rows={4} />}
-        />
-      </Form.Item>
-
-      <Form.Item label="Notes">
-        <Controller
-          name="notes"
-          control={control}
-          render={({ field }) => <TextArea {...field} rows={3} />}
-        />
-      </Form.Item>
 
       <Form.Item>
         <Controller
           name="marketingOptIn"
           control={control}
           render={({ field }) => (
-            <Checkbox {...field}>Sign up for marketing emails</Checkbox>
+            <Checkbox
+              checked={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            >
+              Sign up for marketing emails
+            </Checkbox>
           )}
         />
       </Form.Item>
