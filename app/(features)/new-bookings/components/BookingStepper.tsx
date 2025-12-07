@@ -232,6 +232,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
     }
 
     setIsSubmitting(true);
+    let paymentInitiated = false;
 
     try {
       // Transform form data to match API payload structure
@@ -309,10 +310,17 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
       );
 
       // Initiate Razorpay payment
+      // Note: payment handlers and modal callbacks will handle setIsSubmitting(false)
+      paymentInitiated = true;
       await handleRazorpayPayment(result, data);
     } catch (_error) {
       message.error("Failed to create booking. Please try again.");
-      setIsSubmitting(false);
+    } finally {
+      // Only reset isSubmitting if payment was not successfully initiated
+      // If payment was initiated, the Razorpay handlers will reset it
+      if (!paymentInitiated) {
+        setIsSubmitting(false);
+      }
     }
   };
 
