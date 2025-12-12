@@ -31,6 +31,7 @@ export const generateMetadata = withMetadataErrorHandling(
 
 const HotelDetailsPage = async ({ params }: Props) => {
   const { slug } = await params;
+  const showHotelAttractions = slug === "raco-cyber-residency";
   const hotelResponse = await getHotelBySlug(slug);
   const hotel = hotelResponse.data.hotel;
 
@@ -75,7 +76,11 @@ const HotelDetailsPage = async ({ params }: Props) => {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      <HotelDetailsClient hotel={hotel} initialRoomTypes={roomTypes} />
+      <HotelDetailsClient
+        hotel={hotel}
+        initialRoomTypes={roomTypes}
+        showHotelAttractions={showHotelAttractions}
+      />
     </>
   );
 };

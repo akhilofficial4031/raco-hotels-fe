@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Cinzel, DM_Sans } from "next/font/google";
+import { Montserrat, Cinzel, DM_Sans, Dancing_Script } from "next/font/google";
 import Head from "next/head";
 import "../font-awesome-4.7.0/css/font-awesome.css";
 import Footer from "./components/Footer";
@@ -26,6 +26,13 @@ const cinzel = Cinzel({
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const dancingScript = Dancing_Script({
+  variable: "--font-dancing-script",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
@@ -114,7 +121,7 @@ export default async function RootLayout({
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
       </Head>
       <body
-        className={`${montserrat.variable} ${cinzel.variable} ${dmSans.variable} min-h-screen`}
+        className={`${montserrat.variable} ${cinzel.variable} ${dmSans.variable} ${dancingScript.variable} min-h-screen`}
       >
         <QuickBookingProvider hotels={hotels}>
           <SmoothScroll>

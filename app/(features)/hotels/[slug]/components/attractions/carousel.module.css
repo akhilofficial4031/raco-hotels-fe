@@ -1,0 +1,185 @@
+.embla {
+  position: relative;
+}
+
+.embla__viewport {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+}
+
+.embla__slide {
+  flex: 0 0 25%;
+  min-width: 0;
+  padding-left: 1rem;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .embla__slide {
+    flex: 0 0 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .embla__slide {
+    flex: 0 0 100%;
+  }
+}
+
+.embla__slide__img {
+  display: block;
+  height: 20rem;
+  object-fit: cover;
+  width: 100%;
+}
+
+.embla__slide__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.embla__button {
+  /* background: radial-gradient(circle at 50% 30%, #a4978e, #70625a); */
+  background: #ffffff30;
+  backdrop-filter: blur(7px);
+  border: none;
+  border-radius: 50%;
+  color: var(--text-dark);
+  cursor: pointer;
+  height: 4rem;
+  width: 4rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.embla__button__prev {
+  left: 3rem;
+}
+
+.embla__button__next {
+  right: 3rem;
+}
+
+.darkHeader {
+  background-color: #333;
+  color: #fff;
+  padding: 0.5rem;
+  padding-top: 2rem;
+  border-radius: 1rem;
+}
+
+.darkHeader .embla__slide__img {
+  border-radius: 1rem;
+}
+
+.darkHeader .embla__container {
+  gap: 2rem;
+}
+
+.darkHeader .embla__slide {
+  flex: 0 0 100%;
+  padding-left: 0;
+}
+
+.header {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+}
+
+.headerTitle {
+  font-size: 2rem;
+  font-family: var(--font-cinzel);
+  flex-grow: 1;
+  /* max-width: 200px; */
+}
+
+.headerNav .embla__button {
+  position: static;
+  transform: none;
+  background: #f7b733;
+}
+
+.headerNav {
+  display: flex;
+  gap: 1rem;
+}
+
+.lightFooterNav .embla__slide__img {
+  border-radius: 1rem;
+}
+
+.lightFooterNav .embla__container {
+  gap: 1rem;
+}
+
+.lightFooterNav .embla__slide {
+  flex: 0 0 100%;
+  padding-left: 0;
+}
+
+.footerNav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.footerNav .embla__button {
+  position: static;
+  transform: none;
+  background: #f7b733;
+}
+
+.reviewCard {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  text-align: start;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.reviewAvatar {
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.reviewText {
+  font-size: 1rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.reviewRating {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.reviewUser {
+  font-family: "Dancing Script", cursive;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.reviewCountry {
+  font-size: 0.9rem;
+  color: #777;
+  margin: 0;
+}

@@ -3,21 +3,23 @@ import { EmblaOptionsType } from "embla-carousel";
 // import Autoplay from "embla-carousel-autoplay";
 import React from "react";
 
-import { AttractionData } from "@/types/hotel";
+import { Attraction, AttractionData } from "@/types/hotel";
 import ClassNames from "embla-carousel-class-names";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import "../embla-carousel/embla-attractions.css";
 import {
   NextButton,
   PrevButton,
   usePrevNextButtons,
 } from "../embla-carousel/EmblaCarouselArrowButtons";
+import { getImageUrl } from "@/lib/utils";
 
-const AttractionCarousel: React.FC<{ attractions: AttractionData[] }> = ({
+const AttractionCarousel: React.FC<{ attractions: Attraction[] }> = ({
   attractions,
 }) => {
-  // Debug logging removed
+  const pathname = usePathname();
 
   const options: EmblaOptionsType = {
     loop: true,
@@ -49,12 +51,15 @@ const AttractionCarousel: React.FC<{ attractions: AttractionData[] }> = ({
             key={index}
           >
             <div className=" overflow-hidden w-full h-full">
-              <Link href={attraction.link} className="block h-full">
+              <Link
+                href={`${pathname}/${attraction.slug}`}
+                className="block h-full"
+              >
                 <div className="relative h-96">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     className="absolute inset-0 w-full h-full object-cover"
-                    src={attraction.image}
+                    src={getImageUrl(attraction.content.hero.imageUrl)}
                     alt={attraction.name}
                   />
                 </div>
@@ -64,7 +69,7 @@ const AttractionCarousel: React.FC<{ attractions: AttractionData[] }> = ({
                       {attraction.name}
                     </h3>
                     <p className="text-sm text-left text-text-light">
-                      @ {attraction.location}
+                      @ {attraction.content.hero.subtitle}
                     </p>
                   </div>
                   <div className="ml-4">

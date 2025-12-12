@@ -68,6 +68,7 @@ export interface Hotel {
   images: Image[];
   features: Feature[];
   amenities: Amenity[];
+  attractions: Attraction[];
 }
 
 export interface Addon {
@@ -240,4 +241,83 @@ export interface AttractionData {
   location: string;
   link: string;
   image: string;
+}
+
+export interface AttractionResponse {
+  attraction: Attraction;
+}
+
+export interface Attraction {
+  id: number;
+  hotelId: number;
+  name: string;
+  slug: string;
+  content: AttractionContent;
+  createdAt: string;
+  updatedAt: string;
+  hotelName?: string;
+  layout: string;
+}
+
+export interface ButtonContent {
+  text: string;
+  type: "primary" | "secondary";
+  action: string;
+}
+
+export interface HeroContent {
+  title: string;
+  subtitle: string;
+  imageUrl: string;
+}
+
+export interface AboutSectionContent {
+  title: string;
+  description: string;
+  subtext: string[];
+  buttons: ButtonContent[];
+  images: string[];
+}
+
+export interface CarouselSectionContent {
+  tag: string;
+  title: string;
+  subtitle: string;
+  images: string[];
+}
+
+export interface FeatureContent {
+  tag: string;
+  title: string;
+  subtitle: string;
+  images: string[];
+  button: ButtonContent;
+}
+
+export interface ReviewItem {
+  name: string;
+  review: string;
+  stars: number;
+}
+
+export interface ReviewsContent {
+  tag: string;
+  title: string;
+  items: ReviewItem[];
+}
+
+export interface GalleryContent {
+  tag: string;
+  title: string;
+  images: string[];
+}
+
+export interface AttractionContent {
+  hero: HeroContent;
+  marqueeTexts: string[];
+  aboutSection: AboutSectionContent;
+  carouselSection: CarouselSectionContent;
+  feature: FeatureContent;
+  reviews: ReviewsContent;
+  gallery: GalleryContent;
 }

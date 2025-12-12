@@ -1,5 +1,7 @@
 import { ApiResponse } from "@/types/api";
 import {
+  Attraction,
+  AttractionResponse,
   AvailableRoomTypesApiResponse,
   HotelDetailsResponse,
   HotelResponse,
@@ -162,4 +164,12 @@ export async function getAvailableRoomTypesForHotel(
     // Re-throw the error to be handled by the calling component
     throw new Error("Failed to fetch available room types");
   }
+}
+
+export async function getAttractionBySlug(
+  slug: string
+): Promise<ApiResponse<AttractionResponse>> {
+  return getFetcher<ApiResponse<AttractionResponse>>(
+    `/api/attractions/slug/${slug}`
+  );
 }

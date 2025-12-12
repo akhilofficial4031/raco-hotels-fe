@@ -37,6 +37,28 @@ interface HotelMetadataParams {
   slug: string;
 }
 
+interface AttractionMetadataParams {
+  attraction: {
+    name: string;
+    content: {
+      hero: {
+        title: string;
+        subtitle: string;
+        imageUrl: string;
+      };
+      aboutSection: {
+        description: string;
+      };
+      gallery?: {
+        images?: string[];
+      };
+    };
+    hotelName?: string;
+  };
+  slug: string;
+  hotelSlug: string;
+}
+
 interface PageMetadataParams extends BaseMetadataParams {
   path: string;
   type?: "website" | "article";
@@ -129,6 +151,64 @@ export const generateHotelMetadata = (
     keywords,
     canonical: `${siteUrl}/hotels/${slug}`,
     path: `/hotels/${slug}`,
+    images,
+  });
+};
+
+// Specialized metadata generator for attraction pages
+export const generateAttractionMetadata = (
+  params: AttractionMetadataParams
+): Metadata => {
+  const { attraction, slug, hotelSlug } = params;
+
+  const hotelRef = attraction.hotelName ? ` at ${attraction.hotelName}` : "";
+  const title = `${attraction.content.hero.title ?? attraction.name}${hotelRef} | Raco Hotels`;
+  const description = `${attraction.content.hero.subtitle}. ${attraction.content.aboutSection.description.slice(0, 140)}...`;
+  const keywords = [
+    attraction.name,
+    attraction.content.hero.title,
+    attraction.hotelName ?? "",
+    "hotel attraction",
+    "hotel amenity",
+    "Raco Hotels",
+  ].filter(Boolean);
+
+  // Build images array from hero image and gallery
+  const images: Array<{
+    url: string;
+    width: number;
+    height: number;
+    alt: string;
+  }> = [];
+
+  // Add hero image
+  if (attraction.content.hero.imageUrl) {
+    images.push({
+      url: getImageUrl(attraction.content.hero.imageUrl),
+      width: 1200,
+      height: 630,
+      alt: attraction.content.hero.title ?? attraction.name,
+    });
+  }
+
+  // Add gallery images if available
+  if (attraction.content.gallery?.images) {
+    attraction.content.gallery.images.slice(0, 3).forEach((img) => {
+      images.push({
+        url: getImageUrl(img),
+        width: 1200,
+        height: 630,
+        alt: attraction.name,
+      });
+    });
+  }
+
+  return generatePageMetadata({
+    title,
+    description,
+    keywords,
+    canonical: `${siteUrl}/hotels/${hotelSlug}/${slug}`,
+    path: `/hotels/${hotelSlug}/${slug}`,
     images,
   });
 };
