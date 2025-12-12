@@ -9,13 +9,11 @@ import Image from "next/image";
 import TagSection from "../components/attractions/TagSection";
 import Carousel from "../components/attractions/Carousel";
 import { Metadata } from "next";
-import AboutSection from "./components/AboutSectionL2";
 import { AttractionLayout } from "@/types/attractions";
 import AboutSectionL1 from "./components/AboutSectionL1";
-import AboutContentL3 from "./components/AboutSectionL3";
 import AboutSectionL2 from "./components/AboutSectionL2";
-import AboutSectionL3 from "./components/AboutSectionL3";
 import Gallery from "./components/Gallery";
+import AboutSectionL3 from "./components/AboutSectionL3";
 
 interface Props {
   params: Promise<{
