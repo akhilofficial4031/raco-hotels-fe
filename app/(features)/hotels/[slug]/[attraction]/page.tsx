@@ -65,7 +65,7 @@ const AttractionPage = async ({ params }: Props) => {
             priority
           />
 
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center border border-white/70 text-white text-center bg-white/20 p-8 rounded-3xl backdrop-blur-sm">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center border border-white/70 text-white text-center bg-white/20 p-8 rounded-3xl backdrop-blur-sm w-max">
             <h1 className="text-5xl font-cinzel capitalize">
               {attraction.attraction.content.hero.title}
             </h1>
