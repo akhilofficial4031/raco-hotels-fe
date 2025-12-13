@@ -1,12 +1,13 @@
 "use client";
 
-import { Button, DatePicker, Form, Input, message, Modal } from "antd";
+import { Button, DatePicker, Form, Input, Modal } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import dayjs, { Dayjs } from "dayjs";
 import { useParams } from "next/navigation";
 import { postFetcher } from "@/lib/fetcher";
+import { useState } from "react";
 
 const { TextArea } = Input;
 
@@ -57,6 +58,8 @@ const AttractionEnquiry: React.FC<AttractionInquiryProps> = ({
   const [antdForm] = Form.useForm();
   const params = useParams();
   const attractionSlug = params.attraction as string;
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [showMessage, setShowMessage] = useState<boolean>(false);
 
   const {
     control,
@@ -90,13 +93,19 @@ const AttractionEnquiry: React.FC<AttractionInquiryProps> = ({
         "/api/inquiries",
         payload
       );
+      setShowMessage(true);
+      setIsSuccess(true);
 
-      message.success(
-        "Your inquiry has been submitted successfully! We'll get back to you soon."
-      );
-      handleClose();
+      setTimeout(() => {
+        handleClose();
+        setShowMessage(false);
+      }, 3000);
     } catch (_error) {
-      message.error("Failed to submit inquiry. Please try again.");
+      setShowMessage(true);
+      setIsSuccess(false);
+      setTimeout(() => {
+        handleClose();
+      }, 3000);
     }
   };
 
@@ -219,6 +228,17 @@ const AttractionEnquiry: React.FC<AttractionInquiryProps> = ({
           </div>
         </Form.Item>
       </Form>
+      {showMessage ? (
+        isSuccess ? (
+          <div className="mt-4 text-green-500">
+            Inquiry submitted successfully!
+          </div>
+        ) : (
+          <div className="mt-4 text-red-500">
+            Failed to submit inquiry. Please try again.
+          </div>
+        )
+      ) : null}
     </Modal>
   );
 };
