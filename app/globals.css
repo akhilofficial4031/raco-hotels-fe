@@ -24,6 +24,7 @@ body {
   --color-primary-light: #f2c33c;
   --color-secondary: #ffb200;
   --color-background-light: #f2ece3;
+  --color-background-ultra-light: #faf8f2;
   --color-background-medium: #ede1f0;
   --color-pink-bg: #feeffd;
   --color-footer-dark-bg: #2e2922;
@@ -36,6 +37,9 @@ body {
   --color-gradient-to: #e4b159;
   --color-tag-bg: #e3d19d;
   --color-border: #d1c2ae;
+  --color-black-bg: #2a2622;
+  --color-blackbg-text1: #decdbb;
+  --color-blackbg-text2: #9e9e9e;
   --font-montserrat: var(--font-montserrat), sans-serif;
   --font-cinzel: var(--font-cinzel), serif;
   --font-dm-sans: var(--font-dm-sans), sans-serif;

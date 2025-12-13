@@ -21,11 +21,13 @@ import RoomTypes from "./RoomTypes";
 interface HotelDetailsClientProps {
   hotel: Hotel;
   initialRoomTypes: RoomType[];
+  showHotelAttractions: boolean;
 }
 
 const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   hotel,
   initialRoomTypes,
+  showHotelAttractions,
 }) => {
   console.log("hotel", hotel);
   const router = useRouter();
@@ -144,10 +146,14 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
           </div>
           {/* </AnimatedContainer> */}
         </div>
-        <OurStays content={hotelAttractions} />
-        <div className="container mx-auto px-4 text-center py-16 border-t border-border">
-          <AttractionCarousel attractions={hotelAttractionsData} />
-        </div>
+        {hotel.attractions && hotel.attractions.length > 0 ? (
+          <>
+            <OurStays content={hotelAttractions} />
+            <div className="container mx-auto px-4 text-center py-16 border-t border-border">
+              <AttractionCarousel attractions={hotel.attractions} />
+            </div>
+          </>
+        ) : null}
 
         <div className="">
           {initialRoomTypes && initialRoomTypes.length > 0 ? (
