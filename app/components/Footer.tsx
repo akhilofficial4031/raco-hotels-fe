@@ -2,11 +2,12 @@
 import { useQuickBooking } from "@/contexts/QuickBookingContext";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Footer = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { openModal } = useQuickBooking();
+  const { openModal, openAttractionModal } = useQuickBooking();
 
   const toggleVisibility = () => {
     if (window.scrollY > 300) {
@@ -21,6 +22,16 @@ const Footer = () => {
       top: 0,
       behavior: "smooth",
     });
+  };
+  const pathname = usePathname();
+  const isAttractionPage = /^\/hotels\/[^\/]+\/[^\/]+$/.test(pathname);
+
+  const handleBookingClick = () => {
+    if (isAttractionPage) {
+      openAttractionModal();
+    } else {
+      openModal();
+    }
   };
 
   useEffect(() => {
@@ -67,8 +78,8 @@ const Footer = () => {
             Your next unforgettable
             <br /> escape awaits.
           </p>
-          <button className="btn-primary" onClick={openModal}>
-            Book Now
+          <button className="btn-primary" onClick={handleBookingClick}>
+            {isAttractionPage ? "Inquire Now" : "Book Now"}
           </button>
         </div>
       </div>
