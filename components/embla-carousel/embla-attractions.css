@@ -1,12 +1,23 @@
 .embla {
   max-width: 100%;
-  margin: auto 2rem;
+  margin: auto;
   --slide-height: 22rem;
-  --slide-spacing: 4rem;
-  --slide-size: 33.33%;
+  --slide-spacing: 1rem;
   border: none !important;
   box-shadow: none !important;
 }
+@media (min-width: 768px) {
+  .embla {
+    margin: auto 2rem;
+    --slide-spacing: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .embla {
+    --slide-spacing: 4rem;
+  }
+}
+
 .embla__viewport {
   overflow: hidden;
   border: none !important;
@@ -21,8 +32,6 @@
 }
 .embla__slide {
   transform: translate3d(0, 0, 0);
-  flex: 0 0 var(--slide-size);
-  min-width: 0;
   padding-left: var(--slide-spacing);
   position: relative;
 }
@@ -133,9 +142,15 @@
   content: "";
   position: absolute;
   right: calc(var(--slide-spacing) / -2);
-  top: 0%;
-  bottom: 5%;
+  top: 10%;
+  bottom: 10%;
   width: 1px;
   background-color: rgba(200, 200, 200, 0.5);
   z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .embla__slide:not(:last-child)::after {
+    display: none;
+  }
 }

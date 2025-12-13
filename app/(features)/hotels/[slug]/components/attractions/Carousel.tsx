@@ -32,8 +32,8 @@ const ReviewCard: React.FC<{ item: ReviewItem }> = ({ item }) => (
     <Image
       src="/avatar.jpg"
       alt={item.name}
-      width={80}
-      height={80}
+      width={40}
+      height={40}
       className={styles.reviewAvatar}
     />
     <p className={`${styles.reviewText} text-left `}>{item.review}</p>

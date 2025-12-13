@@ -32,13 +32,17 @@ const Gallery = ({ content }: GalleryProps) => {
         </div>
 
         {/* Image Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="list">
+        <div className="grid grid-cols-2 gap-4" role="list">
           {content.images.map((image, index) => (
-            <div key={index} role="listitem" className="gallery-item">
+            <div
+              key={index}
+              role="listitem"
+              className="gallery-item overflow-hidden rounded-lg"
+            >
               <Image
                 src={getImageUrl(image.src)}
                 alt={image.alt}
-                className="!w-full !h-100 object-cover transform group-hover:scale-110 transition-transform duration-300"
+                className="!w-full !h-auto md:!h-100 object-cover transform rounded-lg group-hover:scale-110 transition-transform duration-300"
                 loading="lazy"
               />
             </div>
