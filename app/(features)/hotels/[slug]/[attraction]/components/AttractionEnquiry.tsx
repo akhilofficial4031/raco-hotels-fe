@@ -20,7 +20,11 @@ const attractionInquirySchema = z.object({
   phone: z
     .string()
     .min(1, "Phone number is required")
-    .regex(/^[\d\s\-\+\(\)]+$/, "Please enter a valid phone number"),
+    .regex(/^[\d\s\-\+\(\)]+$/, "Please enter a valid phone number")
+    .refine((val) => {
+      const digitCount = val.replace(/[^\d]/g, "").length;
+      return digitCount <= 12;
+    }, "Please enter a valid phone number"),
   date: z
     .any()
     .refine((val) => val && dayjs.isDayjs(val), "Please select a date"),
