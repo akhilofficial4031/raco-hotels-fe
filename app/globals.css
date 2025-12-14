@@ -308,6 +308,6 @@ input[type="reset"]:not(:disabled) {
   box-sizing: border-box;
 }
 
-.ant-modal-wrap {
+/* .ant-modal-wrap {
   z-index: 9999 !important;
-}
+} */

@@ -1,6 +1,5 @@
 import { ApiResponse } from "@/types/api";
 import {
-  Attraction,
   AttractionResponse,
   AvailableRoomTypesApiResponse,
   HotelDetailsResponse,

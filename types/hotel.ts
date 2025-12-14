@@ -161,6 +161,9 @@ export interface RoomType {
   rooms: Room[];
   addons?: Addon[];
   offerRate?: number;
+  offerPrice?: number | null;
+  offerStartDate?: string | null;
+  offerEndDate?: string | null;
 }
 
 export interface RoomTypesData {
@@ -320,4 +323,25 @@ export interface AttractionContent {
   feature: FeatureContent;
   reviews: ReviewsContent;
   gallery: GalleryContent;
+}
+
+export interface PromoCodeResponse {
+  promoCode: PromoCode;
+}
+
+export interface PromoCode {
+  id: number;
+  hotelId: number;
+  code: string;
+  type: "fixed" | "percentage";
+  value: number;
+  startDate: string;
+  endDate: string;
+  minNights: number;
+  minAmountCents: number;
+  maxDiscountCents: number;
+  usageLimit: number;
+  usageCount: number;
+  isActive: number;
+  createdAt: string;
 }

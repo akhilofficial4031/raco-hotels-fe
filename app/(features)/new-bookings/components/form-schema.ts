@@ -38,6 +38,7 @@ export const bookingSchema = personalDataSchema.extend({
   promoCode: z.string().optional(),
   totalAmount: z.number(),
   taxAmount: z.number().optional(),
+  discountAmount: z.number().optional(),
 });
 
 export type BookingFormValues = z.infer<typeof bookingSchema>;

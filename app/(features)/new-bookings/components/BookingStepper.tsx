@@ -197,7 +197,11 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
       number: 3,
       title: "Payment details",
       component: (
-        <Step3PaymentDetails roomType={roomType} isSubmitting={isSubmitting} />
+        <Step3PaymentDetails
+          roomType={roomType}
+          hotelId={hotel.id}
+          isSubmitting={isSubmitting}
+        />
       ),
     },
   ];
