@@ -45,7 +45,11 @@ async function fetchWithRetry<T>(
 }
 
 export async function getFetcher<T>(endpoint: string): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
+  // If endpoint starts with /api/, it's a Next.js API route (proxy)
+  // Otherwise, prepend the backend API base URL
+  const url = endpoint.startsWith("/api/")
+    ? endpoint
+    : `${API_BASE_URL}${endpoint}`;
 
   return fetchWithRetry<T>(url, {
     cache: "no-store", // Disable caching for dynamic data

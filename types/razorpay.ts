@@ -32,6 +32,13 @@ export interface RazorpayPaymentVerificationResponse {
   message: string;
   orderId?: string;
   paymentId?: string;
+  booking?: {
+    id: number;
+    referenceCode: string;
+    paymentStatus: string;
+    amountPaidCents: number;
+    balanceDueCents: number;
+  };
 }
 
 export interface RazorpayCheckoutOptions {

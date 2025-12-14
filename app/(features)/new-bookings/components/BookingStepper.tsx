@@ -164,13 +164,28 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
+                bookingId: bookingData.data.booking.id,
+                amount: orderData.order.amount,
               }),
             });
 
-            const verifyData: { success: boolean } =
-              await verifyResponse.json();
+            const verifyData: {
+              success: boolean;
+              message?: string;
+              booking?: BookingResponse["data"]["booking"];
+            } = await verifyResponse.json();
 
             if (verifyData.success) {
+              // Update booking response with latest data if available
+              if (verifyData.booking) {
+                setBookingResponse({
+                  success: true,
+                  data: {
+                    booking: verifyData.booking,
+                  },
+                });
+              }
+
               // Store payment details
               setPaymentDetails({
                 orderId: response.razorpay_order_id,
@@ -186,7 +201,8 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
               message.success("Payment completed successfully!");
             } else {
               message.error(
-                "Payment verification failed. Please contact support."
+                verifyData.message ||
+                  "Payment verification failed. Please contact support."
               );
             }
           } catch (error) {
