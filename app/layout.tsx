@@ -1,4 +1,5 @@
 import "@ant-design/v5-patch-for-react-19";
+import "antd/dist/reset.css";
 import type { Metadata } from "next";
 import { Montserrat, Cinzel, DM_Sans, Dancing_Script } from "next/font/google";
 import Head from "next/head";

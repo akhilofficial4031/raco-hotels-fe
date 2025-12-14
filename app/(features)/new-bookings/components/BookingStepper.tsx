@@ -1,15 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import { postFetcher } from "@/lib/fetcher";
 import { Hotel, RoomType } from "@/types/hotel";
+import {
+  PaymentDetails,
+  RazorpayOrderResponse,
+  RazorpayPaymentSuccessResponse,
+} from "@/types/razorpay";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { message } from "antd";
+import React, { useEffect, useState } from "react";
+import { FieldErrors, FormProvider, useForm } from "react-hook-form";
+import BookingConfirmationModal from "./BookingConfirmationModal";
+import { BookingFormValues, bookingSchema } from "./form-schema";
 import Step1Amenities from "./steps/Step1Amenities";
 import Step2PersonalData from "./steps/Step2PersonalData";
 import Step3PaymentDetails from "./steps/Step3PaymentDetails";
-import { useForm, FormProvider, FieldErrors } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { bookingSchema, BookingFormValues } from "./form-schema";
-import { postFetcher } from "@/lib/fetcher";
-import { message } from "antd";
-import BookingConfirmationModal from "./BookingConfirmationModal";
 
 interface BookingResponse {
   success: boolean;
@@ -63,6 +68,9 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [bookingResponse, setBookingResponse] =
     useState<BookingResponse | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(
+    null
+  );
   const methods = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     mode: "onSubmit",
@@ -94,6 +102,145 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
     },
   });
 
+  // Load Razorpay script
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  // Handle Razorpay payment
+  const handleRazorpayPayment = async (
+    bookingData: BookingResponse,
+    formData: BookingFormValues
+  ) => {
+    try {
+      // Create Razorpay order
+      const orderResponse = await fetch("/api/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: bookingData.data.booking.totalAmountCents,
+          currency: bookingData.data.booking.currencyCode,
+          receipt: bookingData.data.booking.referenceCode,
+          notes: {
+            bookingId: bookingData.data.booking.id.toString(),
+            hotelName: hotel.name,
+          },
+        }),
+      });
+
+      if (!orderResponse.ok) {
+        throw new Error("Failed to create payment order");
+      }
+
+      const orderData: { success: boolean; order: RazorpayOrderResponse } =
+        await orderResponse.json();
+
+      if (!orderData.success) {
+        throw new Error("Failed to create payment order");
+      }
+
+      // Initialize Razorpay checkout
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "",
+        amount: orderData.order.amount,
+        currency: orderData.order.currency,
+        name: "RACO Hotels",
+        description: `Booking for ${hotel.name}`,
+        order_id: orderData.order.id,
+        handler: async (response: RazorpayPaymentSuccessResponse) => {
+          // Payment successful, verify the payment
+          try {
+            const verifyResponse = await fetch("/api/razorpay/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                bookingId: bookingData.data.booking.id,
+                amount: orderData.order.amount,
+              }),
+            });
+
+            const verifyData: {
+              success: boolean;
+              message?: string;
+              booking?: BookingResponse["data"]["booking"];
+            } = await verifyResponse.json();
+
+            if (verifyData.success) {
+              // Update booking response with latest data if available
+              if (verifyData.booking) {
+                setBookingResponse({
+                  success: true,
+                  data: {
+                    booking: verifyData.booking,
+                  },
+                });
+              }
+
+              // Store payment details
+              setPaymentDetails({
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+                amount: orderData.order.amount,
+                currency: orderData.order.currency,
+                status: "success",
+              });
+
+              // Show confirmation modal
+              setShowConfirmationModal(true);
+              message.success("Payment completed successfully!");
+            } else {
+              message.error(
+                verifyData.message ||
+                  "Payment verification failed. Please contact support."
+              );
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Payment verification error:", error);
+            message.error(
+              "Payment verification failed. Please contact support."
+            );
+          } finally {
+            setIsSubmitting(false);
+          }
+        },
+        prefill: {
+          name: formData.fullName,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: {
+          color: "#7e6231",
+        },
+        modal: {
+          ondismiss: () => {
+            setIsSubmitting(false);
+            message.warning("Payment cancelled");
+          },
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Razorpay payment error:", error);
+      message.error("Failed to initialize payment. Please try again.");
+      setIsSubmitting(false);
+    }
+  };
+
   const onSubmit = async (data: BookingFormValues) => {
     if (!checkInDate || !checkOutDate) {
       message.error("Check-in and check-out dates are required");
@@ -101,6 +248,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
     }
 
     setIsSubmitting(true);
+    let paymentInitiated = false;
 
     try {
       // Transform form data to match API payload structure
@@ -170,15 +318,25 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
         payload
       );
 
-      // Store the booking response and show the confirmation modal
+      // Store the booking response
       setBookingResponse(result);
-      setShowConfirmationModal(true);
 
-      message.success("Booking created successfully!");
+      message.success(
+        "Booking created successfully! Redirecting to payment..."
+      );
+
+      // Initiate Razorpay payment
+      // Note: payment handlers and modal callbacks will handle setIsSubmitting(false)
+      paymentInitiated = true;
+      await handleRazorpayPayment(result, data);
     } catch (_error) {
       message.error("Failed to create booking. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      // Only reset isSubmitting if payment was not successfully initiated
+      // If payment was initiated, the Razorpay handlers will reset it
+      if (!paymentInitiated) {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -254,10 +412,12 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
         onClose={() => {
           setShowConfirmationModal(false);
           setBookingResponse(null);
+          setPaymentDetails(null);
         }}
         bookingResponse={bookingResponse}
         hotelName={hotel.name}
         customerName={methods.watch("fullName") || "Guest"}
+        paymentDetails={paymentDetails}
       />
     </FormProvider>
   );

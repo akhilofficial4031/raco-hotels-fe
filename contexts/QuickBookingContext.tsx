@@ -3,7 +3,8 @@
 import AttractionEnquiry from "@/app/(features)/hotels/[slug]/[attraction]/components/AttractionEnquiry";
 import QuickBooking from "@/app/components/QuickBooking";
 import { HotelNavItem } from "@/types/hotel";
-import { createContext, useContext, useState, ReactNode } from "react";
+import "@ant-design/v5-patch-for-react-19";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 interface QuickBookingContextType {
   openModal: () => void;

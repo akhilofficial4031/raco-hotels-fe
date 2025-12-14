@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { HotelNavItem } from "@/types/hotel";
 import {
   Button,
   DatePicker,
@@ -10,12 +10,19 @@ import {
   Modal,
   Select,
 } from "antd";
-import { useState } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { HotelNavItem } from "@/types/hotel";
+import { useState } from "react";
 
 const { RangePicker } = DatePicker;
+
+interface QuickBookingFormValues {
+  hotelId: number;
+  dates: [dayjs.Dayjs | null, dayjs.Dayjs | null];
+  rooms: number;
+  adults: number;
+  children: number;
+}
 
 interface QuickBookingProps {
   open: boolean;
@@ -32,7 +39,7 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
-  const handleCheckAvailability = async (values: any) => {
+  const handleCheckAvailability = async (values: QuickBookingFormValues) => {
     setLoading(true);
     const { hotelId, dates, rooms, adults, children } = values;
 
@@ -94,6 +101,7 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
               label: `${hotel.name} - ${hotel.city}, ${hotel.state}`,
             }))}
             showSearch
+            dropdownStyle={{ zIndex: 10000 }}
           />
         </Form.Item>
         <Form.Item

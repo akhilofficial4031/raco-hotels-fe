@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
       process.env.NEXT_PUBLIC_SITE_URL || "https://raco-hotels.com",
   },
 
+  // Server-only packages (prevents bundling in client)
+  serverExternalPackages: ["razorpay"],
+
   // Image optimization
   images: {
     domains: ["localhost"],
@@ -51,7 +54,8 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+            value:
+              "camera=(), microphone=(), geolocation=(), interest-cohort=()",
           },
         ],
       },
