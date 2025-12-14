@@ -201,7 +201,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
               message.success("Payment completed successfully!");
             } else {
               message.error(
-                verifyData.message ||
+                verifyData.message ??
                   "Payment verification failed. Please contact support."
               );
             }

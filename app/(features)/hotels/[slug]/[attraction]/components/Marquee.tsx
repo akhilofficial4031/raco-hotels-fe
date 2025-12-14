@@ -8,26 +8,21 @@ interface MarqueeProps {
 }
 
 const Marquee = ({ texts }: MarqueeProps) => {
-  const marqueeVariants = {
-    animate: {
-      x: ["0%", "-50%"],
-      transition: {
-        x: {
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 55,
-          ease: "linear",
-        },
-      },
-    },
-  };
-
   return (
     <div className="relative w-full overflow-hidden flex">
       <motion.div
         className="flex whitespace-nowrap"
-        variants={marqueeVariants}
-        animate="animate"
+        animate={{
+          x: ["0%", "-50%"],
+        }}
+        transition={{
+          x: {
+            repeat: Infinity,
+            repeatType: "loop" as const,
+            duration: 55,
+            ease: "linear" as const,
+          },
+        }}
       >
         {[...texts, ...texts].map((text, index) => (
           <div key={index} className="flex items-center flex-shrink-0">
