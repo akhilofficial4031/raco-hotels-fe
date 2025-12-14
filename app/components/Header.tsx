@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { useQuickBooking } from "@/contexts/QuickBookingContext";
 import { TopBannerContent } from "@/types/landing-page";
 import TopBanner from "./TopBanner";
+import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   hotels?: HotelNavItem[];
@@ -16,7 +17,19 @@ const Header = ({ hotels = [] }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { openModal } = useQuickBooking();
+  const { openModal, openAttractionModal } = useQuickBooking();
+  const pathname = usePathname();
+
+  // Check if we're on an attraction page (pattern: /hotels/[slug]/[attraction])
+  const isAttractionPage = /^\/hotels\/[^\/]+\/[^\/]+$/.test(pathname);
+
+  const handleBookingClick = () => {
+    if (isAttractionPage) {
+      openAttractionModal();
+    } else {
+      openModal();
+    }
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -159,11 +172,11 @@ const Header = ({ hotels = [] }: HeaderProps) => {
 
             <div className="hidden md:flex items-center space-x-4">
               <button
-                onClick={openModal}
+                onClick={handleBookingClick}
                 className="btn-primary"
                 aria-label="Book a hotel room now"
               >
-                Book Now
+                {isAttractionPage ? "Inquire Now" : "Book Now"}
               </button>
               {/* <div className="flex items-center space-x-2">
               <Image

@@ -307,3 +307,7 @@ input[type="reset"]:not(:disabled) {
 .booking-receipt * {
   box-sizing: border-box;
 }
+
+.ant-modal-wrap {
+  z-index: 9999 !important;
+}

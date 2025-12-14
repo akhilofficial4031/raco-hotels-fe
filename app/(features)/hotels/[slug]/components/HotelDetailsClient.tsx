@@ -9,10 +9,7 @@ import { message } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  hotelAttractions,
-  hotelAttractionsData,
-} from "../../constants/our-attractions";
+import { hotelAttractions } from "../../constants/our-attractions";
 import AvailableRoomsModal from "./AvailableRoomsModal";
 import CheckAvailability from "./CheckAvailability";
 import HeroCarousel from "./HeroCarousel";
@@ -27,7 +24,6 @@ interface HotelDetailsClientProps {
 const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   hotel,
   initialRoomTypes,
-  showHotelAttractions,
 }) => {
   console.log("hotel", hotel);
   const router = useRouter();
@@ -95,9 +91,17 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
               <p className="mt-4 text-lg">
                 {hotel.city}, {hotel.countryCode}
               </p>
+              <div className="flex lg:hidden items-center justify-center">
+                <span className="mr-2">{hotel.phone}</span>
+                <i className="fa fa-phone" aria-hidden="true" />
+              </div>
+              <div className="flex lg:hidden items-center justify-center">
+                <span className="mr-2">{hotel.email}</span>
+                <i className="fa fa-envelope" aria-hidden="true" />
+              </div>
             </AnimatedContainer>
           </div>
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 text-white flex flex-col items-end space-y-4 pr-8">
+          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 text-white hidden lg:flex flex-col items-end space-y-4 pr-8">
             <AnimatedContainer animationName="fadeIn" delay={1}>
               <div className="flex items-center">
                 <span className="mr-2">
