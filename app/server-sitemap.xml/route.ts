@@ -21,13 +21,23 @@ export async function GET() {
       changefreq: "weekly" as const,
       priority: 0.8,
       images: hotel.images?.slice(0, 5).map((img) => ({
-        loc: img.url,
+        loc: new URL(img.url.startsWith('http') ? img.url : `${siteUrl}${img.url}`),
         title: img.alt || hotel.name,
         caption: `${hotel.name} - ${hotel.city}, ${hotel.countryCode}`,
       })),
     }));
 
-    // Add other important pages with proper priorities
+    // Generate sitemap fields for attractions
+    const attractionSitemapFields = hotels.flatMap((hotel) =>
+      (hotel.attractions || []).map((attraction) => ({
+        loc: `${siteUrl}/hotels/${hotel.slug}/${attraction.slug}`,
+        lastmod: attraction.updatedAt || new Date().toISOString(),
+        changefreq: "monthly" as const,
+        priority: 0.7,
+      }))
+    );
+
+    // Add only actually implemented pages with proper priorities
     const additionalFields = [
       {
         loc: siteUrl,
@@ -41,39 +51,13 @@ export async function GET() {
         changefreq: "daily" as const,
         priority: 0.9,
       },
-      {
-        loc: `${siteUrl}/about`,
-        lastmod: new Date().toISOString(),
-        changefreq: "monthly" as const,
-        priority: 0.7,
-      },
-      {
-        loc: `${siteUrl}/contact`,
-        lastmod: new Date().toISOString(),
-        changefreq: "monthly" as const,
-        priority: 0.6,
-      },
-      {
-        loc: `${siteUrl}/offers`,
-        lastmod: new Date().toISOString(),
-        changefreq: "weekly" as const,
-        priority: 0.8,
-      },
-      {
-        loc: `${siteUrl}/dining`,
-        lastmod: new Date().toISOString(),
-        changefreq: "monthly" as const,
-        priority: 0.6,
-      },
-      {
-        loc: `${siteUrl}/experiences`,
-        lastmod: new Date().toISOString(),
-        changefreq: "monthly" as const,
-        priority: 0.6,
-      },
     ];
 
-    const allFields = [...additionalFields, ...hotelSitemapFields];
+    const allFields = [
+      ...additionalFields,
+      ...hotelSitemapFields,
+      ...attractionSitemapFields,
+    ];
 
     return getServerSideSitemap(allFields);
   } catch (_error) {

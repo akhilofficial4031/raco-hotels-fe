@@ -4,16 +4,16 @@ import {
   withMetadataErrorHandling,
 } from "@/lib/metadata";
 import { getImageUrl } from "@/lib/utils";
-import Marquee from "./components/Marquee";
-import Image from "next/image";
-import TagSection from "../components/attractions/TagSection";
-import Carousel from "../components/attractions/Carousel";
-import { Metadata } from "next";
 import { AttractionLayout } from "@/types/attractions";
+import { Metadata } from "next";
+import Image from "next/image";
+import Carousel from "../components/attractions/Carousel";
+import TagSection from "../components/attractions/TagSection";
 import AboutSectionL1 from "./components/AboutSectionL1";
 import AboutSectionL2 from "./components/AboutSectionL2";
-import Gallery from "./components/Gallery";
 import AboutSectionL3 from "./components/AboutSectionL3";
+import Gallery from "./components/Gallery";
+import Marquee from "./components/Marquee";
 
 interface Props {
   params: Promise<{
@@ -49,7 +49,6 @@ const AttractionPage = async ({ params }: Props) => {
   const { attraction: attractionSlug } = await params;
   const attractionResponse = await getAttractionBySlug(attractionSlug);
   const attraction = attractionResponse.data;
-  console.log("attraction123", attraction);
   const heroImageUrl = getImageUrl(attraction.attraction.content.hero.imageUrl);
   const attractionContent = attraction.attraction.content;
 

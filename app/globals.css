@@ -140,11 +140,16 @@ body {
 }
 
 .fullscreen-carousel.embla-room {
-  height: 100%;
+  height: 90vh !important;
   width: 100%;
+  max-width: 100vw;
 }
 
 .fullscreen-carousel .embla-room__viewport {
+  height: 100%;
+}
+
+.fullscreen-carousel .embla-room__container {
   height: 100%;
 }
 
@@ -152,14 +157,25 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
 }
 
 .fullscreen-carousel .embla-room__slide__img {
-  width: auto;
-  height: auto;
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+/* Ant Design Modal fullscreen overrides */
+.ant-modal-root .ant-modal-wrap {
+  overflow: hidden;
+}
+
+.ant-modal-root .ant-modal {
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  top: 0 !important;
 }
 
 .embla__slide:not(.is-snapped) {

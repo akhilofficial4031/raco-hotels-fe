@@ -59,8 +59,23 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value:
-              "connect-src 'self' https://checkout.razorpay.com https://api.razorpay.com https://lumberjack.razorpay.com https://www.google-analytics.com https://raco-hotels-backend-production.raco-api.workers.dev;",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://www.google-analytics.com https://www.googletagmanager.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "img-src 'self' data: https: blob:",
+              "media-src 'self' https:",
+              "connect-src 'self' https://checkout.razorpay.com https://api.razorpay.com https://lumberjack.razorpay.com https://www.google-analytics.com https://raco-hotels-backend-production.raco-api.workers.dev",
+              "frame-src 'self' https://checkout.razorpay.com https://api.razorpay.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self' https://checkout.razorpay.com",
+              "frame-ancestors 'none'",
+              "upgrade-insecure-requests",
+            ]
+              .join("; ")
+              .replace(/\s+/g, " "),
           },
         ],
       },

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LandingPageContent, CMSHomepageResponse } from "@/types/landing-page";
 import { getFetcher } from "@/lib/fetcher";
+import { CMSHomepageResponse, LandingPageContent } from "@/types/landing-page";
 import fs from "fs";
 import path from "path";
 
@@ -23,6 +23,11 @@ export async function getLandingPageContent(): Promise<LandingPageContent> {
     // Validate the content structure (basic validation)
     if (!content.hero || !content.aboutUs || !content.seo) {
       throw new Error("Invalid landing page content structure");
+    }
+
+    // Validate that SEO fields are not empty (if they are, use mock data)
+    if (!content.seo.title || !content.seo.description) {
+      throw new Error("SEO data is empty, falling back to mock data");
     }
 
     return content;

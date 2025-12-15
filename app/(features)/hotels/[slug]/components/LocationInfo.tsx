@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { LocationInfo as LocationInfoType } from "@/types/hotel";
+import Image from "next/image";
 
 interface Props {
   locationInfo: LocationInfoType[] | null | undefined;
@@ -63,7 +64,7 @@ const LocationInfo = ({ locationInfo }: Props) => {
                   key={i}
                   className="rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
                 >
-                  <img
+                  <Image
                     src={`${_baseUrl}/${image.url.replace("r2://", "")}`}
                     alt={image.alt}
                     width={400}

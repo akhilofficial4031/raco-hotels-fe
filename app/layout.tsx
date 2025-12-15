@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { Montserrat, Cinzel, DM_Sans, Dancing_Script } from "next/font/google";
 
 // Suppress Ant Design React 19 compatibility warning
-import Head from "next/head";
 import "../font-awesome-4.7.0/css/font-awesome.css";
 import Footer from "./components/Footer";
 import HeaderWrapper from "./components/HeaderWrapper";
@@ -65,6 +64,9 @@ export const metadata: Metadata = {
     "Raco Hotels",
   ],
   authors: [{ name: "Raco Hotels" }],
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com",
+  },
   openGraph: {
     title: "Raco Hotels - Luxury Accommodations & Premium Hotel Bookings",
     description:
@@ -98,7 +100,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    apple: "/pwa/ios/180.png",
   },
   other: {
     "format-detection": "telephone=no",
@@ -119,13 +121,9 @@ export default async function RootLayout({
   const hotels = await getHotelsForNavigation();
   return (
     <html lang="en">
-      <Head>
-        <link
-          rel="canonical"
-          href={process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com"}
-        />
+      <head>
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-      </Head>
+      </head>
       <body
         className={`${montserrat.variable} ${cinzel.variable} ${dmSans.variable} ${dancingScript.variable} min-h-screen`}
       >
