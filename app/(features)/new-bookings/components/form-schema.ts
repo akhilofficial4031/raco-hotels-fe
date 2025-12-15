@@ -16,7 +16,14 @@ export const personalDataSchema = z.object({
   idType: z.string().optional(),
   idNumber: z.string().optional(),
   emergencyContactName: z.string().optional(),
-  emergencyContactPhone: z.string().optional(),
+  emergencyContactPhone: z
+    .string()
+    .regex(/^[\d\s\-\+\(\)]+$/, "Please enter a valid phone number")
+    .optional()
+    .refine((val) => {
+      const digitCount = val?.replace(/[^\d]/g, "").length ?? 0;
+      return digitCount <= 12;
+    }, "Please enter a valid phone number"),
   marketingOptIn: z.boolean().optional(),
   notes: z.string().optional(),
 });

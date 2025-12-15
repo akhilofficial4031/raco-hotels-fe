@@ -303,7 +303,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
             />
             <Button
               type="primary"
-              className="!bg-primary"
+              className="!bg-primary !text-white"
               onClick={handleApplyPromoCode}
               loading={isApplyingPromo}
               disabled={isApplyingPromo || !promoCode?.trim()}

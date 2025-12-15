@@ -82,7 +82,7 @@ const Header = ({ hotels = [] }: HeaderProps) => {
   };
 
   return (
-    <div className="sticky top-0 z-[99]">
+    <div className="sticky w-full top-0 z-[99]">
       <TopBanner content={topBannerContent} />
       <header className="bg-white text-gray-800 dm-sans" role="banner">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

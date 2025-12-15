@@ -47,7 +47,7 @@ const AttractionCarousel: React.FC<{ attractions: Attraction[] }> = ({
       <div className="embla__container flex">
         {attractions.map((attraction, index) => (
           <div
-            className="embla__slide flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.33%] min-w-0"
+            className="embla__slide flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0"
             key={index}
           >
             <div className=" overflow-hidden w-full h-full select-none">

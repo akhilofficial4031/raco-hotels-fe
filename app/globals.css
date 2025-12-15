@@ -1,9 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+html {
+  height: auto !important;
+}
+
 body {
   font-family: var(--font-montserrat), sans-serif;
   overflow-x: hidden;
+  height: auto !important;
 }
 
 .dm-sans {
@@ -327,3 +332,14 @@ input[type="reset"]:not(:disabled) {
 /* .ant-modal-wrap {
   z-index: 9999 !important;
 } */
+
+.razorpay-container {
+  position: fixed !important;
+  z-index: 10000 !important;
+}
+
+/* Ensure body scroll is manageable during payment */
+body.payment-in-progress {
+  overflow: auto !important;
+  height: auto !important;
+}

@@ -359,7 +359,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit, onError)}
-        className="bg-white rounded-lg border border-gray-200 relative"
+        className={`${isSubmitting ? "h-auto" : "h-full"} bg-white rounded-lg border border-gray-200 relative`}
       >
         {isSubmitting ? (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg">

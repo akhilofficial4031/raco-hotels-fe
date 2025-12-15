@@ -157,7 +157,7 @@ const NewBookingsPageContent = () => {
             />
           </div>
           <div className="lg:col-span-1">
-            <div className="sticky top-30">
+            <div className="sticky top-[130px]">
               <BookingSummary
                 hotel={hotel}
                 roomType={roomType}

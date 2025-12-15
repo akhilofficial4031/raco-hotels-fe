@@ -3,6 +3,7 @@ import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { Input, Select, Checkbox, Form, Row, Col, Divider } from "antd";
 import { BookingFormValues } from "../form-schema";
+import { nationalities } from "@/lib/nationalities";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -26,7 +27,7 @@ const Step2PersonalData = () => {
               name="fullName"
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="e.g. Maria Lost" />
+                <Input {...field} placeholder="Enter Full Name" />
               )}
             />
           </Form.Item>
@@ -41,7 +42,7 @@ const Step2PersonalData = () => {
               name="email"
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="email@email.com" type="email" />
+                <Input {...field} placeholder="Enter Email" type="email" />
               )}
             />
           </Form.Item>
@@ -56,7 +57,7 @@ const Step2PersonalData = () => {
               name="phone"
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="+123 001 234 567" />
+                <Input {...field} placeholder="Enter Phone Number" />
               )}
             />
           </Form.Item>
@@ -66,16 +67,33 @@ const Step2PersonalData = () => {
             <Controller
               name="alternatePhone"
               control={control}
-              render={({ field }) => <Input {...field} />}
+              render={({ field }) => (
+                <Input {...field} placeholder="Enter Alternate Phone Number" />
+              )}
             />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
           <Form.Item label="Nationality">
-            <Controller
+            {/* <Controller
               name="nationality"
               control={control}
               render={({ field }) => <Input {...field} />}
+            /> */}
+
+            <Controller
+              name="nationality"
+              control={control}
+              render={({ field }) => (
+                <Select {...field} placeholder="Select Nationality">
+                  <Option value="">Select Nationality</Option>
+                  {nationalities.map((nationality) => (
+                    <Option key={nationality} value={nationality}>
+                      {nationality}
+                    </Option>
+                  ))}
+                </Select>
+              )}
             />
           </Form.Item>
         </Col>
@@ -91,6 +109,7 @@ const Step2PersonalData = () => {
               control={control}
               render={({ field }) => (
                 <Select {...field} placeholder="Select ID type">
+                  <Option value="">Select ID type</Option>
                   <Option value="passport">Passport</Option>
                   <Option value="driving_license">Driving License</Option>
                   <Option value="national_id">National ID</Option>
@@ -104,30 +123,54 @@ const Step2PersonalData = () => {
             <Controller
               name="idNumber"
               control={control}
-              render={({ field }) => <Input {...field} />}
+              render={({ field }) => (
+                <Input {...field} placeholder="Enter ID number" />
+              )}
             />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
           <Form.Item label="Emergency Contact Name">
             <Controller
+              name="emergencyContactName"
+              control={control}
+              render={({ field }) => (
+                <Input {...field} placeholder="Enter Emergency Contact Name" />
+              )}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} md={12}>
+          <Form.Item label="Emergency Contact Number">
+            <Controller
               name="emergencyContactPhone"
               control={control}
-              render={({ field }) => <Input {...field} />}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Enter Emergency Contact Number"
+                />
+              )}
             />
           </Form.Item>
         </Col>
       </Row>
 
       {/* Preferences & Additional Info */}
-      <Divider orientation="left">Preferences & Additional Info</Divider>
+      <Divider orientation="left">Additional Info</Divider>
 
       {/* Notes field spans full width */}
       <Form.Item label="Notes">
         <Controller
           name="notes"
           control={control}
-          render={({ field }) => <TextArea {...field} rows={3} />}
+          render={({ field }) => (
+            <TextArea
+              {...field}
+              rows={3}
+              placeholder="Enter any additional notes"
+            />
+          )}
         />
       </Form.Item>
 

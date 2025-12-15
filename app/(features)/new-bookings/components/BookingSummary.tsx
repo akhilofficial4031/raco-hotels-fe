@@ -44,7 +44,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
     checkIn && checkOut ? moment(checkOut).diff(moment(checkIn), "days") : 0;
 
   return (
-    <div className="bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden">
+    <div className="bg-white  border border-border rounded-lg overflow-hidden">
       {/* Header Section */}
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between">

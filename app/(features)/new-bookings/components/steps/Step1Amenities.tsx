@@ -1,6 +1,7 @@
 "use client";
 import { Hotel, RoomType, Amenity } from "@/types/hotel";
 import React from "react";
+import { ClockCircleFilled, MailFilled, PhoneFilled } from "@ant-design/icons";
 
 interface Step1AmenitiesProps {
   hotel: Hotel;
@@ -40,14 +41,19 @@ const Step1Amenities: React.FC<Step1AmenitiesProps> = ({ hotel, roomType }) => {
         <h4 className="font-semibold text-gray-800 mb-3">House rules</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div className="flex items-center space-x-2">
-            <span className="text-gray-600">⏰ Check-in time</span>
+            <span className="text-gray-600">
+              <ClockCircleFilled className="mr-2 !text-primary" /> Check-in time
+            </span>
             <span className="text-gray-800">
               From{" "}
               <span className="font-bold">{hotel.checkInTime || "3 PM"}</span>
             </span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-gray-600">⏰ Check-out time</span>
+            <span className="text-gray-600">
+              <ClockCircleFilled className="mr-2 !text-primary" /> Check-out
+              time
+            </span>
             <span className="text-gray-800">
               Until{" "}
               <span className="font-bold">{hotel.checkOutTime || "11 AM"}</span>
@@ -55,8 +61,22 @@ const Step1Amenities: React.FC<Step1AmenitiesProps> = ({ hotel, roomType }) => {
           </div>
         </div>
         <div>
-          <h5 className="font-semibold text-gray-800 mb-2">Beware</h5>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <h5 className="font-semibold text-gray-800 !mb-3">Contact</h5>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="text-gray-600">
+              <p className="mb-2">
+                <MailFilled className="mr-2 !text-primary" /> Email:{" "}
+                {hotel.email}
+              </p>
+            </div>
+            <div className="text-gray-600">
+              <p className="mb-2">
+                <PhoneFilled className="mr-2 !text-primary" /> Phone:{" "}
+                {hotel.phone}
+              </p>
+            </div>
+          </div>
+          {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <div className="flex items-center space-x-2">
               <span className="text-red-500">🚫</span>
               <span className="text-gray-700">No pets allowed</span>
@@ -69,7 +89,7 @@ const Step1Amenities: React.FC<Step1AmenitiesProps> = ({ hotel, roomType }) => {
               <span className="text-red-500">🚫</span>
               <span className="text-gray-700">No partying</span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
