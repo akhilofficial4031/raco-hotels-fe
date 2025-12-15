@@ -1,4 +1,5 @@
 "use client";
+import { message } from "@/components/message";
 import { postFetcher } from "@/lib/fetcher";
 import { Hotel, RoomType } from "@/types/hotel";
 import {
@@ -7,7 +8,6 @@ import {
   RazorpayPaymentSuccessResponse,
 } from "@/types/razorpay";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { message } from "@/components/message";
 import React, { useEffect, useState } from "react";
 import { FieldErrors, FormProvider, useForm } from "react-hook-form";
 import BookingConfirmationModal from "./BookingConfirmationModal";
@@ -145,6 +145,13 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
         name: "RACO Hotels",
         description: `Booking for ${hotel.name}`,
         order_id: orderData.order.id,
+        display: {
+          hide: [
+            { method: "emi" },
+            { method: "paylater" },
+            { method: "netbanking" },
+          ],
+        },
         handler: async (response: RazorpayPaymentSuccessResponse) => {
           // Payment successful, verify the payment
           try {

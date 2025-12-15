@@ -238,6 +238,14 @@ export const withMetadataErrorHandling = <T extends unknown[]>(
   };
 };
 
+// Default Open Graph image configuration
+const DEFAULT_OG_IMAGE = {
+  url: `${siteUrl}/images/og-default.png`,
+  width: 1200,
+  height: 630,
+  alt: "Raco Hotels - Luxury Accommodations",
+};
+
 // Predefined metadata configurations for common pages
 export const pageMetadataConfigs = {
   hotels: {
@@ -247,6 +255,7 @@ export const pageMetadataConfigs = {
     keywords:
       "hotel collection, luxury hotels, hotel directory, premium accommodations, hotel search",
     path: "/hotels",
+    images: [DEFAULT_OG_IMAGE],
   },
   home: {
     title: "Welcome to Raco Hotels - Your Gateway to Luxury",
@@ -255,6 +264,7 @@ export const pageMetadataConfigs = {
     keywords:
       "Raco Hotels, luxury hotels, premium accommodations, hotel group, hospitality, travel",
     path: "/",
+    images: [DEFAULT_OG_IMAGE],
   },
 } as const;
 
@@ -273,6 +283,7 @@ export const generateHomePageMetadata = (seoContent?: {
       description: seoContent.description,
       keywords: seoContent.keywords,
       path: "/",
+      images: [DEFAULT_OG_IMAGE],
     });
   }
   return generatePageMetadata(pageMetadataConfigs.home);
