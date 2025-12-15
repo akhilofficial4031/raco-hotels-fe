@@ -131,22 +131,22 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                 </p> */}
                 <div className="mt-4 grid grid-cols-2 gap-4 text-sm text-gray-700">
                   <div className="flex items-center">
-                    <i className="fa fa-users mr-2 text-primary" />
+                    <i className="fa fa-users mr-2 text-gray-500" />
                     <span>
                       Sleeps {roomType.baseOccupancy} - {roomType.maxOccupancy}
                     </span>
                   </div>
                   <div className="flex items-center">
-                    <i className="fa fa-bed mr-2 text-primary" />
+                    <i className="fa fa-bed mr-2 text-gray-500" />
                     <span>{roomType.bedType}</span>
                   </div>
                   <div className="flex items-center">
-                    <i className="fa fa-expand mr-2 text-primary" />
+                    <i className="fa fa-expand mr-2 text-gray-500" />
                     <span>{roomType.sizeSqft} sqft</span>
                   </div>
                   <div className="flex items-center">
                     <i
-                      className={`fa ${roomType.smokingAllowed ? "fa-smoking" : "fa-smoking-ban"} mr-2 text-primary`}
+                      className={`fa ${roomType.smokingAllowed ? "fa-smoking" : "fa-smoking-ban"} mr-2 text-gray-500`}
                     />
                     <span>
                       {roomType.smokingAllowed ? "Smoking" : "Non-Smoking"}
@@ -154,24 +154,22 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                   </div>
                 </div>
                 <div className="mt-6 flex justify-between items-center">
-                  <div className="flex flex-col gap-1">
+                  <div className="flex gap-2 items-center mb-3">
                     {/* Always reserve space for strike-through price to maintain consistent card heights */}
-                    <p className="text-sm font-normal text-gray-500 h-5">
+                    <p className="text-sm font-normal text-gray-500 h-5 !mb-0 font-dm-sans">
                       {roomType.offerRate !== null &&
                       roomType.offerRate !== undefined ? (
-                        <span className="line-through">
+                        <span className="line-through text-lg">
                           {new Intl.NumberFormat("en-IN", {
                             style: "currency",
                             currency: roomType.currencyCode,
                             minimumFractionDigits: 0,
                           }).format(roomType.basePriceCents / 100)}
                         </span>
-                      ) : (
-                        <span className="invisible">Placeholder</span>
-                      )}
+                      ) : null}
                     </p>
                     <p
-                      className={`text-2xl font-semibold font-cinzel ${
+                      className={`text-2xl font-semibold !mb-0 font-dm-sans ${
                         roomType.offerRate !== null &&
                         roomType.offerRate !== undefined
                           ? "text-green-600"
@@ -188,19 +186,16 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                           ? roomType.offerRate / 100
                           : roomType.basePriceCents / 100
                       )}
-                      <span className="text-sm font-normal text-gray-500 ml-1">
-                        /night
-                      </span>
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => showModal(roomType)}
-                    className="bg-primary cursor-pointer text-sm text-white px-6 py-2 rounded-md hover:bg-primary/90 transition-colors duration-300"
-                  >
-                    Check Availability
-                  </button>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => showModal(roomType)}
+                  className="bg-primary cursor-pointer w-full text-sm !text-white px-6 py-2 rounded-md hover:bg-primary/90 transition-colors duration-300"
+                >
+                  Check Availability
+                </button>
               </div>
             </div>
           ))}
