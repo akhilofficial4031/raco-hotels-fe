@@ -15,6 +15,8 @@ import { BookingFormValues, bookingSchema } from "./form-schema";
 import Step1Amenities from "./steps/Step1Amenities";
 import Step2PersonalData from "./steps/Step2PersonalData";
 import Step3PaymentDetails from "./steps/Step3PaymentDetails";
+import { Button } from "antd";
+import { useRouter } from "next/navigation";
 
 interface BookingResponse {
   success: boolean;
@@ -64,6 +66,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
   numAdults,
   numChildren,
 }) => {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [bookingResponse, setBookingResponse] =
@@ -239,7 +242,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
     }
   };
 
-  const onSubmit = async (data: BookingFormValues) => {
+  const onSubmit = async (data: BookingFormValues, initiatePayment = true) => {
     if (!checkInDate || !checkOutDate) {
       message.error("Check-in and check-out dates are required");
       return;
@@ -306,14 +309,20 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
       // Store the booking response
       setBookingResponse(result);
 
-      message.success(
-        "Booking created successfully! Redirecting to payment..."
-      );
+      if (initiatePayment) {
+        message.success(
+          "Booking created successfully! Redirecting to payment..."
+        );
 
-      // Initiate Razorpay payment
-      // Note: payment handlers and modal callbacks will handle setIsSubmitting(false)
-      paymentInitiated = true;
-      await handleRazorpayPayment(result, data);
+        // Initiate Razorpay payment
+        // Note: payment handlers and modal callbacks will handle setIsSubmitting(false)
+        paymentInitiated = true;
+        await handleRazorpayPayment(result, data);
+      } else {
+        message.success("Booking created successfully!");
+        setShowConfirmationModal(true);
+        setIsSubmitting(false);
+      }
     } catch (_error) {
       message.error("Failed to create booking. Please try again.");
     } finally {
@@ -362,10 +371,37 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
     }
   };
 
+  // Handle Book Now (without payment)
+  const handleBookNow = async () => {
+    const formData = methods.getValues();
+    const isValid = await methods.trigger();
+
+    if (isValid) {
+      await onSubmit(formData, false);
+    } else {
+      onError(methods.formState.errors);
+    }
+  };
+
+  // Handle Book Now and Pay (with payment)
+  const handleBookNowAndPay = async () => {
+    const formData = methods.getValues();
+    const isValid = await methods.trigger();
+
+    if (isValid) {
+      await onSubmit(formData, true);
+    } else {
+      onError(methods.formState.errors);
+    }
+  };
+
+  const gotoHotelPage = () => {
+    router.push(`/hotels/${hotel.slug}`);
+  };
+
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={methods.handleSubmit(onSubmit, onError)}
         className={`${isSubmitting ? "h-auto" : "h-full"} bg-white rounded-lg border border-gray-200 relative`}
       >
         {isSubmitting ? (
@@ -379,7 +415,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
         {steps.map((step, index) => (
           <div
             key={step.number}
-            className={`p-8 ${
+            className={`px-8 pt-8 ${
               index < steps.length - 1 ? "border-b border-gray-200" : ""
             }`}
           >
@@ -389,6 +425,31 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
             <div>{step.component}</div>
           </div>
         ))}
+        <div className="flex gap-4 px-8 pt-4 mb-4">
+          <Button size="large" className="flex-1" type="default">
+            Cancel
+          </Button>
+          <Button
+            type="primary"
+            size="large"
+            className="flex-1 !bg-primary"
+            loading={isSubmitting}
+            disabled={isSubmitting}
+            onClick={handleBookNow}
+          >
+            {isSubmitting ? "Processing..." : "Book now"}
+          </Button>
+          <Button
+            type="primary"
+            size="large"
+            className="flex-1 !bg-primary"
+            loading={isSubmitting}
+            disabled={isSubmitting}
+            onClick={handleBookNowAndPay}
+          >
+            {isSubmitting ? "Processing..." : "Book Now and Pay"}
+          </Button>
+        </div>
       </form>
 
       {/* Booking Confirmation Modal */}
@@ -398,6 +459,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
           setShowConfirmationModal(false);
           setBookingResponse(null);
           setPaymentDetails(null);
+          gotoHotelPage();
         }}
         bookingResponse={bookingResponse}
         hotelName={hotel.name}

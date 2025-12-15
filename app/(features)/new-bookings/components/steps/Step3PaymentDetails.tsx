@@ -33,7 +33,6 @@ const formatNumber = (amount: number, currencyCode: string) => {
 const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   roomType,
   hotelId,
-  isSubmitting = false,
 }) => {
   const { control, watch, setValue } = useFormContext<BookingFormValues>();
   const selectedAddonIds: number[] = watch("addons", []);
@@ -146,9 +145,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
     <div className="space-y-6">
       {/* Payment Summary */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">
-          Payment Summary
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-800">Payment Summary</h3>
         <div className="space-y-3">
           <div className="flex justify-between items-center text-gray-600">
             <span>Room Rent</span>
@@ -315,7 +312,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-4">
+      {/* <div className="flex gap-4">
         <Button size="large" className="flex-1">
           Cancel
         </Button>
@@ -329,7 +326,17 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
         >
           {isSubmitting ? "Processing..." : "Book now"}
         </Button>
-      </div>
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          className="flex-1 !bg-primary"
+          loading={isSubmitting}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Processing..." : "Book and Pay Now"}
+        </Button>
+      </div> */}
     </div>
   );
 };
