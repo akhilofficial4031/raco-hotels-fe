@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { Modal, Button, Divider, message } from "antd";
+import { Modal, Button, Divider } from "antd";
+import { message } from "@/components/message";
 import { DownloadOutlined, CloseOutlined } from "@ant-design/icons";
 
 interface BookingData {

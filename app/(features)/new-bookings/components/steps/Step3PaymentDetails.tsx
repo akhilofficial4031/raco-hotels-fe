@@ -1,7 +1,8 @@
 "use client";
 import { PromoCodeResponse, RoomType } from "@/types/hotel";
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Checkbox, Input, Divider, message, Tag } from "antd";
+import { Button, Checkbox, Input, Divider, Tag } from "antd";
+import { message } from "@/components/message";
 import { useFormContext, Controller } from "react-hook-form";
 import { BookingFormValues } from "../form-schema";
 import { getFetcher } from "@/lib/fetcher";
@@ -47,7 +48,6 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   const [totalAfterDiscount, setTotalAfterDiscount] = useState<number>(0);
   const [isApplyingPromo, setIsApplyingPromo] = useState<boolean>(false);
   const [appliedPromoCode, setAppliedPromoCode] = useState<string>("");
-  // console.log("roomType", roomType);
 
   const getRoomRent = useCallback(() => {
     if (roomType.offerPrice) {
@@ -74,9 +74,6 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
 
     const basePrice = getRoomRent() ?? 0;
     const subtotal = basePrice + addonsTotal;
-    console.log("discountAmount", discountAmount);
-    console.log("subtotal", subtotal);
-    console.log("totalAfterDiscount", totalAfterDiscount);
     if (discountAmount > 0) {
       setTotalAfterDiscount(subtotal - discountAmount * 100);
     }
@@ -114,9 +111,9 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
         const { type, value } = promoCodeData;
         let discount = 0;
         if (type === "fixed") {
-          discount = value;
-        } else if (type === "percentage") {
-          discount = Math.round(subtotalAmount * (value / 100));
+          discount = value / 100;
+        } else {
+          discount = Math.round((subtotalAmount * (value / 100)) / 100);
         }
 
         setValue("discountAmount" as keyof BookingFormValues, discount);
@@ -126,8 +123,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
       } else {
         message.error(response.message ?? "Invalid promo code");
       }
-    } catch (error) {
-      console.error("Error applying promo code:", error);
+    } catch (_error) {
       message.error("Failed to apply promo code. Please try again.");
     } finally {
       setIsApplyingPromo(false);

@@ -126,7 +126,7 @@ const AttractionEnquiry: React.FC<AttractionInquiryProps> = ({
       onCancel={handleClose}
       footer={null}
       centered
-      destroyOnClose
+      destroyOnHidden
       width={500}
     >
       <Form

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
-import { Input, DatePicker, Select, Checkbox, Form, Row, Col } from "antd";
+import { Input, Select, Checkbox, Form, Row, Col } from "antd";
 import { BookingFormValues } from "../form-schema";
 
 const { Option } = Select;
@@ -14,7 +14,7 @@ const Step2PersonalData = () => {
   } = useFormContext<BookingFormValues>();
 
   return (
-    <div className="ant-form ant-form-vertical">
+    <Form layout="vertical">
       <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item
@@ -71,32 +71,6 @@ const Step2PersonalData = () => {
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label="Date of Birth">
-            <Controller
-              name="dateOfBirth"
-              control={control}
-              render={({ field }) => (
-                <DatePicker {...field} style={{ width: "100%" }} />
-              )}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item label="Gender">
-            <Controller
-              name="gender"
-              control={control}
-              render={({ field }) => (
-                <Select {...field} placeholder="Select gender">
-                  <Option value="male">Male</Option>
-                  <Option value="female">Female</Option>
-                  <Option value="other">Other</Option>
-                </Select>
-              )}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
           <Form.Item label="Nationality">
             <Controller
               name="nationality"
@@ -130,69 +104,6 @@ const Step2PersonalData = () => {
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label="Address Line 1">
-            <Controller
-              name="addressLine1"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item label="Address Line 2">
-            <Controller
-              name="addressLine2"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={8}>
-          <Form.Item label="City">
-            <Controller
-              name="city"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={8}>
-          <Form.Item label="State">
-            <Controller
-              name="state"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={8}>
-          <Form.Item label="Country">
-            <Controller
-              name="country"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item label="Postal Code">
-            <Controller
-              name="postalCode"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item label="Dietary Preferences">
-            <Controller
-              name="dietaryPreferences"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
           <Form.Item label="Emergency Contact Name">
             <Controller
               name="emergencyContactName"
@@ -210,25 +121,9 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={12}>
-          <Form.Item label="Loyalty Number">
-            <Controller
-              name="loyaltyNumber"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
       </Row>
 
-      <Form.Item label="Special Requests">
-        <Controller
-          name="specialRequests"
-          control={control}
-          render={({ field }) => <TextArea {...field} rows={4} />}
-        />
-      </Form.Item>
-
+      {/* Notes field spans full width */}
       <Form.Item label="Notes">
         <Controller
           name="notes"
@@ -246,7 +141,7 @@ const Step2PersonalData = () => {
           )}
         />
       </Form.Item>
-    </div>
+    </Form>
   );
 };
 

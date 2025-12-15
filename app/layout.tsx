@@ -1,6 +1,8 @@
 import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
 import { Montserrat, Cinzel, DM_Sans, Dancing_Script } from "next/font/google";
+
+// Suppress Ant Design React 19 compatibility warning
 import Head from "next/head";
 import "../font-awesome-4.7.0/css/font-awesome.css";
 import Footer from "./components/Footer";
@@ -11,6 +13,8 @@ import { getHotelsForNavigation } from "@/lib/hotels";
 import { QuickBookingProvider } from "@/contexts/QuickBookingContext";
 import "./globals.css";
 import ResourceHints from "./components/ResourceHints";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { MessageProvider, MessageContainer } from "@/components/message";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -124,15 +128,20 @@ export default async function RootLayout({
       <body
         className={`${montserrat.variable} ${cinzel.variable} ${dmSans.variable} ${dancingScript.variable} min-h-screen`}
       >
-        <QuickBookingProvider hotels={hotels}>
-          <SmoothScroll>
-            <ResourceHints />
-            <WebVitals />
-            <HeaderWrapper hotels={hotels} />
-            <main>{children}</main>
-            <Footer />
-          </SmoothScroll>
-        </QuickBookingProvider>
+        <AntdRegistry>
+          <MessageProvider>
+            <QuickBookingProvider hotels={hotels}>
+              <SmoothScroll>
+                <ResourceHints />
+                <WebVitals />
+                <HeaderWrapper hotels={hotels} />
+                <main>{children}</main>
+                <Footer />
+              </SmoothScroll>
+            </QuickBookingProvider>
+            <MessageContainer />
+          </MessageProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

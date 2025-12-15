@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import dayjs from "dayjs";
-import { message } from "antd";
+import { message } from "@/components/message";
 import { Hotel, RoomType } from "@/types/hotel";
 import { useRouter } from "next/navigation";
 import CheckAvailability from "./CheckAvailability";

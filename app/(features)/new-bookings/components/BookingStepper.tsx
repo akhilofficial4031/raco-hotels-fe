@@ -8,7 +8,7 @@ import { useForm, FormProvider, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { bookingSchema, BookingFormValues } from "./form-schema";
 import { postFetcher } from "@/lib/fetcher";
-import { message } from "antd";
+import { message } from "@/components/message";
 import BookingConfirmationModal from "./BookingConfirmationModal";
 
 interface BookingResponse {
@@ -78,17 +78,8 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
       nationality: "",
       idType: "",
       idNumber: "",
-      addressLine1: "",
-      addressLine2: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
-      dietaryPreferences: "",
-      specialRequests: "",
       emergencyContactName: "",
       emergencyContactPhone: "",
-      loyaltyNumber: "",
       notes: "",
       marketingOptIn: false,
     },
@@ -118,26 +109,13 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
           fullName: data.fullName,
           phone: data.phone,
           alternatePhone: data.alternatePhone ?? "",
-          dateOfBirth: data.dateOfBirth
-            ? data.dateOfBirth.format("YYYY-MM-DD")
-            : "",
-          gender: data.gender ?? "male",
+
           nationality: data.nationality ?? "",
           idType: data.idType ?? "",
           idNumber: data.idNumber ?? "",
-          addressLine1: data.addressLine1 ?? "",
-          addressLine2: data.addressLine2 ?? "",
-          city: data.city ?? "",
-          state: data.state ?? "",
-          country: data.country ?? "",
-          postalCode: data.postalCode ?? "",
-          dietaryPreferences: data.dietaryPreferences
-            ? [data.dietaryPreferences]
-            : [],
-          specialRequests: data.specialRequests ? [data.specialRequests] : [],
+
           emergencyContactName: data.emergencyContactName ?? "",
           emergencyContactPhone: data.emergencyContactPhone ?? "",
-          loyaltyNumber: data.loyaltyNumber ?? "",
           marketingOptIn: data.marketingOptIn ?? false,
           notes: data.notes ?? "",
           firstBookingSource: "web",

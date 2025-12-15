@@ -3,24 +3,20 @@ import * as z from "zod";
 export const personalDataSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Phone number is required"),
+  phone: z
+    .string()
+    .min(1, "Phone number is required")
+    .regex(/^[\d\s\-\+\(\)]+$/, "Please enter a valid phone number")
+    .refine((val) => {
+      const digitCount = val.replace(/[^\d]/g, "").length;
+      return digitCount <= 12;
+    }, "Please enter a valid phone number"),
   alternatePhone: z.string().optional(),
-  dateOfBirth: z.any().optional(),
-  gender: z.string().optional(),
   nationality: z.string().optional(),
   idType: z.string().optional(),
   idNumber: z.string().optional(),
-  addressLine1: z.string().optional(),
-  addressLine2: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  country: z.string().optional(),
-  postalCode: z.string().optional(),
-  dietaryPreferences: z.string().optional(),
-  specialRequests: z.string().optional(),
   emergencyContactName: z.string().optional(),
   emergencyContactPhone: z.string().optional(),
-  loyaltyNumber: z.string().optional(),
   marketingOptIn: z.boolean().optional(),
   notes: z.string().optional(),
 });
