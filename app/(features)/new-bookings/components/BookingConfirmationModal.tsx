@@ -53,15 +53,6 @@ const formatCurrency = (amountCents: number, currencyCode: string) => {
   }).format(amountCents / 100);
 };
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
-
 const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
   isOpen,
   onClose,
@@ -105,6 +96,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
         .booking-receipt * {
           color: rgb(0, 0, 0) !important;
           border-color: rgb(209, 213, 219) !important;
+          background: transparent !important;
         }
         .booking-receipt [style*="color: #1e40af"],
         .booking-receipt .text-blue-600 {
@@ -118,10 +110,12 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
         .booking-receipt .text-green-600 {
           color: rgb(22, 163, 74) !important;
         }
-        .booking-receipt [style*="background:"],
-        .booking-receipt [style*="linear-gradient"] {
-          background: rgb(126, 98, 49) !important;
-          color: rgb(255, 255, 255) !important;
+        .booking-receipt .text-yellow-600,
+        .booking-receipt .text-yellow-800 {
+          color: rgb(146, 64, 14) !important;
+        }
+        .booking-receipt .text-green-800 {
+          color: rgb(22, 101, 52) !important;
         }
       `;
       document.head.appendChild(tempStyle);
@@ -161,16 +155,8 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                     : "#000000";
                 }
 
-                // Force background colors to white or explicit RGB
-                if (
-                  computedStyle.backgroundColor &&
-                  computedStyle.backgroundColor !== "rgba(0, 0, 0, 0)"
-                ) {
-                  htmlEl.style.backgroundColor =
-                    computedStyle.backgroundColor.includes("rgb")
-                      ? computedStyle.backgroundColor
-                      : "#ffffff";
-                }
+                // Remove all background colors to prevent PDF issues
+                htmlEl.style.backgroundColor = "transparent";
               }
             });
 
@@ -180,10 +166,12 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
               * {
                 color: inherit !important;
                 border-color: currentColor !important;
+                background-color: transparent !important;
+                background: transparent !important;
               }
               [style*="lab("] {
                 color: #000000 !important;
-                background-color: #ffffff !important;
+                background-color: transparent !important;
               }
             `;
             clonedDoc.head.appendChild(style);
@@ -231,11 +219,11 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
 
       message.success("PDF downloaded successfully!");
     } catch (error) {
-      console.error("PDF Generation Error:", error);
-      console.error("Error details:", {
-        message: error instanceof Error ? error.message : "Unknown",
-        stack: error instanceof Error ? error.stack : undefined,
-      });
+      // console.error("PDF Generation Error:", error);
+      // console.error("Error details:", {
+      //   message: error instanceof Error ? error.message : "Unknown",
+      //   stack: error instanceof Error ? error.stack : undefined,
+      // });
 
       message.error(
         `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`
@@ -262,12 +250,12 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
       open={isOpen}
       onCancel={onClose}
       footer={null}
-      width={600}
+      width={550}
       centered
       maskClosable={false}
       closeIcon={<CloseOutlined />}
       styles={{
-        body: { padding: 0, maxHeight: "90vh", overflowY: "auto" },
+        body: { padding: 0, maxHeight: "85vh", overflowY: "hidden" },
         mask: { zIndex: 10000 },
         wrapper: { zIndex: 10001 },
       }}
@@ -275,59 +263,48 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
     >
       <div ref={receiptRef} className="bg-white booking-receipt">
         {/* Header */}
-        <div
-          className="text-white p-6 text-center"
-          style={{ background: "linear-gradient(to right, #7e6231, #e4b159)" }}
-        >
-          <div className="text-2xl font-bold mb-2"> Booking Confirmed!</div>
-          <div className="text-blue-100" style={{ color: "#dbeafe" }}>
-            Thank you for choosing us
-          </div>
-        </div>
 
         {/* Receipt Content */}
-        <div className="p-6">
+        <div className="p-4">
           {/* Booking Reference */}
-          <div className="text-center mb-6">
-            <div className="text-lg font-semibold text-gray-700 mb-1">
-              Booking Reference
+          <div className="text-center mb-4">
+            <div className="text-base font-semibold text-gray-700 mb-1">
+              Booking Confirmed
             </div>
             <div
-              className="text-2xl font-bold text-blue-600 bg-blue-50 py-2 px-4 rounded-lg inline-block"
-              style={{ color: "#1e40af", backgroundColor: "#eff6ff" }}
+              className="text-xl font-bold text-blue-600 py-1.5 px-3 rounded-lg inline-block border"
+              style={{ color: "#1e40af", borderColor: "#1e40af" }}
             >
               {booking.referenceCode}
             </div>
           </div>
 
-          <Divider />
-
-          {/* Guest Information */}
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          {/* Combined Guest, Hotel, and Stay Information */}
+          <div className="grid grid-cols-3 gap-3 mb-3">
             <div>
-              <h4 className="font-semibold text-gray-700 mb-2">
+              <h4 className="font-semibold text-gray-700 mb-1.5 text-sm">
                 Guest Details
               </h4>
-              <div className="space-y-1 text-sm">
+              <div className="space-y-1 text-xs">
                 <div>
                   <strong>Name:</strong> {customerName}
                 </div>
                 <div>
-                  <strong>Booking ID:</strong> #{booking.id}
+                  <strong>ID:</strong> #{booking.id}
                 </div>
                 <div>
                   <strong>Status:</strong>
                   <span
-                    className={`ml-1 px-2 py-1 rounded-full text-xs ${
+                    className={`ml-1 px-1.5 py-0.5 rounded-full text-xs  ${
                       booking.status === "confirmed"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
+                        ? "text-green-600"
+                        : "text-yellow-600"
                     }`}
                     style={{
-                      backgroundColor:
-                        booking.status === "confirmed" ? "#dcfce7" : "#fef3c7",
                       color:
                         booking.status === "confirmed" ? "#166534" : "#92400e",
+                      borderColor:
+                        booking.status === "confirmed" ? "#86efac" : "#fde047",
                     }}
                   >
                     {booking.status.toUpperCase()}
@@ -337,10 +314,10 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
             </div>
 
             <div>
-              <h4 className="font-semibold text-gray-700 mb-2">
+              <h4 className="font-semibold text-gray-700 mb-1.5 text-sm">
                 Hotel Details
               </h4>
-              <div className="space-y-1 text-sm">
+              <div className="space-y-1 text-xs">
                 <div>
                   <strong>Hotel:</strong> {hotelName}
                 </div>
@@ -352,39 +329,47 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                 </div>
               </div>
             </div>
-          </div>
 
-          <Divider />
-
-          {/* Stay Information */}
-          <div className="mb-4">
-            <h4 className="font-semibold text-gray-700 mb-2">
-              Stay Information
-            </h4>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <div className="font-medium text-gray-600">Check-in</div>
-                <div className="font-semibold">
-                  {formatDate(booking.checkInDate)}
+            <div>
+              <h4 className="font-semibold text-gray-700 mb-1.5 text-sm">
+                Stay Information
+              </h4>
+              <div className="space-y-1 text-xs">
+                <div>
+                  <div className="font-medium text-gray-600">Check-in:</div>
+                  <div className="font-semibold">
+                    {new Date(booking.checkInDate).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-600">Check-out</div>
-                <div className="font-semibold">
-                  {formatDate(booking.checkOutDate)}
+                <div>
+                  <div className="font-medium text-gray-600">Check-out:</div>
+                  <div className="font-semibold">
+                    {new Date(booking.checkOutDate).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      }
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <Divider />
+          <Divider className="my-3" />
 
           {/* Payment Summary */}
-          <div className="mb-4">
-            <h4 className="font-semibold text-gray-700 mb-3">
+          <div className="mb-3">
+            <h4 className="font-semibold text-gray-700 mb-2 text-sm">
               Payment Summary
             </h4>
-            <div className="space-y-2 text-sm">
+            <div className="space-y-1.5 text-xs">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
                 <span>
@@ -415,8 +400,8 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                   </span>
                 </div>
               )}
-              <Divider className="my-2" />
-              <div className="flex justify-between font-bold text-lg">
+              <Divider className="my-1.5" />
+              <div className="flex justify-between font-bold text-sm">
                 <span>Total Amount:</span>
                 <span className="text-blue-600" style={{ color: "#1e40af" }}>
                   {formatCurrency(
@@ -425,7 +410,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                   )}
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between">
                 <span>Amount Paid:</span>
                 <span>
                   {formatCurrency(
@@ -435,7 +420,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                 </span>
               </div>
               <div
-                className="flex justify-between text-sm font-medium text-red-600"
+                className="flex justify-between font-medium text-red-600"
                 style={{ color: "#dc2626" }}
               >
                 <span>Balance Due:</span>
@@ -446,29 +431,31 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                   )}
                 </span>
               </div>
-              <div>
-                <strong>Payment Status:</strong>
+              <div className="flex justify-between items-center">
+                <span>
+                  <strong>Payment Status:</strong>
+                </span>
                 <span
-                  className={`ml-1 px-2 py-1 rounded-full text-xs ${
+                  className={`px-1.5 py-0.5 rounded-full text-xs  ${
                     paymentDetails?.status === "success"
-                      ? "bg-green-100 text-green-800"
+                      ? "text-green-800"
                       : booking.paymentStatus === "completed"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
+                        ? "text-green-800 "
+                        : "text-yellow-800 "
                   }`}
                   style={{
-                    backgroundColor:
-                      paymentDetails?.status === "success"
-                        ? "#dcfce7"
-                        : booking.paymentStatus === "completed"
-                          ? "#dcfce7"
-                          : "#fef3c7",
                     color:
                       paymentDetails?.status === "success"
                         ? "#166534"
                         : booking.paymentStatus === "completed"
                           ? "#166534"
                           : "#92400e",
+                    borderColor:
+                      paymentDetails?.status === "success"
+                        ? "#86efac"
+                        : booking.paymentStatus === "completed"
+                          ? "#86efac"
+                          : "#fde047",
                   }}
                 >
                   {paymentDetails?.status === "success"
@@ -481,11 +468,11 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
 
           {/* Razorpay Payment Details */}
           {Boolean(paymentDetails) && (
-            <div className="mb-4">
-              <h4 className="font-semibold text-gray-700 mb-2">
+            <div className="mb-3">
+              <h4 className="font-semibold text-gray-700 mb-1.5 text-sm">
                 Payment Information
               </h4>
-              <div className="text-sm space-y-1 bg-green-50 p-3 rounded-lg">
+              <div className="text-xs space-y-1 border border-green-200 p-2 rounded-lg">
                 <div>
                   <strong>Payment Gateway:</strong> Razorpay
                 </div>
@@ -551,22 +538,23 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
             </div>
           </div> */}
 
-          <div className="text-xs text-gray-500 text-center mb-4">
-            Booking created on {new Date(booking.createdAt).toLocaleString()}
+          <div className="text-xs text-gray-500 text-center mb-2">
+            Booking created on{" "}
+            {new Date(booking.createdAt).toLocaleDateString()}
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t no-print">
+          <div className="flex gap-2 pt-2 border-t no-print">
             <Button
               type="primary"
               icon={<DownloadOutlined />}
               onClick={handleDownloadPDF}
               className="flex-1 !bg-blue-600"
-              size="large"
+              size="middle"
             >
-              Download PDF Receipt
+              Download PDF
             </Button>
-            <Button onClick={onClose} size="large" className="flex-1">
+            <Button onClick={onClose} size="middle" className="flex-1">
               Close
             </Button>
           </div>

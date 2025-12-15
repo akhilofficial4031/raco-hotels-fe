@@ -10,8 +10,10 @@ import {
 } from "@/lib/hotels";
 import { Hotel, RoomType, AvailableRoomType } from "@/types/hotel";
 import RacoLoader from "@/app/components/RacoLoader";
+import { useRouter } from "next/navigation";
 
 const NewBookingsPageContent = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const hotelId = searchParams.get("hotelId");
   const roomTypeId = searchParams.get("roomTypeId");
@@ -127,7 +129,10 @@ const NewBookingsPageContent = () => {
       )}
       <div className="container mx-auto p-4 sm:p-6 lg:p-8">
         <div className="flex justify-between items-center mb-8">
-          <button className="text-gray-700 hover:text-gray-900 font-semibold flex items-center">
+          <button
+            className="text-gray-700 hover:text-gray-900 font-semibold flex items-center"
+            onClick={() => router.back()}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 mr-2"
