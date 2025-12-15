@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   // Environment variables for SEO
   env: {
     NEXT_PUBLIC_SITE_URL:
-      process.env.NEXT_PUBLIC_SITE_URL || "https://raco-hotels.com",
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com",
   },
 
   // Server-only packages (prevents bundling in client)
@@ -56,6 +56,11 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value:
               "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "connect-src 'self' https://checkout.razorpay.com https://api.razorpay.com https://lumberjack.razorpay.com https://www.google-analytics.com https://raco-hotels-backend-production.raco-api.workers.dev;",
           },
         ],
       },
