@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useFormContext, Controller } from "react-hook-form";
-import { Input, Select, Checkbox, Form, Row, Col } from "antd";
+import { Input, Select, Checkbox, Form, Row, Col, Divider } from "antd";
 import { BookingFormValues } from "../form-schema";
 
 const { Option } = Select;
@@ -79,6 +79,11 @@ const Step2PersonalData = () => {
             />
           </Form.Item>
         </Col>
+      </Row>
+
+      {/* Identity Documents */}
+      <Divider orientation="left">Identity Documents</Divider>
+      <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item label="ID Type">
             <Controller
@@ -106,15 +111,6 @@ const Step2PersonalData = () => {
         <Col xs={24} md={12}>
           <Form.Item label="Emergency Contact Name">
             <Controller
-              name="emergencyContactName"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item label="Emergency Contact Phone">
-            <Controller
               name="emergencyContactPhone"
               control={control}
               render={({ field }) => <Input {...field} />}
@@ -122,6 +118,9 @@ const Step2PersonalData = () => {
           </Form.Item>
         </Col>
       </Row>
+
+      {/* Preferences & Additional Info */}
+      <Divider orientation="left">Preferences & Additional Info</Divider>
 
       {/* Notes field spans full width */}
       <Form.Item label="Notes">
@@ -137,7 +136,13 @@ const Step2PersonalData = () => {
           name="marketingOptIn"
           control={control}
           render={({ field }) => (
-            <Checkbox {...field}>Sign up for marketing emails</Checkbox>
+            <Checkbox
+              checked={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            >
+              Sign up for marketing emails
+            </Checkbox>
           )}
         />
       </Form.Item>

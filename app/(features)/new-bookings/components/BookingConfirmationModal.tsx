@@ -1,4 +1,5 @@
 "use client";
+import { PaymentDetails } from "@/types/razorpay";
 import React from "react";
 import { Modal, Button, Divider } from "antd";
 import { message } from "@/components/message";
@@ -41,6 +42,7 @@ interface BookingConfirmationModalProps {
   bookingResponse: BookingResponse | null;
   hotelName?: string;
   customerName?: string;
+  paymentDetails?: PaymentDetails | null;
 }
 
 const formatCurrency = (amountCents: number, currencyCode: string) => {
@@ -66,6 +68,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
   bookingResponse,
   hotelName = "Hotel Name",
   customerName = "Guest",
+  paymentDetails = null,
 }) => {
   const receiptRef = React.useRef<HTMLDivElement>(null);
 
@@ -82,7 +85,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
     let buttons: NodeListOf<Element> | null = null;
 
     try {
-      message.loading({ content: "Generating PDF...", key: "pdf-generation" });
+      message.loading("Generating PDF...");
 
       console.log("Starting PDF generation...");
 
@@ -266,10 +269,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
 
       console.log("PDF save triggered");
 
-      message.success({
-        content: "PDF downloaded successfully!",
-        key: "pdf-generation",
-      });
+      message.success("PDF downloaded successfully!");
     } catch (error) {
       console.error("PDF Generation Error:", error);
       console.error("Error details:", {
@@ -277,10 +277,9 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
         stack: error instanceof Error ? error.stack : undefined,
       });
 
-      message.error({
-        content: `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
-        key: "pdf-generation",
-      });
+      message.error(
+        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     } finally {
       // Always restore buttons visibility
       console.log("Restoring buttons...");
@@ -494,26 +493,67 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                 <strong>Payment Status:</strong>
                 <span
                   className={`ml-1 px-2 py-1 rounded-full text-xs ${
-                    booking.paymentStatus === "completed"
+                    paymentDetails?.status === "success"
                       ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
+                      : booking.paymentStatus === "completed"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-yellow-100 text-yellow-800"
                   }`}
                   style={{
                     backgroundColor:
-                      booking.paymentStatus === "completed"
+                      paymentDetails?.status === "success"
                         ? "#dcfce7"
-                        : "#fef3c7",
+                        : booking.paymentStatus === "completed"
+                          ? "#dcfce7"
+                          : "#fef3c7",
                     color:
-                      booking.paymentStatus === "completed"
+                      paymentDetails?.status === "success"
                         ? "#166534"
-                        : "#92400e",
+                        : booking.paymentStatus === "completed"
+                          ? "#166534"
+                          : "#92400e",
                   }}
                 >
-                  {booking.paymentStatus.toUpperCase()}
+                  {paymentDetails?.status === "success"
+                    ? "PAID"
+                    : booking.paymentStatus.toUpperCase()}
                 </span>
               </div>
             </div>
           </div>
+
+          {/* Razorpay Payment Details */}
+          {Boolean(paymentDetails) && (
+            <div className="mb-4">
+              <h4 className="font-semibold text-gray-700 mb-2">
+                Payment Information
+              </h4>
+              <div className="text-sm space-y-1 bg-green-50 p-3 rounded-lg">
+                <div>
+                  <strong>Payment Gateway:</strong> Razorpay
+                </div>
+                {Boolean(paymentDetails?.paymentId) && (
+                  <div className="break-all">
+                    <strong>Transaction ID:</strong> {paymentDetails?.paymentId}
+                  </div>
+                )}
+                {Boolean(paymentDetails?.orderId) && (
+                  <div className="break-all">
+                    <strong>Order ID:</strong> {paymentDetails?.orderId}
+                  </div>
+                )}
+                {paymentDetails?.amount !== undefined && (
+                  <div>
+                    <strong>Amount Paid:</strong>{" "}
+                    {formatCurrency(
+                      paymentDetails.amount,
+                      paymentDetails.currency
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Payment Information */}
           {/* <div className="mb-4">

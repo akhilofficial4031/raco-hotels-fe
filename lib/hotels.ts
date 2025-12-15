@@ -78,8 +78,8 @@ export async function getHotelsForNavigation() {
       }));
 
     return activeHotels;
-  } catch (_error) {
-    // Error logging removed
+  } catch (error) {
+    console.error("[getHotelsForNavigation] Error fetching hotels:", error);
     // Return empty array as fallback to prevent header from breaking
     return [];
   }
