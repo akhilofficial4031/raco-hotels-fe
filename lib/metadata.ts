@@ -17,7 +17,7 @@ interface BaseMetadataParams {
   description: string;
   keywords?: string | string[];
   canonical?: string;
-  images?: Array<{
+  images?: ReadonlyArray<{
     url: string;
     width?: number;
     height?: number;
@@ -97,7 +97,7 @@ const createOpenGraphMetadata = (
   siteName: BASE_METADATA.siteName,
   locale: BASE_METADATA.locale,
   type: (params.type as "website" | "article") ?? "website",
-  images: params.images ?? [],
+  images: params.images ? [...params.images] : [],
 });
 
 const createTwitterMetadata = (params: BaseMetadataParams) => ({

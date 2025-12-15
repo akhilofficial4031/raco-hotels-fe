@@ -8,12 +8,12 @@ import {
 } from "@/lib/seo";
 import type { Metadata } from "next";
 import Script from "next/script";
-import HotelList from "./components/HotelList";
+import HotelListingGrid from "./components/HotelListingGrid";
 
 export const metadata: Metadata = generateHotelsPageMetadata();
 
 export default async function HotelsPage() {
-  // Fetch hotels for structured data
+  // Fetch hotels for structured data and display
   const hotels = await getActiveHotels();
 
   // Generate structured data for hotels listing page
@@ -48,7 +48,9 @@ export default async function HotelsPage() {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      <HotelList />
+      <main id="main-content" role="main">
+        <HotelListingGrid hotels={hotels} />
+      </main>
     </>
   );
 }
