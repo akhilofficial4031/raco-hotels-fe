@@ -1,23 +1,19 @@
-import Link from "next/link";
 import { Metadata } from "next";
-import { getHotelsForNavigation } from "@/lib/hotels";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Page Not Found | Raco Hotels",
-  description: "The page you're looking for doesn't exist. Explore our hotels and find your perfect stay.",
+  description:
+    "The page you're looking for doesn't exist. Explore our hotels and find your perfect stay.",
   robots: {
     index: false,
     follow: false,
   },
 };
 
-export default async function NotFound() {
-  // Fetch featured hotels for suggestions
-  const hotels = await getHotelsForNavigation();
-  const featuredHotels = hotels.slice(0, 3);
-
+export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center">
       <div className="container mx-auto px-4 py-16 text-center">
         {/* 404 Error Section */}
         <div className="mb-12">
@@ -32,7 +28,7 @@ export default async function NotFound() {
             might have been moved or doesn&apos;t exist.
           </p>
 
-          {/* Search and Navigation Buttons */}
+          {/* Navigation Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               href="/"
@@ -70,81 +66,10 @@ export default async function NotFound() {
                   d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                 />
               </svg>
-              Browse Hotels
+              Browse All Properties
             </Link>
           </div>
         </div>
-
-        {/* Featured Hotels Section */}
-        {featuredHotels.length > 0 && (
-          <div className="max-w-6xl mx-auto">
-            <h3 className="text-3xl font-cinzel text-text-dark mb-8">
-              Explore Our Featured Hotels
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              {featuredHotels.map((hotel) => (
-                <Link
-                  key={hotel.id}
-                  href={`/hotels/${hotel.slug}`}
-                  className="group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="relative h-48 bg-gray-200">
-                    {hotel.images && hotel.images.length > 0 ? (
-                      <img
-                        src={hotel.images[0].url}
-                        alt={hotel.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-100 to-purple-200">
-                        <svg
-                          className="w-16 h-16 text-primary"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <h4 className="text-xl font-cinzel text-text-dark mb-2 group-hover:text-primary transition-colors">
-                      {hotel.name}
-                    </h4>
-                    <p className="text-gray-600 flex items-center">
-                      <svg
-                        className="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      {hotel.city}, {hotel.countryCode}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Quick Links Section */}
         <div className="border-t border-gray-200 pt-12">
@@ -163,7 +88,7 @@ export default async function NotFound() {
               href="/hotels"
               className="text-gray-600 hover:text-primary transition-colors"
             >
-              All Hotels
+              All Properties
             </Link>
             <span className="text-gray-300">|</span>
             <Link
@@ -187,10 +112,10 @@ export default async function NotFound() {
           <p>
             Need help? Contact us at{" "}
             <a
-              href="mailto:contact@racohotels.com"
+              href="mailto:hello@racogroup.com"
               className="text-primary hover:underline"
             >
-              contact@racohotels.com
+              hello@racogroup.com
             </a>
           </p>
         </div>
@@ -198,4 +123,3 @@ export default async function NotFound() {
     </div>
   );
 }
-

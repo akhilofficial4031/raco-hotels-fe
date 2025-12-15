@@ -29,6 +29,10 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({
 }) => {
   const [messages, setMessages] = useState<MessageItem[]>([]);
 
+  const removeMessage = useCallback((id: string) => {
+    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+  }, []);
+
   const addMessage = useCallback(
     (type: MessageType, content: string, duration = 3000) => {
       const id = Math.random().toString(36).substring(7);
@@ -43,12 +47,8 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({
         }, duration);
       }
     },
-    []
+    [removeMessage]
   );
-
-  const removeMessage = useCallback((id: string) => {
-    setMessages((prev) => prev.filter((msg) => msg.id !== id));
-  }, []);
 
   const contextValue: MessageContextType = {
     messages,
@@ -73,7 +73,7 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({
 
     // Set the global message instance on window
     if (typeof window !== "undefined") {
-      (window as any).__messageInstance = messageAPI;
+      (window as unknown as { __messageInstance: typeof messageAPI }).__messageInstance = messageAPI;
     }
   }, [addMessage]);
 

@@ -21,7 +21,7 @@ export async function GET() {
       changefreq: "weekly" as const,
       priority: 0.8,
       images: hotel.images?.slice(0, 5).map((img) => ({
-        loc: img.url,
+        loc: new URL(img.url.startsWith('http') ? img.url : `${siteUrl}${img.url}`),
         title: img.alt || hotel.name,
         caption: `${hotel.name} - ${hotel.city}, ${hotel.countryCode}`,
       })),

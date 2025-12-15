@@ -17,6 +17,6 @@ export default function BookingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return children;
 }
 

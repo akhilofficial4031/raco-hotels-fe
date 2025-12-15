@@ -158,7 +158,7 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
         <div className="relative w-full h-full flex items-center justify-center">
           {/* Blurred background */}
           <div className="absolute inset-0 -z-10">
-            {slides[selectedIndexModal] && (
+            {slides[selectedIndexModal] ? (
               <Image
                 src={getImageUrl(slides[selectedIndexModal].url)}
                 alt="Background blur"
@@ -166,7 +166,7 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
                 style={{ objectFit: "cover", filter: "blur(40px)", opacity: 0.3 }}
                 priority={false}
               />
-            )}
+            ) : null}
           </div>
           
           {renderCarousel(true)}

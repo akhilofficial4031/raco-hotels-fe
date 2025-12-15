@@ -17,6 +17,6 @@ export default function AvailableRoomsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return children;
 }
 
