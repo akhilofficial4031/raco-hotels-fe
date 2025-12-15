@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import dayjs from "dayjs";
-import { message } from "@/components/message";
 import OurStays from "@/app/components/OurStays";
 import AttractionCarousel from "@/components/client/AttractionCarousel";
 import MapComponent from "@/components/client/MapComponent";
+import { message } from "@/components/message";
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import { Hotel, RoomType } from "@/types/hotel";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { hotelAttractions } from "../../constants/our-attractions";
 import AvailableRoomsModal from "./AvailableRoomsModal";
 import CheckAvailability from "./CheckAvailability";
@@ -25,7 +25,6 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   hotel,
   initialRoomTypes,
 }) => {
-  console.log("hotel", hotel);
   const router = useRouter();
   const [dates, setDates] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
     dayjs().add(1, "day"),

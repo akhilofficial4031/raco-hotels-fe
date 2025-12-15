@@ -1,14 +1,12 @@
-/* eslint-disable react/no-array-index-key */
-import { Image } from "antd";
-import { GalleryContent } from "@/types/landing-page";
 import { getImageUrl } from "@/lib/utils";
+import { GalleryContent } from "@/types/landing-page";
+import { Image } from "antd";
 
 interface GalleryProps {
   content: GalleryContent;
 }
 
 const Gallery = ({ content }: GalleryProps) => {
-  console.log("content", content);
   return (
     <section
       className="bg-background-light py-16 md:py-24"

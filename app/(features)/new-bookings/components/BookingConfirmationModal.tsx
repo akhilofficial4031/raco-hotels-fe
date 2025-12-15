@@ -1,9 +1,9 @@
 "use client";
-import { PaymentDetails } from "@/types/razorpay";
-import React from "react";
-import { Modal, Button, Divider } from "antd";
 import { message } from "@/components/message";
-import { DownloadOutlined, CloseOutlined } from "@ant-design/icons";
+import { PaymentDetails } from "@/types/razorpay";
+import { CloseOutlined, DownloadOutlined } from "@ant-design/icons";
+import { Button, Divider, Modal } from "antd";
+import React from "react";
 
 interface BookingData {
   id: number;
@@ -87,17 +87,12 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
     try {
       message.loading("Generating PDF...");
 
-      console.log("Starting PDF generation...");
-
       // Dynamic import to avoid SSR issues
-      console.log("Importing libraries...");
       const html2canvas = (await import("html2canvas")).default;
       const jsPDF = (await import("jspdf")).default;
-      console.log("Libraries loaded successfully");
 
       // Hide buttons temporarily
       buttons = receiptRef.current.querySelectorAll(".no-print");
-      console.log(`Found ${buttons.length} buttons to hide`);
       buttons.forEach((btn) => {
         (btn as HTMLElement).style.display = "none";
       });
@@ -134,13 +129,6 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
       // Small delay to ensure render
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      console.log("Starting canvas capture...");
-      console.log("Receipt element dimensions:", {
-        width: receiptRef.current.offsetWidth,
-        height: receiptRef.current.offsetHeight,
-        scrollHeight: receiptRef.current.scrollHeight,
-      });
-
       // Capture the screenshot
       const canvas = await html2canvas(receiptRef.current, {
         scale: 2,
@@ -150,14 +138,10 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
         allowTaint: true,
         foreignObjectRendering: false,
         onclone: (clonedDoc) => {
-          console.log("Canvas cloning...");
           const clonedElement = clonedDoc.querySelector(".booking-receipt");
           if (clonedElement) {
-            console.log("Cloned element found");
-
             // Force all elements to use explicit RGB colors
             const allElements = clonedElement.querySelectorAll("*");
-            console.log(`Processing ${allElements.length} elements...`);
 
             allElements.forEach((el) => {
               const htmlEl = el as HTMLElement;
@@ -203,20 +187,12 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
               }
             `;
             clonedDoc.head.appendChild(style);
-
-            console.log("Cleaned problematic colors from cloned element");
           }
         },
       });
 
-      console.log("Canvas captured:", {
-        width: canvas.width,
-        height: canvas.height,
-      });
-
       // Convert canvas to image
       const imgData = canvas.toDataURL("image/png", 1.0);
-      console.log("Image data created, length:", imgData.length);
 
       // Create PDF
       const pdf = new jsPDF({
@@ -224,8 +200,6 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
         unit: "mm",
         format: "a4",
       });
-
-      console.log("PDF object created");
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
@@ -235,39 +209,25 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
       const imgWidth = pdfWidth - margin * 2;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      console.log("PDF dimensions:", {
-        pdfWidth,
-        pdfHeight,
-        imgWidth,
-        imgHeight,
-      });
-
       let heightLeft = imgHeight;
       let position = margin;
 
       // Add first page
-      console.log("Adding image to PDF...");
       pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
       heightLeft -= pdfHeight - margin * 2;
 
       // Add remaining pages if content is longer
-      let pageCount = 1;
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
         pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
         heightLeft -= pdfHeight - margin * 2;
-        pageCount++;
       }
-
-      console.log(`PDF created with ${pageCount} page(s)`);
 
       // Save the PDF
       const filename = `Booking-Receipt-${booking.referenceCode}.pdf`;
-      console.log("Saving PDF as:", filename);
-      pdf.save(filename);
 
-      console.log("PDF save triggered");
+      pdf.save(filename);
 
       message.success("PDF downloaded successfully!");
     } catch (error) {
@@ -282,19 +242,16 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
       );
     } finally {
       // Always restore buttons visibility
-      console.log("Restoring buttons...");
       if (buttons) {
         buttons.forEach((btn) => {
           (btn as HTMLElement).style.display = "";
         });
-        console.log("Buttons restored");
       }
 
       // Remove temporary color override style
       const tempStyle = document.getElementById("pdf-color-override");
       if (tempStyle) {
         tempStyle.remove();
-        console.log("Temporary styles removed");
       }
     }
   };

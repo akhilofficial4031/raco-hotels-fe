@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getCachedLandingPageContent } from "@/lib/landing-page";
 import { generateHomePageMetadata } from "@/lib/metadata";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/seo";
@@ -7,20 +6,15 @@ import Script from "next/script";
 import AboutUs from "./components/AboutUs";
 import FeaturedStays from "./components/FeaturedStays";
 import Gallery from "./components/Gallery";
-import GravityBar from "./components/GravityBar";
 import Hero from "./components/Hero";
 import OurStays from "./components/OurStays";
-import Restaurant from "./components/Restaurant";
-import SignatureExperiences from "./components/SignatureExperiences";
-import Testimonials from "./components/Testimonials";
-import TopBanner from "./components/TopBanner";
 
 // Generate metadata dynamically based on content
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const content = await getCachedLandingPageContent();
     return generateHomePageMetadata(content.seo);
-  } catch (error) {
+  } catch (_error) {
     // Error logging removed
     return generateHomePageMetadata();
   }

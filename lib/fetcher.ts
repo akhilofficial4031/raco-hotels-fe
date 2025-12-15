@@ -3,59 +3,16 @@
 // Read API base URL from environment variable
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
-/**
- * Fetch with retry logic for better reliability
- */
-async function fetchWithRetry<T>(
-  url: string,
-  options: RequestInit,
-  retries = 2
-): Promise<T> {
-  for (let i = 0; i <= retries; i++) {
-    try {
-      const response = await fetch(url, options);
+export async function getFetcher<T>(endpoint: string): Promise<T> {
+  const url = `${API_BASE_URL}${endpoint}`;
+  // URL logging removed
+  const response = await fetch(url);
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      const isLastAttempt = i === retries;
-
-      if (isLastAttempt) {
-        console.error(
-          `Fetch failed after ${retries + 1} attempts:`,
-          url,
-          error
-        );
-        throw error;
-      }
-
-      // Wait before retrying (exponential backoff)
-      const delay = Math.min(1000 * Math.pow(2, i), 5000);
-      console.warn(
-        `Fetch attempt ${i + 1} failed for ${url}, retrying in ${delay}ms...`
-      );
-      await new Promise((resolve) => setTimeout(resolve, delay));
-    }
+  if (!response.ok) {
+    throw new Error(`Error fetching ${url}: ${response.statusText}`);
   }
 
-  throw new Error("Fetch failed");
-}
-
-export async function getFetcher<T>(endpoint: string): Promise<T> {
-  // If endpoint starts with /api/, it's a Next.js API route (proxy)
-  // Otherwise, prepend the backend API base URL
-  const url = endpoint.startsWith("/api/")
-    ? endpoint
-    : `${API_BASE_URL}${endpoint}`;
-
-  return fetchWithRetry<T>(url, {
-    cache: "no-store", // Disable caching for dynamic data
-    next: { revalidate: 0 }, // Revalidate on every request
-    signal: AbortSignal.timeout(10000), // 10 second timeout per attempt
-  });
+  return response.json();
 }
 
 export async function postFetcher<T, Body = unknown>(
@@ -71,6 +28,24 @@ export async function postFetcher<T, Body = unknown>(
 
   if (!response.ok) {
     throw new Error(`Error posting to ${url}: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function patchFetcher<T, Body = unknown>(
+  endpoint: string,
+  body: Body
+): Promise<T> {
+  const url = `${API_BASE_URL}${endpoint}`;
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error patching ${url}: ${response.statusText}`);
   }
 
   return response.json();

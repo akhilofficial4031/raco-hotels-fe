@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LandingPageContent, CMSHomepageResponse } from "@/types/landing-page";
 import { getFetcher } from "@/lib/fetcher";
+import { CMSHomepageResponse, LandingPageContent } from "@/types/landing-page";
 import fs from "fs";
 import path from "path";
 

@@ -85,7 +85,7 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
                   alt={image.alt ?? `Room image ${image.id}`}
                   fill
                   sizes={isModal ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: isModal ? "contain" : "cover" }}
                   priority={!isModal}
                 />
               </div>
@@ -120,36 +120,65 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
         <FullscreenOutlined />
       </button>
 
-      {isModalVisible ? (
-        <Modal
-          open={isModalVisible}
-          onCancel={handleCancel}
-          footer={null}
-          closable={false}
-          width="100vw"
-          style={{ top: 0, padding: 0, height: "100vh", maxWidth: "100vw" }}
-          bodyStyle={{
+      <Modal
+        open={isModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+        closable={false}
+        width="100vw"
+        centered
+        style={{ 
+          top: 0, 
+          padding: 0, 
+          height: "100vh", 
+          maxWidth: "100vw",
+        }}
+        styles={{
+          body: {
             padding: 0,
-            height: "100%",
+            height: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            backgroundColor: "transparent",
             overflow: "hidden",
-          }}
-        >
-          <div className="relative w-full h-full flex items-center justify-center">
-            {renderCarousel(true)}
-            <button
-              onClick={handleCancel}
-              className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-opacity"
-              aria-label="Exit fullscreen"
-            >
-              <FullscreenExitOutlined />
-            </button>
+          },
+          content: {
+            padding: 0,
+            height: "100vh",
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+          mask: {
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            backdropFilter: "blur(10px)",
+          }
+        }}
+      >
+        <div className="relative w-full h-full flex items-center justify-center">
+          {/* Blurred background */}
+          <div className="absolute inset-0 -z-10">
+            {slides[selectedIndexModal] && (
+              <Image
+                src={getImageUrl(slides[selectedIndexModal].url)}
+                alt="Background blur"
+                fill
+                style={{ objectFit: "cover", filter: "blur(40px)", opacity: 0.3 }}
+                priority={false}
+              />
+            )}
           </div>
-        </Modal>
-      ) : null}
+          
+          {renderCarousel(true)}
+          <button
+            onClick={handleCancel}
+            className="absolute top-4 right-4 bg-white text-gray-800 p-3 rounded-full hover:bg-gray-100 transition-all shadow-lg z-[100]"
+            aria-label="Exit fullscreen"
+          >
+            <FullscreenExitOutlined className="text-xl" />
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
