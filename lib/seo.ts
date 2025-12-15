@@ -20,11 +20,11 @@ export const defaultSEO: DefaultSeoProps = {
       "Discover amazing hotels in premium locations worldwide. Book your perfect stay with Raco Hotels - luxury accommodations, exclusive deals, and exceptional service across our hotel group.",
     images: [
       {
-        url: `${siteUrl}/images/og-default.jpg`,
+        url: `${siteUrl}/images/og-default.png`,
         width: 1200,
         height: 630,
         alt: "Raco Hotels - Luxury Accommodations",
-        type: "image/jpeg",
+        type: "image/png",
       },
     ],
   },
@@ -83,7 +83,7 @@ export const defaultSEO: DefaultSeoProps = {
     },
     {
       rel: "apple-touch-icon",
-      href: "/apple-touch-icon.png",
+      href: "/pwa/ios/180.png",
       sizes: "180x180",
     },
     {
@@ -418,9 +418,15 @@ export const generateEnhancedHotelSchema = (
     maxOccupancy: number;
     sizeSqft: number;
     bedType: string;
-  }>
+  }>,
+  aggregateRating?: {
+    ratingValue: number;
+    reviewCount: number;
+    bestRating?: number;
+    worstRating?: number;
+  }
 ) => {
-  const baseSchema = {
+  const baseSchema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     "@id": `${siteUrl}/hotels/${hotel.slug}#lodging`,
@@ -484,6 +490,11 @@ export const generateEnhancedHotelSchema = (
       },
     },
   };
+
+  // Add aggregate rating if available
+  if (aggregateRating && aggregateRating.reviewCount > 0) {
+    baseSchema.aggregateRating = generateAggregateRatingSchema(aggregateRating);
+  }
 
   // Add room offers if available
   if (roomTypes && roomTypes.length > 0) {

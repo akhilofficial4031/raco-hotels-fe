@@ -25,6 +25,11 @@ export async function getLandingPageContent(): Promise<LandingPageContent> {
       throw new Error("Invalid landing page content structure");
     }
 
+    // Validate that SEO fields are not empty (if they are, use mock data)
+    if (!content.seo.title || !content.seo.description) {
+      throw new Error("SEO data is empty, falling back to mock data");
+    }
+
     return content;
   } catch (error) {
     // eslint-disable-next-line no-console

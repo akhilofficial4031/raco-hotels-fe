@@ -38,8 +38,21 @@ const HotelDetailsPage = async ({ params }: Props) => {
   const roomTypesResponse = await getHotelRoomTypes(hotel.id);
   const roomTypes = roomTypesResponse.data.roomTypes;
 
-  // Generate enhanced structured data with room offers
-  const enhancedHotelSchema = generateEnhancedHotelSchema(hotel, roomTypes);
+  // TODO: Replace with actual review data from database
+  // Example aggregate rating - replace with real data when review system is implemented
+  const aggregateRating = {
+    ratingValue: 4.5,
+    reviewCount: 127,
+    bestRating: 5,
+    worstRating: 1,
+  };
+
+  // Generate enhanced structured data with room offers and reviews
+  const enhancedHotelSchema = generateEnhancedHotelSchema(
+    hotel,
+    roomTypes,
+    aggregateRating
+  );
 
   // Keep the basic hotel schema for backward compatibility
   const hotelSchema = generateHotelSchema(hotel);
