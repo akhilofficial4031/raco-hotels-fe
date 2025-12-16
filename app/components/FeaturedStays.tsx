@@ -22,10 +22,8 @@ const FeaturedStays = ({ content }: FeaturedStaysProps) => {
               </div>
             </AnimatedContainer>
             <AnimatedContainer animationName="fadeRight" delay={0.1}>
-              <Link href="/hotels">
-                <button className="btn-primary">
-                  {content.primaryButton.text}
-                </button>
+              <Link href="/hotels" className="btn-primary inline-block">
+                {content.primaryButton.text}
               </Link>
             </AnimatedContainer>
           </div>

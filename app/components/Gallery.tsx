@@ -50,16 +50,16 @@ const Gallery = ({ content }: GalleryProps) => {
         {/* Action Buttons */}
         {/* <nav
           aria-label="Gallery actions"
-          className="flex justify-center space-x-4 mt-8"
+          className="flex justify-center flex-wrap gap-8 mt-8"
         >
           {content.buttons.map((button, index) => (
             <button
               key={index}
-              className={`px-6 py-2 rounded-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+              className={
                 button.type === "primary"
-                  ? "bg-primary text-white hover:opacity-90"
-                  : "bg-transparent text-primary border border-primary hover:bg-primary hover:text-white"
-              }`}
+                  ? "btn-primary"
+                  : "px-6 py-2 rounded-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 bg-transparent text-primary border border-primary hover:bg-primary hover:text-white"
+              }
               aria-label={button.text}
             >
               {button.text}
