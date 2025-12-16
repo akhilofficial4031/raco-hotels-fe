@@ -15,7 +15,7 @@ import { BookingFormValues, bookingSchema } from "./form-schema";
 import Step1Amenities from "./steps/Step1Amenities";
 import Step2PersonalData from "./steps/Step2PersonalData";
 import Step3PaymentDetails from "./steps/Step3PaymentDetails";
-import { Button } from "antd";
+import { Button, Modal, Spin } from "antd";
 import { useRouter } from "next/navigation";
 
 interface BookingResponse {
@@ -76,7 +76,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
   );
   const methods = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
-    mode: "onSubmit",
+    mode: "onTouched",
     defaultValues: {
       fullName: "",
       email: "",
@@ -298,6 +298,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
         amountPaidCents: 0, // This would be set based on payment processing
         taxAmountCents: data.taxAmount ?? 0,
         totalAmountCents: data.totalAmount ?? 0,
+        sendConfirmationEmail: !initiatePayment,
       };
 
       // Call the booking API
@@ -360,7 +361,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
 
   const onError = (errors: FieldErrors<BookingFormValues>) => {
     message.error(
-      "Please fill in all required fields (Full Name, Email, Phone)"
+      "Please fill in all required fields (Full Name, Email, Phone, Nationality, ID Type, ID Number)"
     );
 
     // Scroll to first error
@@ -401,17 +402,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
 
   return (
     <FormProvider {...methods}>
-      <form
-        className={`${isSubmitting ? "h-auto" : "h-full"} bg-white rounded-lg border border-gray-200 relative`}
-      >
-        {isSubmitting ? (
-          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2" />
-              <p className="text-gray-600">Creating your booking...</p>
-            </div>
-          </div>
-        ) : null}
+      <form className="h-full bg-white rounded-lg border border-gray-200 relative">
         {steps.map((step, index) => (
           <div
             key={step.number}
@@ -466,6 +457,25 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
         customerName={methods.watch("fullName") || "Guest"}
         paymentDetails={paymentDetails}
       />
+
+      {/* Loading Modal */}
+      <Modal
+        open={isSubmitting}
+        closable={false}
+        maskClosable={false}
+        footer={null}
+        centered
+        width={400}
+        className="loading-modal"
+      >
+        <div className="text-center py-8">
+          <Spin size="large" />
+          <p className="text-gray-600 mt-4 text-lg">Creating your booking...</p>
+          <p className="text-gray-500 mt-2 text-sm">
+            Please do not close or refresh this page
+          </p>
+        </div>
+      </Modal>
     </FormProvider>
   );
 };

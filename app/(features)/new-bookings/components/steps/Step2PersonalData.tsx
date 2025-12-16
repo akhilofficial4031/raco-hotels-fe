@@ -12,6 +12,7 @@ const Step2PersonalData = () => {
   const {
     control,
     formState: { errors },
+    trigger,
   } = useFormContext<BookingFormValues>();
 
   return (
@@ -27,7 +28,14 @@ const Step2PersonalData = () => {
               name="fullName"
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="Enter Full Name" />
+                <Input
+                  {...field}
+                  placeholder="Enter Full Name"
+                  onBlur={(e) => {
+                    field.onBlur(e);
+                    trigger("fullName");
+                  }}
+                />
               )}
             />
           </Form.Item>
@@ -42,7 +50,15 @@ const Step2PersonalData = () => {
               name="email"
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="Enter Email" type="email" />
+                <Input
+                  {...field}
+                  placeholder="Enter Email"
+                  type="email"
+                  onBlur={(e) => {
+                    field.onBlur(e);
+                    trigger("email");
+                  }}
+                />
               )}
             />
           </Form.Item>
@@ -57,35 +73,58 @@ const Step2PersonalData = () => {
               name="phone"
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="Enter Phone Number" />
+                <Input
+                  {...field}
+                  placeholder="Enter Phone Number"
+                  onBlur={(e) => {
+                    field.onBlur(e);
+                    trigger("phone");
+                  }}
+                />
               )}
             />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label="Alternate Phone">
+          <Form.Item
+            label="Alternate Phone"
+            validateStatus={errors.alternatePhone ? "error" : ""}
+            help={errors.alternatePhone?.message}
+          >
             <Controller
               name="alternatePhone"
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="Enter Alternate Phone Number" />
+                <Input
+                  {...field}
+                  placeholder="Enter Alternate Phone Number"
+                  onBlur={(e) => {
+                    field.onBlur(e);
+                    trigger("alternatePhone");
+                  }}
+                />
               )}
             />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label="Nationality">
-            {/* <Controller
-              name="nationality"
-              control={control}
-              render={({ field }) => <Input {...field} />}
-            /> */}
-
+          <Form.Item
+            label="Nationality"
+            validateStatus={errors.nationality ? "error" : ""}
+            help={errors.nationality?.message}
+          >
             <Controller
               name="nationality"
               control={control}
               render={({ field }) => (
-                <Select {...field} placeholder="Select Nationality">
+                <Select
+                  {...field}
+                  placeholder="Select Nationality"
+                  onChange={(value) => {
+                    field.onChange(value);
+                    trigger("nationality");
+                  }}
+                >
                   <Option value="">Select Nationality</Option>
                   {nationalities.map((nationality) => (
                     <Option key={nationality} value={nationality}>
@@ -103,12 +142,23 @@ const Step2PersonalData = () => {
       <Divider orientation="left">Identity Documents</Divider>
       <Row gutter={24}>
         <Col xs={24} md={12}>
-          <Form.Item label="ID Type">
+          <Form.Item
+            label="ID Type"
+            validateStatus={errors.idType ? "error" : ""}
+            help={errors.idType?.message}
+          >
             <Controller
               name="idType"
               control={control}
               render={({ field }) => (
-                <Select {...field} placeholder="Select ID type">
+                <Select
+                  {...field}
+                  placeholder="Select ID type"
+                  onChange={(value) => {
+                    field.onChange(value);
+                    trigger("idType");
+                  }}
+                >
                   <Option value="">Select ID type</Option>
                   <Option value="passport">Passport</Option>
                   <Option value="driving_license">Driving License</Option>
@@ -119,12 +169,23 @@ const Step2PersonalData = () => {
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label="ID Number">
+          <Form.Item
+            label="ID Number"
+            validateStatus={errors.idNumber ? "error" : ""}
+            help={errors.idNumber?.message}
+          >
             <Controller
               name="idNumber"
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="Enter ID number" />
+                <Input
+                  {...field}
+                  placeholder="Enter ID number"
+                  onBlur={(e) => {
+                    field.onBlur(e);
+                    trigger("idNumber");
+                  }}
+                />
               )}
             />
           </Form.Item>
@@ -141,7 +202,11 @@ const Step2PersonalData = () => {
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label="Emergency Contact Number">
+          <Form.Item
+            label="Emergency Contact Number"
+            validateStatus={errors.emergencyContactPhone ? "error" : ""}
+            help={errors.emergencyContactPhone?.message}
+          >
             <Controller
               name="emergencyContactPhone"
               control={control}
@@ -149,6 +214,10 @@ const Step2PersonalData = () => {
                 <Input
                   {...field}
                   placeholder="Enter Emergency Contact Number"
+                  onBlur={(e) => {
+                    field.onBlur(e);
+                    trigger("emergencyContactPhone");
+                  }}
                 />
               )}
             />

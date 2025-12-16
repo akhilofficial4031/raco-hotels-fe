@@ -11,17 +11,32 @@ export const personalDataSchema = z.object({
       const digitCount = val.replace(/[^\d]/g, "").length;
       return digitCount <= 12;
     }, "Please enter a valid phone number"),
-  alternatePhone: z.string().optional(),
-  nationality: z.string().optional(),
-  idType: z.string().optional(),
-  idNumber: z.string().optional(),
+  alternatePhone: z
+    .string()
+    .optional()
+    .refine((val) => {
+      if (!val || val.trim() === "") return true; // No validation if empty
+      return /^[\d\s\-\+\(\)]+$/.test(val);
+    }, "Please enter a valid phone number")
+    .refine((val) => {
+      if (!val || val.trim() === "") return true; // No validation if empty
+      const digitCount = val.replace(/[^\d]/g, "").length;
+      return digitCount <= 12;
+    }, "Please enter a valid phone number"),
+  nationality: z.string().min(1, "Nationality is required"),
+  idType: z.string().min(1, "ID type is required"),
+  idNumber: z.string().min(1, "ID number is required"),
   emergencyContactName: z.string().optional(),
   emergencyContactPhone: z
     .string()
-    .regex(/^[\d\s\-\+\(\)]+$/, "Please enter a valid phone number")
     .optional()
     .refine((val) => {
-      const digitCount = val?.replace(/[^\d]/g, "").length ?? 0;
+      if (!val || val.trim() === "") return true; // No validation if empty
+      return /^[\d\s\-\+\(\)]+$/.test(val);
+    }, "Please enter a valid phone number")
+    .refine((val) => {
+      if (!val || val.trim() === "") return true; // No validation if empty
+      const digitCount = val.replace(/[^\d]/g, "").length;
       return digitCount <= 12;
     }, "Please enter a valid phone number"),
   marketingOptIn: z.boolean().optional(),

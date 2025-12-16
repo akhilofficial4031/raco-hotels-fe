@@ -76,7 +76,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
     let buttons: NodeListOf<Element> | null = null;
 
     try {
-      message.loading("Generating PDF...");
+      // message.loading("Generating PDF...");
 
       // Dynamic import to avoid SSR issues
       const html2canvas = (await import("html2canvas")).default;
