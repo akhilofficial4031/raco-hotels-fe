@@ -12,7 +12,7 @@ export async function GET() {
     const hotels = response.data.hotels || [];
 
     const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com";
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://racohotelgroup.com";
 
     // Generate sitemap fields for each hotel with enhanced metadata
     const hotelSitemapFields = hotels.map((hotel) => ({
@@ -65,7 +65,7 @@ export async function GET() {
 
     // Return minimal sitemap in case of error
     const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com";
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://racohotelgroup.com";
     const fallbackFields = [
       {
         loc: siteUrl,

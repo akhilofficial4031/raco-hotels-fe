@@ -45,7 +45,7 @@ const dancingScript = Dancing_Script({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://racohotelgroup.com"
   ),
   title: "Raco Hotels - Luxury Accommodations & Premium Hotel Bookings",
   description:
@@ -65,13 +65,13 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Raco Hotels" }],
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com",
+    canonical: process.env.NEXT_PUBLIC_SITE_URL ?? "https://racohotelgroup.com",
   },
   openGraph: {
     title: "Raco Hotels - Luxury Accommodations & Premium Hotel Bookings",
     description:
       "Discover amazing hotels in premium locations worldwide. Book your perfect stay with Raco Hotels - luxury accommodations, exclusive deals, and exceptional service across our hotel group.",
-    url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://racohotelgroup.com",
     siteName: "Raco Hotels",
     locale: "en_US",
     type: "website",
