@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://raco-hotels.com",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://racohotelgroup.com",
   generateRobotsTxt: true, // (optional) generate robots.txt
   sitemapSize: 7000,
   changefreq: "daily",
@@ -36,7 +36,7 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      `${process.env.NEXT_PUBLIC_SITE_URL || "https://raco-hotels.com"}/server-sitemap.xml`, // For server-side generated content
+      `${process.env.NEXT_PUBLIC_SITE_URL || "https://racohotelgroup.com"}/server-sitemap.xml`, // For server-side generated content
     ],
   },
   transform: async (config, path) => {

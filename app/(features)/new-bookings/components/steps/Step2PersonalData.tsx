@@ -31,8 +31,8 @@ const Step2PersonalData = () => {
                 <Input
                   {...field}
                   placeholder="Enter Full Name"
-                  onBlur={(e) => {
-                    field.onBlur(e);
+                  onBlur={() => {
+                    field.onBlur();
                     trigger("fullName");
                   }}
                 />
@@ -54,8 +54,8 @@ const Step2PersonalData = () => {
                   {...field}
                   placeholder="Enter Email"
                   type="email"
-                  onBlur={(e) => {
-                    field.onBlur(e);
+                  onBlur={() => {
+                    field.onBlur();
                     trigger("email");
                   }}
                 />
@@ -76,8 +76,8 @@ const Step2PersonalData = () => {
                 <Input
                   {...field}
                   placeholder="Enter Phone Number"
-                  onBlur={(e) => {
-                    field.onBlur(e);
+                  onBlur={() => {
+                    field.onBlur();
                     trigger("phone");
                   }}
                 />
@@ -98,8 +98,8 @@ const Step2PersonalData = () => {
                 <Input
                   {...field}
                   placeholder="Enter Alternate Phone Number"
-                  onBlur={(e) => {
-                    field.onBlur(e);
+                  onBlur={() => {
+                    field.onBlur();
                     trigger("alternatePhone");
                   }}
                 />
@@ -181,8 +181,8 @@ const Step2PersonalData = () => {
                 <Input
                   {...field}
                   placeholder="Enter ID number"
-                  onBlur={(e) => {
-                    field.onBlur(e);
+                  onBlur={() => {
+                    field.onBlur();
                     trigger("idNumber");
                   }}
                 />
@@ -214,8 +214,8 @@ const Step2PersonalData = () => {
                 <Input
                   {...field}
                   placeholder="Enter Emergency Contact Number"
-                  onBlur={(e) => {
-                    field.onBlur(e);
+                  onBlur={() => {
+                    field.onBlur();
                     trigger("emergencyContactPhone");
                   }}
                 />

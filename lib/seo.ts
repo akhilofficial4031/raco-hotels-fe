@@ -2,7 +2,7 @@ import { DefaultSeoProps } from "next-seo";
 import { getImageUrl } from "./utils";
 
 export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://racohotelgroup.com";
 
 export const defaultSEO: DefaultSeoProps = {
   titleTemplate: "%s | Raco Hotels",

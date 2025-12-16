@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   // Environment variables for SEO
   env: {
     NEXT_PUBLIC_SITE_URL:
-      process.env.NEXT_PUBLIC_SITE_URL ?? "https://raco-hotels.com",
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://racohotelgroup.com",
   },
 
   // Server-only packages (prevents bundling in client)
