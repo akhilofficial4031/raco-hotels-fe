@@ -142,12 +142,14 @@ export async function getAvailableRoomTypesForHotel(
   hotelId: number,
   checkInDate: string,
   checkOutDate: string,
-  roomTypeId?: number
+  roomTypeId?: number,
+  numberOfRooms?: number
 ): Promise<AvailableRoomTypesApiResponse> {
   const params = new URLSearchParams({
     hotelId: hotelId.toString(),
     checkInDate,
     checkOutDate,
+    numberOfRooms: numberOfRooms?.toString() ?? "1",
   });
 
   if (roomTypeId) {

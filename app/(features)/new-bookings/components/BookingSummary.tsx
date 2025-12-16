@@ -15,6 +15,7 @@ interface BookingSummaryProps {
   roomType: RoomType;
   checkIn: string | null;
   checkOut: string | null;
+  numberOfRooms: number;
 }
 
 const BookingSummary: React.FC<BookingSummaryProps> = ({
@@ -22,6 +23,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   roomType,
   checkIn,
   checkOut,
+  numberOfRooms,
 }) => {
   if (!hotel || !roomType) {
     return (
@@ -68,7 +70,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
           </h3>
           <div className="inline-flex items-center bg-gray-50 capitalize text-primary px-4 py-2 rounded-md text-sm font-semibold">
             <span className="w-2 h-2 bg-primary rounded-full mr-2 " />
-            {roomType.name}
+            {roomType.name}({numberOfRooms})
           </div>
         </div>
 

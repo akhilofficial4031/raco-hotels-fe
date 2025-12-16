@@ -43,10 +43,12 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
     }
     const checkIn = dates[0].format("YYYY-MM-DD");
     const checkOut = dates[1].format("YYYY-MM-DD");
+    const numberOfRooms = rooms;
     const params = new URLSearchParams({
       hotelId: hotel.id.toString(),
       checkIn,
       checkOut,
+      numberOfRooms: numberOfRooms.toString(),
     });
     router.push(`/available-rooms?${params.toString()}`);
   };

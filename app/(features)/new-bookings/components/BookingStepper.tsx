@@ -50,7 +50,7 @@ interface BookingResponse {
 interface BookingStepperProps {
   hotel: Hotel;
   roomType: RoomType;
-  roomId: number;
+  roomIds: number[];
   checkInDate: string | null;
   checkOutDate: string | null;
   numAdults: number;
@@ -60,7 +60,7 @@ interface BookingStepperProps {
 const BookingStepper: React.FC<BookingStepperProps> = ({
   hotel,
   roomType,
-  roomId,
+  roomIds,
   checkInDate,
   checkOutDate,
   numAdults,
@@ -278,11 +278,9 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
           notes: data.notes ?? "",
           firstBookingSource: "web",
         },
-        selectedRooms: [
-          {
-            id: roomId,
-          },
-        ],
+        selectedRooms: roomIds.map((roomId) => ({
+          id: roomId,
+        })),
         selectedAddons:
           data.addons?.map((addonId) => ({
             id: addonId,
@@ -354,6 +352,9 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
           roomType={roomType}
           hotelId={hotel.id}
           isSubmitting={isSubmitting}
+          checkInDate={checkInDate}
+          checkOutDate={checkOutDate}
+          numberOfRooms={roomIds.length}
         />
       ),
     },

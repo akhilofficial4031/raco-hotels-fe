@@ -1,7 +1,7 @@
 "use client";
 import { PromoCodeResponse, RoomType } from "@/types/hotel";
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Checkbox, Input, Divider, Tag } from "antd";
+import { Button, Checkbox, Input, Tag } from "antd";
 import { message } from "@/components/message";
 import { useFormContext, Controller } from "react-hook-form";
 import { BookingFormValues } from "../form-schema";
@@ -12,6 +12,9 @@ interface Step3PaymentDetailsProps {
   roomType: RoomType;
   hotelId: number;
   isSubmitting?: boolean;
+  checkInDate: string | null;
+  checkOutDate: string | null;
+  numberOfRooms: number;
 }
 
 const formatCurrency = (amount: number, currencyCode: string) => {
@@ -30,9 +33,31 @@ const formatNumber = (amount: number, currencyCode: string) => {
   }).format(amount);
 };
 
+const calculateNumberOfNights = (
+  checkIn: string | null,
+  checkOut: string | null
+): number => {
+  if (!checkIn || !checkOut) return 1; // Default to 1 night if dates are not available
+
+  const checkInDate = new Date(checkIn);
+  const checkOutDate = new Date(checkOut);
+
+  // Calculate the difference in milliseconds
+  const timeDifference = checkOutDate.getTime() - checkInDate.getTime();
+
+  // Convert milliseconds to days
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+  // Ensure minimum of 1 night
+  return Math.max(daysDifference, 1);
+};
+
 const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   roomType,
   hotelId,
+  checkInDate,
+  checkOutDate,
+  numberOfRooms,
 }) => {
   const { control, watch, setValue } = useFormContext<BookingFormValues>();
   const selectedAddonIds: number[] = watch("addons", []);
@@ -47,6 +72,9 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   const [totalAfterDiscount, setTotalAfterDiscount] = useState<number>(0);
   const [isApplyingPromo, setIsApplyingPromo] = useState<boolean>(false);
   const [appliedPromoCode, setAppliedPromoCode] = useState<string>("");
+
+  // Calculate number of nights
+  const numberOfNights = calculateNumberOfNights(checkInDate, checkOutDate);
 
   const getRoomRent = useCallback(() => {
     if (roomType.offerPrice) {
@@ -72,7 +100,8 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
     }, 0);
 
     const basePrice = getRoomRent() ?? 0;
-    const subtotal = basePrice + addonsTotal;
+    const totalRoomRent = basePrice * numberOfNights * numberOfRooms; // Multiply by number of nights
+    const subtotal = totalRoomRent + addonsTotal;
     if (discountAmount > 0) {
       setTotalAfterDiscount(subtotal - discountAmount * 100);
     }
@@ -90,6 +119,8 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
     setValue,
     discountAmount,
     totalAfterDiscount,
+    numberOfNights,
+    numberOfRooms,
   ]);
 
   const handleApplyPromoCode = async () => {
@@ -157,33 +188,60 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
             </span>
           </div>
 
+          <div className="flex justify-between items-center text-gray-500 text-sm pl-4  border-b border-gray-200 pb-2">
+            <span className="text-xs">
+              Number of Nights: <strong>{numberOfNights}</strong> <br />
+              Number of Rooms: <strong>{numberOfRooms}</strong>
+            </span>
+            <span />
+          </div>
+
+          <div className="flex justify-between items-center text-gray-600 border-b border-gray-200 pb-2">
+            <span>Total Room Rent</span>
+            <span>
+              {formatCurrency(
+                (getRoomRent() ?? 0) *
+                  (numberOfNights ?? 1) *
+                  (numberOfRooms ?? 1),
+                roomType.currencyCode ?? "INR"
+              )}
+            </span>
+          </div>
+
           {selectedAddonIds.length > 0 && (
-            <div className="flex justify-between items-center text-gray-600">
-              <span>Add-ons</span>
-            </div>
-          )}
-          {selectedAddonIds.map((addonId) => {
-            const addon = roomType.addons?.find((a) => a.addonId === addonId);
-            if (!addon) return null;
-            return (
-              <div
-                key={addon.id}
-                className="flex justify-between items-center text-gray-600 pl-8"
-              >
-                <span className="capitalize">{addon.name}</span>
-                <span>
-                  +{" "}
-                  {formatCurrency(
-                    addon.priceCents,
-                    addon.currencyCode || "INR"
-                  )}
-                </span>
+            <>
+              <div className="flex justify-between items-center text-gray-600">
+                <span>Add-ons</span>
               </div>
-            );
-          })}
+
+              <div className="border-b border-gray-200 pb-2">
+                {selectedAddonIds.map((addonId) => {
+                  const addon = roomType.addons?.find(
+                    (a) => a.addonId === addonId
+                  );
+                  if (!addon) return null;
+                  return (
+                    <div
+                      key={addon.id}
+                      className="flex justify-between items-center text-gray-600 pl-4 mb-2"
+                    >
+                      <span className="capitalize text-xs">{addon.name}</span>
+                      <span>
+                        +{" "}
+                        {formatCurrency(
+                          addon.priceCents,
+                          addon.currencyCode || "INR"
+                        )}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
-        <div className="flex justify-between items-center text-gray-600 mt-2">
+        <div className="flex justify-between items-center text-gray-600 border-b border-gray-200 mt-2 pb-2">
           <span>Subtotal</span>
           <span>
             {formatCurrency(
@@ -213,16 +271,14 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
           </>
         )}
 
-        <div className="flex justify-between items-center text-gray-600 mt-2">
+        <div className="flex justify-between items-center text-gray-600 border-b border-gray-200 pb-2 mt-2">
           <span>Tax(18%)</span>
           <span>
             {formatCurrency(taxAmount ?? 0, roomType.currencyCode ?? "INR")}
           </span>
         </div>
 
-        <Divider />
-
-        <div className="flex justify-between items-center font-bold text-lg text-gray-800">
+        <div className="flex justify-between items-center font-bold text-lg text-gray-800 mt-3">
           <span>Total</span>
           <span>
             {formatCurrency(totalAmount, roomType.currencyCode || "INR")}

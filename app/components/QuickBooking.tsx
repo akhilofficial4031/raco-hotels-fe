@@ -56,7 +56,7 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
       hotelId: hotelId.toString(),
       checkIn,
       checkOut,
-      rooms: (rooms ?? 1).toString(),
+      numberOfRooms: (rooms ?? 1).toString(),
       adults: (adults ?? 1).toString(),
       children: (children ?? 0).toString(),
     });

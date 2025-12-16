@@ -4,7 +4,7 @@ import { RoomType, AvailableRoomDetails } from "@/types/hotel";
 import { getAvailableRoomTypesForHotel } from "@/lib/hotels";
 import Image from "next/image";
 import React, { useState } from "react";
-import { DatePicker, Button, Modal, Spin } from "antd";
+import { DatePicker, Button, Modal, Spin, InputNumber } from "antd";
 import { message } from "@/components/message";
 import dayjs from "dayjs";
 import RoomImageCarousel from "./RoomImageCarousel";
@@ -20,6 +20,7 @@ interface RoomTypesProps {
 const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
+  const [numberOfRooms, setNumberOfRooms] = useState(1);
   const [dates, setDates] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
     dayjs().add(1, "day"),
     dayjs().add(2, "day"),
@@ -51,7 +52,8 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
         hotelId,
         checkInDate,
         checkOutDate,
-        selectedRoom.id
+        selectedRoom.id,
+        numberOfRooms
       );
 
       if (
@@ -82,11 +84,13 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
     if (!selectedRoom || !dates[0] || !dates[1]) return;
     const checkIn = dates[0].format("YYYY-MM-DD");
     const checkOut = dates[1].format("YYYY-MM-DD");
+    const numberOfRoomsString = numberOfRooms.toString();
     const params = new URLSearchParams({
       hotelId: hotelId.toString(),
       roomTypeId: selectedRoom.id.toString(),
       checkIn,
       checkOut,
+      numberOfRooms: numberOfRoomsString,
     });
     router.push(`/new-bookings?${params.toString()}`);
   };
@@ -228,20 +232,29 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select your dates:
+                Select your dates and number of rooms:
               </label>
-              <RangePicker
-                value={dates}
-                onChange={(dates) => {
-                  setDates(dates as [dayjs.Dayjs | null, dayjs.Dayjs | null]);
-                  setIsAvailable(null); // Reset availability when dates change
-                  setAvailableRooms([]);
-                }}
-                disabledDate={(current) =>
-                  current && current < dayjs().startOf("day")
-                }
-                className="w-full"
-              />
+              <div className="grid grid-cols-2 gap-2">
+                <RangePicker
+                  value={dates}
+                  onChange={(dates) => {
+                    setDates(dates as [dayjs.Dayjs | null, dayjs.Dayjs | null]);
+                    setIsAvailable(null); // Reset availability when dates change
+                    setAvailableRooms([]);
+                  }}
+                  disabledDate={(current) =>
+                    current && current < dayjs().startOf("day")
+                  }
+                  className="!w-full"
+                />
+                <InputNumber
+                  min={1}
+                  placeholder="Number of rooms"
+                  value={numberOfRooms}
+                  onChange={(value) => setNumberOfRooms(value ?? 1)}
+                  className="!w-full"
+                />
+              </div>
             </div>
 
             {isLoading ? (

@@ -19,6 +19,7 @@ const NewBookingsPageContent = () => {
   const roomTypeId = searchParams.get("roomTypeId");
   const checkIn = searchParams.get("checkIn");
   const checkOut = searchParams.get("checkOut");
+  const numberOfRooms = searchParams.get("numberOfRooms") ?? "1";
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [roomType, setRoomType] = useState<RoomType | null>(null);
@@ -29,7 +30,7 @@ const NewBookingsPageContent = () => {
   const [error, setError] = useState<string | null>(null);
 
   const BUCKET_BASE_URL = process.env.NEXT_PUBLIC_BUCKET_URL ?? "";
-  const [roomId, setRoomId] = useState<number | null>(null);
+  const [roomIds, setRoomIds] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,12 +48,26 @@ const NewBookingsPageContent = () => {
           parseInt(hotelId, 10),
           checkIn,
           checkOut,
-          parseInt(roomTypeId, 10)
+          parseInt(roomTypeId, 10),
+          parseInt(numberOfRooms ?? "1", 10)
         );
         if (availableRoomResponse.success) {
-          const roomId =
-            availableRoomResponse.data.roomTypes[0].rooms[0].roomId;
-          setRoomId(roomId);
+          const numRooms = parseInt(numberOfRooms, 10);
+          const availableRooms = availableRoomResponse.data.roomTypes[0].rooms;
+
+          let selectedRoomIds: number[] = [];
+
+          if (numRooms > 1) {
+            // Get the first numberOfRooms room IDs
+            selectedRoomIds = availableRooms
+              .slice(0, numRooms)
+              .map((room) => room.roomId);
+          } else {
+            // Get just the first room ID
+            selectedRoomIds = [availableRooms[0].roomId];
+          }
+
+          setRoomIds(selectedRoomIds);
         } else {
           setError("Could not fetch available room.");
         }
@@ -98,7 +113,7 @@ const NewBookingsPageContent = () => {
     };
 
     fetchData();
-  }, [hotelId, roomTypeId, checkIn, checkOut, BUCKET_BASE_URL]);
+  }, [hotelId, roomTypeId, checkIn, checkOut, BUCKET_BASE_URL, numberOfRooms]);
 
   if (loading) {
     return (
@@ -154,7 +169,7 @@ const NewBookingsPageContent = () => {
             <BookingStepper
               hotel={hotel}
               roomType={roomType}
-              roomId={roomId ?? 0}
+              roomIds={roomIds ?? []}
               checkInDate={checkIn}
               checkOutDate={checkOut}
               numAdults={parseInt(searchParams.get("adults") ?? "1", 10)}
@@ -168,6 +183,7 @@ const NewBookingsPageContent = () => {
                 roomType={roomType}
                 checkIn={checkIn}
                 checkOut={checkOut}
+                numberOfRooms={parseInt(numberOfRooms, 10)}
               />
             </div>
           </div>

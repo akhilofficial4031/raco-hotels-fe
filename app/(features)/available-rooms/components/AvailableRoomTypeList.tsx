@@ -11,6 +11,7 @@ interface AvailableRoomTypeListProps {
   hotelId: number;
   checkIn: string;
   checkOut: string;
+  numberOfRooms: number;
 }
 
 const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
@@ -18,6 +19,7 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
   hotelId,
   checkIn,
   checkOut,
+  numberOfRooms,
 }) => {
   const router = useRouter();
 
@@ -27,6 +29,7 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
       roomTypeId: roomType.roomTypeId.toString(),
       checkIn,
       checkOut,
+      numberOfRooms: numberOfRooms.toString(),
     });
     router.push(`/new-bookings?${params.toString()}`);
   };

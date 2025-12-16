@@ -12,6 +12,7 @@ const AvailableRoomsPageContent = () => {
   const hotelId = searchParams.get("hotelId");
   const checkIn = searchParams.get("checkIn");
   const checkOut = searchParams.get("checkOut");
+  const numberOfRooms = searchParams.get("numberOfRooms");
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [availableRooms, setAvailableRooms] = useState<AvailableRoomType[]>([]);
@@ -38,7 +39,9 @@ const AvailableRoomsPageContent = () => {
         const availableRoomsRes = await getAvailableRoomTypesForHotel(
           parseInt(hotelId, 10),
           checkIn,
-          checkOut
+          checkOut,
+          undefined,
+          parseInt(numberOfRooms ?? "1", 10)
         );
 
         if (availableRoomsRes.success) {
@@ -95,6 +98,7 @@ const AvailableRoomsPageContent = () => {
             hotelId={parseInt(hotelId, 10)}
             checkIn={checkIn}
             checkOut={checkOut}
+            numberOfRooms={parseInt(numberOfRooms ?? "1", 10)}
           />
         ) : (
           <div className="text-center">
