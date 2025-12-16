@@ -72,7 +72,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
     } catch (_error) {
       // console.error("Error checking availability:", error);
       message.error("Failed to check availability. Please try again.");
-      setIsAvailable(null);
+      setIsAvailable(false);
     } finally {
       setIsLoading(false);
     }

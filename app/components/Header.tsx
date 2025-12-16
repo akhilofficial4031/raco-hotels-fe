@@ -60,7 +60,6 @@ const Header = ({ hotels = [] }: HeaderProps) => {
 
   const navLinks: NavLink[] = [
     { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
     {
       href: "/hotels",
       label: "Our Properties",
@@ -76,7 +75,7 @@ const Header = ({ hotels = [] }: HeaderProps) => {
 
   const topBannerContent: TopBannerContent = {
     isVisible: true,
-    text: "Book directly with us and get a complimentary bottle of wine.",
+    text: "Escape the ordinary — book your perfect stay now",
     linkText: "Book Now",
     onClick: openModal,
   };

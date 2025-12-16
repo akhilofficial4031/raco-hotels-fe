@@ -63,7 +63,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
                 </p>
               </div>
             </AnimatedContainer>
-            <AnimatedContainer animationName="fadeIn" delay={0.4}>
+            {/* <AnimatedContainer animationName="fadeIn" delay={0.4}>
               <div className="mt-8">
                 <button
                   aria-label={content.primaryButton.text}
@@ -72,7 +72,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
                   {content.primaryButton.text}
                 </button>
               </div>
-            </AnimatedContainer>
+            </AnimatedContainer> */}
           </div>
 
           {/* Right Image Gallery */}

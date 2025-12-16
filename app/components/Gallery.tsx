@@ -48,7 +48,7 @@ const Gallery = ({ content }: GalleryProps) => {
         </div>
 
         {/* Action Buttons */}
-        <nav
+        {/* <nav
           aria-label="Gallery actions"
           className="flex justify-center space-x-4 mt-8"
         >
@@ -64,8 +64,8 @@ const Gallery = ({ content }: GalleryProps) => {
             >
               {button.text}
             </button>
-          ))}
-        </nav>
+          ))} */}
+        {/* </nav> */}
       </div>
     </section>
   );

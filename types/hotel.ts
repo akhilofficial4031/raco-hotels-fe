@@ -213,6 +213,9 @@ export interface AvailableRoomType {
   roomTypeSlug: string;
   description: string;
   baseOccupancy: number;
+  offerPrice: number | null;
+  offerStartDate: string | null;
+  offerEndDate: string | null;
   maxOccupancy: number;
   basePriceCents: number;
   currencyCode: string;

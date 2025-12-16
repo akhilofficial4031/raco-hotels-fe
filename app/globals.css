@@ -343,3 +343,7 @@ body.payment-in-progress {
   overflow: auto !important;
   height: auto !important;
 }
+
+.leaflet-container {
+  z-index: 1;
+}

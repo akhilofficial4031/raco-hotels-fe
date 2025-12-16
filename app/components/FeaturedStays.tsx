@@ -1,6 +1,7 @@
 import HotelList from "@/app/(features)/hotels/components/HotelList";
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import { FeaturedStaysContent } from "@/types/landing-page";
+import Link from "next/link";
 
 interface FeaturedStaysProps {
   content: FeaturedStaysContent;
@@ -21,9 +22,11 @@ const FeaturedStays = ({ content }: FeaturedStaysProps) => {
               </div>
             </AnimatedContainer>
             <AnimatedContainer animationName="fadeRight" delay={0.1}>
-              <button className="btn-primary">
-                {content.primaryButton.text}
-              </button>
+              <Link href="/hotels">
+                <button className="btn-primary">
+                  {content.primaryButton.text}
+                </button>
+              </Link>
             </AnimatedContainer>
           </div>
           <div className="lg:col-span-2">

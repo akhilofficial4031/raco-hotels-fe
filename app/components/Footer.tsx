@@ -40,24 +40,22 @@ const Footer = () => {
   }, []);
 
   const quickLinks = [
-    { href: "/about", label: "About" },
-    { href: "/properties", label: "Properties" },
-    { href: "/offers", label: "Offers" },
+    { href: "/hotels", label: "Properties" },
     { href: "/contact", label: "Contact" },
   ];
 
-  const stayWithUsLinks = [
-    { href: "/rooms-suites", label: "Rooms & Suites" },
-    { href: "/dining", label: "Dining" },
-    { href: "/spa-wellness", label: "Spa & Wellness" },
-  ];
+  // const stayWithUsLinks = [
+  //   { href: "/rooms-suites", label: "Rooms & Suites" },
+  //   { href: "/dining", label: "Dining" },
+  //   { href: "/spa-wellness", label: "Spa & Wellness" },
+  // ];
 
-  const discoverLinks = [
-    { href: "/attractions", label: "Attractions Nearby" },
-    { href: "/experiences", label: "Experiences & Tours" },
-    { href: "/gallery", label: "Gallery" },
-    { href: "/blog", label: "Blog / Travel Guide" },
-  ];
+  // const discoverLinks = [
+  //   { href: "/attractions", label: "Attractions Nearby" },
+  //   { href: "/experiences", label: "Experiences & Tours" },
+  //   { href: "/gallery", label: "Gallery" },
+  //   { href: "/blog", label: "Blog / Travel Guide" },
+  // ];
 
   const legalLinks = [
     { href: "/privacy-policy", label: "Privacy Policy" },
@@ -83,7 +81,7 @@ const Footer = () => {
           </button>
         </div>
       </div>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 mt-18">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0 w-full bg-footer-dark-bg rounded-4xl mb-12">
           <div className="p-8 items-center justify-center mb-12  col-span-2">
             <div className="flex-grow text-center md:text-left mb-6 md:mb-0">
@@ -107,7 +105,7 @@ const Footer = () => {
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-gray-800">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mt-18 text-gray-800">
           <nav aria-labelledby="quick-links-heading">
             <h3
               id="quick-links-heading"
@@ -128,49 +126,6 @@ const Footer = () => {
               ))}
             </ul>
           </nav>
-
-          <nav aria-labelledby="stay-with-us-heading">
-            <h3
-              id="stay-with-us-heading"
-              className="font-bold mb-4 text-sm uppercase"
-            >
-              Stay with us
-            </h3>
-            <ul className="space-y-3">
-              {stayWithUsLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-primary transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav aria-labelledby="discover-heading">
-            <h3
-              id="discover-heading"
-              className="font-bold mb-4 text-sm uppercase"
-            >
-              Discover
-            </h3>
-            <ul className="space-y-3">
-              {discoverLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-primary transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
           <nav aria-labelledby="legal-heading">
             <h3 id="legal-heading" className="font-bold mb-4 text-sm uppercase">
               Legal
@@ -186,6 +141,48 @@ const Footer = () => {
                   </Link>
                 </li>
               ))}
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="stay-with-us-heading">
+            <h3
+              id="stay-with-us-heading"
+              className="font-bold mb-4 text-sm uppercase"
+            >
+              {/* Stay with us */}
+            </h3>
+            <ul className="space-y-3">
+              {/* {stayWithUsLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="hover:text-primary transition-colors text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))} */}
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="discover-heading">
+            <h3
+              id="discover-heading"
+              className="font-bold mb-4 text-sm uppercase"
+            >
+              {/* Discover */}
+            </h3>
+            <ul className="space-y-3">
+              {/* {discoverLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="hover:text-primary transition-colors text-sm"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))} */}
             </ul>
           </nav>
 
@@ -205,35 +202,44 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-300 flex flex-col md:flex-row justify-between items-center text-gray-600">
-          <div className="flex items-center gap-6 mb-6 md:mb-0">
-            <Link
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-primary"
-            >
-              Instagram <i className="fa fa-instagram" />
-            </Link>
-            <Link
-              href="https://whatsapp.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-primary"
-            >
-              Whatsapp <i className="fa fa-whatsapp" />
-            </Link>
+        <div className="pt-8 items-center text-gray-600 mt-[100px]">
+          <div className="grid grid-cols-3 gap-18 mb-18">
+            <div className="border-t border-gray-300 pt-4">
+              <Link
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-primary"
+              >
+                <span className="flex justify-between w-full">
+                  Instagram <i className="fa fa-instagram" />
+                </span>
+              </Link>
+            </div>
+            <div className="border-t border-gray-300 pt-4">
+              <Link
+                href="https://whatsapp.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-primary"
+              >
+                <span className="flex justify-between w-full">
+                  Whatsapp <i className="fa fa-whatsapp" />
+                </span>
+              </Link>
+            </div>
+            <div />
           </div>
-          <p className="text-sm">&copy; 2025 — Copyright</p>
+          <p className="text-sm mt-18">&copy; 2025 — Copyright</p>
         </div>
       </div>
       {isVisible ? (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all duration-300 z-50"
+          className="fixed bottom-8 right-8 bg-transparent border w-10 h-10 border-gray-500  rounded-full shadow-lg hover:bg-gray-100 transition-all duration-300 z-50"
           aria-label="Go to top"
         >
-          <i className="fa fa-arrow-up text-primary" />
+          <i className="fa fa-arrow-up !font-light text-gray-500" />
         </button>
       ) : null}
     </footer>
