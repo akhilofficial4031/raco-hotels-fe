@@ -92,27 +92,29 @@ const AttractionPage = async ({ params }: Props) => {
           <AboutSectionL3 content={attractionContent.aboutSection} />
         ) : null}
       </section>
-      <section>
-        <TagSection
-          content={{
-            sectionTag: attractionContent.feature.tag,
-            title: attractionContent.feature.title,
-            description: attractionContent.feature.subtitle,
-            bg: "color",
-          }}
-        />
-        <div className="py-20 bg-background-light">
-          <Carousel
-            items={attractionContent.carouselSection.images.map((image) => ({
-              image,
-              name: "",
-            }))}
-            type="image"
-            imageCarouselType="default"
-            title="MEMORABLE STAYS, SHARED EXPERIENCES"
+      {attraction.attraction.layout !== AttractionLayout.layout3 ? (
+        <section>
+          <TagSection
+            content={{
+              sectionTag: attractionContent.feature.tag,
+              title: attractionContent.feature.title,
+              description: attractionContent.feature.subtitle,
+              bg: "color",
+            }}
           />
-        </div>
-        {/* <div className="py-20">
+
+          <div className="py-20 bg-background-light">
+            <Carousel
+              items={attractionContent.carouselSection.images.map((image) => ({
+                image,
+                name: "",
+              }))}
+              type="image"
+              imageCarouselType="default"
+              title="MEMORABLE STAYS, SHARED EXPERIENCES"
+            />
+          </div>
+          {/* <div className="py-20">
           <Carousel
             items={attractionContent.carouselSection.images.map((image) => ({
               image,
@@ -122,7 +124,8 @@ const AttractionPage = async ({ params }: Props) => {
             imageCarouselType="lightFooterNav"
           />
         </div> */}
-      </section>
+        </section>
+      ) : null}
 
       <section>
         <TagSection

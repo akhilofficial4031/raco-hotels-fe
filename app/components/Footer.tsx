@@ -2,12 +2,13 @@
 import { useQuickBooking } from "@/contexts/QuickBookingContext";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Footer = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { openModal, openAttractionModal } = useQuickBooking();
+  const router = useRouter();
 
   const toggleVisibility = () => {
     if (window.scrollY > 300) {
@@ -92,16 +93,20 @@ const Footer = () => {
                 <span className="text-white">DO YOU NEED HELP?</span>
               </p>
               <p className="text-gray-300">
-                In a world that moves too fast, we believe in the art of slow
-                living. Natural textures, warm lighting, and thoughtful spaces
-                create an atmosphere of comfort and timeless elegance.
+                In a fast-paced world, Cyber Residency offers a refined
+                business-class stay for professionals. Thoughtfully designed
+                spaces, warm lighting, and modern comfort create an environment
+                that supports focused work and effortless relaxation.
               </p>
             </div>
           </div>
           <div className="flex bg-footer-cta-bg items-center rounded-l-[72px] justify-center rounded-r-4xl relative">
             {/* <div className="bg-footer-cta-bg rounded-l-full h-[400px] w-40 absolute -left-10" /> */}
-            <button className="px-8 py-4 rounded-lg font-semibold flex items-center gap-2 transition-transform transform hover:scale-105 text-text-dark">
-              Get consultation <i className="fa fa-arrow-right" />
+            <button
+              onClick={() => router.push("/contact")}
+              className="px-8 py-4 rounded-lg font-semibold flex items-center gap-2 transition-transform transform hover:scale-105 text-text-dark"
+            >
+              Contact Us <i className="fa fa-arrow-right" />
             </button>
           </div>
         </div>
