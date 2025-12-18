@@ -201,8 +201,8 @@ const Footer = () => {
               />
             </Link>
             <div className="mt-auto">
-              <p className="text-sm">+91 981 981-23-19</p>
-              <p className="text-sm">hello@racogroup.com</p>
+              <p className="text-sm">092490 97929</p>
+              <p className="text-sm">racohotelgroup@gmail.com</p>
             </div>
           </div>
         </div>
