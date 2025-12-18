@@ -33,8 +33,6 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   const [availableRooms, _setAvailableRooms] = useState<RoomType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
 
   const handleCheckAvailability = async () => {
     if (!hotel || !dates[0] || !dates[1]) {
@@ -126,14 +124,9 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
             onDatesChange={setDates}
             rooms={rooms}
             onRoomsChange={setRooms}
-            adults={adults}
-            onAdultsChange={setAdults}
-            onChildrenChange={setChildren}
             onCheck={handleCheckAvailability}
             loading={false}
-          >
-            {children}
-          </CheckAvailability>
+          />
           {/* </AnimatedContainer> */}
         </div>
         <div className="pt-44 pb-16 bg-white">

@@ -120,6 +120,9 @@ export interface RoomAmenity {
   amenityId: number;
   roomTypeId: number;
   createdAt: string;
+  code?: string;
+  name?: string;
+  icon?: string;
 }
 
 export interface Room {
@@ -226,6 +229,7 @@ export interface AvailableRoomType {
   availableRooms: number;
   images: RoomImage[];
   rooms: AvailableRoomDetails[];
+  amenities: RoomAmenity[];
 }
 
 export interface AvailableRoomTypesData {

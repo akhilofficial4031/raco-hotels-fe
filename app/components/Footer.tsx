@@ -100,9 +100,11 @@ const Footer = () => {
           </div>
           <div className="flex bg-footer-cta-bg items-center rounded-l-[72px] justify-center rounded-r-4xl relative">
             {/* <div className="bg-footer-cta-bg rounded-l-full h-[400px] w-40 absolute -left-10" /> */}
-            <button className="px-8 py-4 rounded-lg font-semibold flex items-center gap-2 transition-transform transform hover:scale-105 text-text-dark">
-              Get consultation <i className="fa fa-arrow-right" />
-            </button>
+            <Link href="/contact">
+              <button className="px-8 py-4 rounded-lg font-semibold flex items-center gap-2 transition-transform transform hover:scale-105 text-text-dark">
+                Get consultation <i className="fa fa-arrow-right" />
+              </button>
+            </Link>
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mt-18 text-gray-800">

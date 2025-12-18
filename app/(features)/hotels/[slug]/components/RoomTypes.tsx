@@ -21,6 +21,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [numberOfRooms, setNumberOfRooms] = useState(1);
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [dates, setDates] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
     dayjs().add(1, "day"),
     dayjs().add(2, "day"),
@@ -101,6 +102,16 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
     setAvailableRooms([]);
   };
 
+  const handleShowAllAmenities = (roomType: RoomType) => {
+    setSelectedRoom(roomType);
+    setShowAllAmenities(true);
+  };
+
+  const handleCloseAllAmenities = () => {
+    setSelectedRoom(null);
+    setShowAllAmenities(false);
+  };
+
   return (
     <>
       <div className="container mx-auto px-4">
@@ -157,6 +168,29 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                     </span>
                   </div>
                 </div>
+                {roomType.amenities.length >= 1 ? (
+                  <div className="mt-6 flex justify-between items-center">
+                    <div className="flex gap-2 items-center mb-3">
+                      <p className="text-sm font-normal flex item-cener gap-2 text-gray-500 !mb-0 font-dm-sans">
+                        <i
+                          className={`fa ${roomType.amenities[0].icon} text-gray-500 !flex !items-center justify-center`}
+                          aria-hidden="true"
+                        />
+                        <span className="capitalize">
+                          {roomType.amenities[0].name}
+                        </span>
+                        {roomType.amenities.length > 1 ? (
+                          <span
+                            className="text-primary ml-2 cursor-pointer"
+                            onClick={() => handleShowAllAmenities(roomType)}
+                          >
+                            + {roomType.amenities.length - 1} more
+                          </span>
+                        ) : null}
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
                 <div className="mt-6 flex justify-between items-center">
                   <div className="flex gap-2 items-center mb-3">
                     {/* Always reserve space for strike-through price to maintain consistent card heights */}
@@ -234,7 +268,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select your dates and number of rooms:
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <RangePicker
                   value={dates}
                   onChange={(dates) => {
@@ -245,14 +279,14 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                   disabledDate={(current) =>
                     current && current < dayjs().startOf("day")
                   }
-                  className="!w-full"
+                  className="!w-full !mt-2"
                 />
                 <InputNumber
                   min={1}
                   placeholder="Number of rooms"
                   value={numberOfRooms}
                   onChange={(value) => setNumberOfRooms(value ?? 1)}
-                  className="!w-full"
+                  className="!w-full !mt-2"
                 />
               </div>
             </div>
@@ -286,6 +320,37 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                 </div>
               </div>
             )}
+          </div>
+        </Modal>
+      ) : null}
+
+      {showAllAmenities ? (
+        <Modal
+          title={`All Amenities for ${selectedRoom?.name}`}
+          open={showAllAmenities}
+          onCancel={handleCloseAllAmenities}
+          footer={[
+            <Button key="back" onClick={handleCloseAllAmenities}>
+              Close
+            </Button>,
+          ]}
+          centered
+        >
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {selectedRoom?.amenities.map((amenity) => (
+                <div
+                  key={amenity.amenityId}
+                  className="flex items-center gap-2"
+                >
+                  <i
+                    className={`fa ${amenity.icon} text-gray-500 !flex !items-center justify-center`}
+                    aria-hidden="true"
+                  />
+                  <span className="capitalize">{amenity.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </Modal>
       ) : null}

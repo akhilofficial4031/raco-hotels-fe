@@ -2,8 +2,9 @@
 import { getImageUrl } from "@/lib/utils";
 import { AvailableRoomType } from "@/types/hotel";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Modal, Button } from "antd";
 import RoomImageCarousel from "@/app/(features)/hotels/[slug]/components/RoomImageCarousel";
 
 interface AvailableRoomTypeListProps {
@@ -22,6 +23,10 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
   numberOfRooms,
 }) => {
   const router = useRouter();
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<AvailableRoomType | null>(
+    null
+  );
 
   const handleProceedToBooking = (roomType: AvailableRoomType) => {
     const params = new URLSearchParams({
@@ -32,6 +37,16 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
       numberOfRooms: numberOfRooms.toString(),
     });
     router.push(`/new-bookings?${params.toString()}`);
+  };
+
+  const handleShowAllAmenities = (roomType: AvailableRoomType) => {
+    setSelectedRoom(roomType);
+    setShowAllAmenities(true);
+  };
+
+  const handleCloseAllAmenities = () => {
+    setSelectedRoom(null);
+    setShowAllAmenities(false);
   };
 
   return (
@@ -87,6 +102,29 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
                   </span>
                 </div>
               </div>
+              {roomType.amenities && roomType.amenities.length >= 1 ? (
+                <div className="mt-6 flex justify-between items-center">
+                  <div className="flex gap-2 items-center mb-3">
+                    <p className="text-sm font-normal flex item-cener gap-2 text-gray-500 !mb-0 font-dm-sans">
+                      <i
+                        className={`fa ${roomType.amenities[0].icon} text-gray-500 !flex !items-center justify-center`}
+                        aria-hidden="true"
+                      />
+                      <span className="capitalize">
+                        {roomType.amenities[0].name}
+                      </span>
+                      {roomType.amenities.length > 1 ? (
+                        <span
+                          className="text-primary ml-2 cursor-pointer"
+                          onClick={() => handleShowAllAmenities(roomType)}
+                        >
+                          + {roomType.amenities.length - 1} more
+                        </span>
+                      ) : null}
+                    </p>
+                  </div>
+                </div>
+              ) : null}
               <div className="mt-6 flex justify-between items-center">
                 <div className="flex gap-2 items-center mb-3">
                   {/* Always reserve space for strike-through price to maintain consistent card heights */}
@@ -134,6 +172,37 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
           </div>
         ))}
       </div>
+
+      {showAllAmenities ? (
+        <Modal
+          title={`All Amenities for ${selectedRoom?.roomTypeName}`}
+          open={showAllAmenities}
+          onCancel={handleCloseAllAmenities}
+          footer={[
+            <Button key="back" onClick={handleCloseAllAmenities}>
+              Close
+            </Button>,
+          ]}
+          centered
+        >
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {selectedRoom?.amenities.map((amenity) => (
+                <div
+                  key={amenity.amenityId}
+                  className="flex items-center gap-2"
+                >
+                  <i
+                    className={`fa ${amenity.icon} text-gray-500 !flex !items-center justify-center`}
+                    aria-hidden="true"
+                  />
+                  <span className="capitalize">{amenity.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Modal>
+      ) : null}
     </div>
   );
 };

@@ -41,7 +41,7 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
 
   const handleCheckAvailability = async (values: QuickBookingFormValues) => {
     setLoading(true);
-    const { hotelId, dates, rooms, adults, children } = values;
+    const { hotelId, dates, rooms } = values;
 
     if (!hotelId || !dates?.[0] || !dates?.[1]) {
       message.error("Please select a hotel and valid dates.");
@@ -57,8 +57,6 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
       checkIn,
       checkOut,
       numberOfRooms: (rooms ?? 1).toString(),
-      adults: (adults ?? 1).toString(),
-      children: (children ?? 0).toString(),
     });
 
     router.push(`/available-rooms?${params.toString()}`);
@@ -82,8 +80,7 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
         onFinish={handleCheckAvailability}
         initialValues={{
           rooms: 1,
-          adults: 1,
-          children: 0,
+
           dates: [dayjs().add(1, "day"), dayjs().add(2, "day")],
         }}
         className="!pt-6"
@@ -118,15 +115,9 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
           />
         </Form.Item>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className=" gap-4">
           <Form.Item name="rooms" label="Rooms">
             <InputNumber min={1} max={20} className="!w-full" size="large" />
-          </Form.Item>
-          <Form.Item name="adults" label="Adults">
-            <InputNumber min={1} max={20} className="!w-full" size="large" />
-          </Form.Item>
-          <Form.Item name="children" label="Children">
-            <InputNumber min={0} max={20} className="!w-full" size="large" />
           </Form.Item>
         </div>
         <Form.Item>
