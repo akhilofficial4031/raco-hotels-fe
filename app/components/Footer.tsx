@@ -1,5 +1,10 @@
 "use client";
 import { useQuickBooking } from "@/contexts/QuickBookingContext";
+import {
+  FooterContactContent,
+  FooterContactContentPages,
+  FooterImagePath,
+} from "@/lib/footer";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -26,6 +31,33 @@ const Footer = () => {
   };
   const pathname = usePathname();
   const isAttractionPage = /^\/hotels\/[^\/]+\/[^\/]+$/.test(pathname);
+
+  const footerContactContentPage = (): string => {
+    if (pathname === "/") {
+      return FooterContactContentPages.HOME;
+    } else if (pathname.includes(FooterContactContentPages.RACO_REGENCY)) {
+      return FooterContactContentPages.RACO_REGENCY;
+    } else if (
+      pathname.includes(FooterContactContentPages.RACO_CYBER_RESIDENCY)
+    ) {
+      return FooterContactContentPages.RACO_CYBER_RESIDENCY;
+    } else {
+      return FooterContactContentPages.HOME;
+    }
+  };
+
+  const footerImagePath = (): string => {
+    if (pathname === "/") {
+      return FooterImagePath.home;
+    } else if (pathname.includes(FooterContactContentPages.RACO_REGENCY)) {
+      return FooterImagePath["raco-regency"];
+    } else if (
+      pathname.includes(FooterContactContentPages.RACO_CYBER_RESIDENCY)
+    ) {
+      return FooterImagePath["raco-cyber-residency"];
+    }
+    return FooterImagePath.home;
+  };
 
   const handleBookingClick = () => {
     if (isAttractionPage) {
@@ -70,7 +102,14 @@ const Footer = () => {
       style={{ backgroundColor: "var(--color-background-light)" }}
       role="contentinfo"
     >
-      <div className="relative bg-[url('/footer-bg.jpg')] bg-cover bg-center h-96 w-full flex items-center justify-center">
+      <div
+        className={`relative bg-[url(${footerImagePath()})] bg-cover bg-center h-96 w-full flex items-center justify-center`}
+      >
+        <img
+          src={footerImagePath()}
+          alt="Footer Image"
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        />
         <div className="bg-black/50 absolute top-0 left-0 w-full h-full" />
         <div className="relative z-10 flex flex-col items-center justify-center gap-4">
           <p className="text-white text-5xl font-cinzel text-center">
@@ -93,10 +132,11 @@ const Footer = () => {
                 <span className="text-white">DO YOU NEED HELP?</span>
               </p>
               <p className="text-gray-300">
-                In a fast-paced world, Cyber Residency offers a refined
-                business-class stay for professionals. Thoughtfully designed
-                spaces, warm lighting, and modern comfort create an environment
-                that supports focused work and effortless relaxation.
+                {
+                  FooterContactContent[
+                    footerContactContentPage() as keyof typeof FooterContactContent
+                  ]
+                }
               </p>
             </div>
           </div>

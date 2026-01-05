@@ -132,3 +132,9 @@ export interface CMSHomepageResponse {
   data: LandingPageContent;
   message?: string;
 }
+
+export interface CMSTopBannerResponse {
+  success: boolean;
+  data: TopBannerContent;
+  message?: string;
+}

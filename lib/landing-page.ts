@@ -1,8 +1,37 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getFetcher } from "@/lib/fetcher";
-import { CMSHomepageResponse, LandingPageContent } from "@/types/landing-page";
+import {
+  CMSHomepageResponse,
+  CMSTopBannerResponse,
+  LandingPageContent,
+  TopBannerContent,
+} from "@/types/landing-page";
 import fs from "fs";
 import path from "path";
+
+export async function getTopBannerContent(): Promise<TopBannerContent> {
+  try {
+    const response: CMSTopBannerResponse =
+      await getFetcher<CMSTopBannerResponse>("/api/public/top-banner");
+    if (!response.success || !response.data) {
+      throw new Error("Invalid CMS API response");
+    }
+
+    return response.data;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "CMS API unavailable, falling back to mock data:",
+      error instanceof Error ? error.message : error
+    );
+  }
+  return {
+    isVisible: false,
+    text: "",
+    linkText: "",
+    linkUrl: "#",
+  };
+}
 
 /**
  * Fetches landing page content from the CMS API

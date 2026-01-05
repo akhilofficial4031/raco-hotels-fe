@@ -51,6 +51,16 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
     router.push(`/available-rooms?${params.toString()}`);
   };
 
+  const onCheckinDatesChange = (
+    dates: [dayjs.Dayjs | null, dayjs.Dayjs | null]
+  ) => {
+    if (dates?.[0] && dates?.[1]) {
+      setDates(dates);
+    } else {
+      setDates([null, null]);
+    }
+  };
+
   const handleProceedToBooking = (_roomType: RoomType) => {
     // TODO: Implement booking logic
     setIsModalVisible(false);
@@ -69,7 +79,7 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
                 {hotel.name}
               </h1>
             </AnimatedContainer>
-            <div className="flex items-center mt-4">
+            {/* <div className="flex items-center mt-4">
               {Array.from({ length: hotel.starRating }, (_, i) => (
                 <AnimatedContainer
                   animationName="fadeIn"
@@ -85,8 +95,8 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
                   </svg>
                 </AnimatedContainer>
               ))}
-            </div>
-            <AnimatedContainer animationName="fadeIn" delay={0.7}>
+            </div> */}
+            {/* <AnimatedContainer animationName="fadeIn" delay={0.7}>
               <p className="mt-4 text-lg">
                 {hotel.city}, {hotel.countryCode}
               </p>
@@ -98,9 +108,9 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
                 <span className="mr-2">{hotel.email}</span>
                 <i className="fa fa-envelope" aria-hidden="true" />
               </div>
-            </AnimatedContainer>
+            </AnimatedContainer> */}
           </div>
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 text-white hidden lg:flex flex-col items-end space-y-4 pr-8">
+          {/* <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 text-white hidden lg:flex flex-col items-end space-y-4 pr-8">
             <AnimatedContainer animationName="fadeIn" delay={1}>
               <div className="flex items-center">
                 <span className="mr-2">
@@ -117,11 +127,11 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
                 <i className="fa fa-envelope" aria-hidden="true" />
               </div>
             </AnimatedContainer>
-          </div>
+          </div> */}
           {/* <AnimatedContainer animationName="zoomIn" delay={1.2}> */}
           <CheckAvailability
             dates={dates}
-            onDatesChange={setDates}
+            onDatesChange={onCheckinDatesChange}
             rooms={rooms}
             onRoomsChange={setRooms}
             onCheck={handleCheckAvailability}

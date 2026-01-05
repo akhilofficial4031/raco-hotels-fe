@@ -28,10 +28,10 @@ const AboutUs = ({ content }: AboutUsProps) => {
           <div className="col-span-1" />
           <div className="col-span-2">
             <AnimatedContainer animationName="fadeIn" delay={0.1}>
-              <div className="mb-12 text-center md:text-left">
+              <div className="mb-16 text-center md:text-left">
                 <h2
                   id="about-us-heading"
-                  className="text-2xl md:text-5xl font-normal text-gray-800 leading-tight mt-4"
+                  className="text-sm font-normal text-text-light leading-tight mt-4"
                 >
                   {content.title}
                 </h2>
@@ -58,7 +58,7 @@ const AboutUs = ({ content }: AboutUsProps) => {
           <div className="flex flex-col items-center md:items-start">
             <AnimatedContainer animationName="fadeIn" delay={0.3}>
               <div>
-                <p className="text-center md:text-left text-gray-600 dm-sans w-full md:w-3/4 text-sm">
+                <p className="text-center md:text-left text-text-dark dm-sans w-full text-2xl">
                   {content.description}
                 </p>
               </div>

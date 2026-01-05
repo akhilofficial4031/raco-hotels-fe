@@ -5,15 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useQuickBooking } from "@/contexts/QuickBookingContext";
+// import { TopBannerContent } from "@/types/landing-page";
+// import TopBanner from "./TopBanner";
+import { usePathname } from "next/navigation";
 import { TopBannerContent } from "@/types/landing-page";
 import TopBanner from "./TopBanner";
-import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   hotels?: HotelNavItem[];
+  topBannerContent: TopBannerContent;
 }
 
-const Header = ({ hotels = [] }: HeaderProps) => {
+const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -73,16 +76,19 @@ const Header = ({ hotels = [] }: HeaderProps) => {
     { href: "/contact", label: "Contact" },
   ];
 
-  const topBannerContent: TopBannerContent = {
-    isVisible: true,
-    text: "Escape the ordinary — book your perfect stay now",
-    linkText: "Book Now",
-    onClick: openModal,
-  };
+  // const topBannerContent: TopBannerContent = {
+  //   isVisible: true,
+  //   text: "Escape the ordinary — book your perfect stay now",
+  //   linkText: "Book Now",
+  //   onClick: openModal,
+  // };
 
   return (
     <div className="sticky w-full top-0 z-[99]">
-      <TopBanner content={topBannerContent} />
+      {topBannerContent.isVisible ? (
+        <TopBanner content={topBannerContent} />
+      ) : null}
+
       <header className="bg-white text-gray-800 dm-sans" role="banner">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">

@@ -45,7 +45,6 @@ export default async function Home() {
           __html: JSON.stringify(websiteSchema),
         }}
       />
-      {/* <TopBanner content={content.topBanner} /> */}
       <main id="main-content" role="main">
         <Hero content={content.hero} />
         <AboutUs content={content.aboutUs} />

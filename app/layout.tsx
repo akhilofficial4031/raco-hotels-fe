@@ -15,6 +15,7 @@ import "./globals.css";
 import ResourceHints from "./components/ResourceHints";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { MessageProvider, MessageContainer } from "@/components/message";
+import { getTopBannerContent } from "@/lib/landing-page";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -119,6 +120,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const hotels = await getHotelsForNavigation();
+  const topBannerContent = await getTopBannerContent();
   return (
     <html lang="en">
       <head>
@@ -133,7 +135,10 @@ export default async function RootLayout({
               <SmoothScroll>
                 <ResourceHints />
                 <WebVitals />
-                <HeaderWrapper hotels={hotels} />
+                <HeaderWrapper
+                  hotels={hotels}
+                  topBannerContent={topBannerContent}
+                />
                 <main>{children}</main>
                 <Footer />
               </SmoothScroll>
