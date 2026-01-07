@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import { getImageUrl } from "@/lib/utils";
 import { AboutUsContent } from "@/types/landing-page";
@@ -12,102 +11,76 @@ interface AboutUsProps {
 const AboutUs = ({ content }: AboutUsProps) => {
   return (
     <section
-      className="bg-white py-16 md:py-24"
+      className="bg-background-ultra-light py-20 lg:py-32 overflow-hidden"
       aria-labelledby="about-us-heading"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <p
-          className="font-semibold tracking-wider uppercase mb-4"
-          role="doc-subtitle"
-        >
-          <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-            {content.sectionTag}
-          </span>
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <div className="col-span-1" />
-          <div className="col-span-2">
-            <AnimatedContainer animationName="fadeIn" delay={0.1}>
-              <div className="mb-16 text-center md:text-left">
-                <h2
-                  id="about-us-heading"
-                  className="text-sm font-normal text-text-light leading-tight mt-4"
-                >
-                  {content.title}
-                </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 xl:gap-24 items-start">
+          {/* Left Column: Image Composition */}
+          <div className="relative">
+            {/* Decorative Background Frame */}
+            {/* <div className="absolute -top-6 -left-6 w-[80%] h-[90%] border-[8px] border-primary/20 rounded-lg -z-10" /> */}
+            <AnimatedContainer animationName="fadeRight">
+              {/* Main Image */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl z-10 aspect-[4/3] w-full hidden md:block">
+                <Image
+                  src={getImageUrl(content.image.src)}
+                  alt={content.image.alt}
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                />
               </div>
-            </AnimatedContainer>
-          </div>
-          <div className="col-span-1" />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
-          {/* Left Content */}
-          <div className="flex items-center md:items-start justify-center h-full">
-            <AnimatedContainer animationName="fadeIn" delay={0.2}>
-              <div className="flex-shrink-0 pt-8">
+
+              {/* Floating Badge (Bottom Right Overlap) */}
+              <div className="absolute -bottom-10 -right-4 sm:-bottom-12 sm:-right-12 z-20 bg-white rounded-full p-4 shadow-xl hidden md:flex justify-center items-center">
                 <img
                   src={getImageUrl(content.badge.src)}
                   alt={content.badge.alt}
-                  width={150}
-                  height={150}
-                  className="mx-auto"
+                  className="w-24 h-24 sm:w-32 sm:h-32 object-contain"
                 />
               </div>
             </AnimatedContainer>
           </div>
-          <div className="flex flex-col items-center md:items-start">
-            <AnimatedContainer animationName="fadeIn" delay={0.3}>
-              <div>
-                <p className="text-center md:text-left text-text-dark dm-sans w-full text-2xl">
-                  {content.description}
-                </p>
-              </div>
+
+          {/* Right Column: Text Content */}
+          <div className="flex flex-col">
+            <AnimatedContainer animationName="fadeUp" delay={0.3}>
+              <span className="inline-block text-primary font-bold tracking-[0.2em] text-sm uppercase mb-4">
+                {content.sectionTag}
+              </span>
             </AnimatedContainer>
-            {/* <AnimatedContainer animationName="fadeIn" delay={0.4}>
-              <div className="mt-8">
-                <button
-                  aria-label={content.primaryButton.text}
-                  className="btn-primary"
-                >
-                  {content.primaryButton.text}
-                </button>
-              </div>
+
+            <AnimatedContainer animationName="fadeUp" delay={0.4}>
+              <h2
+                id="about-us-heading"
+                className="font-cinzel text-4xl md:text-5xl lg:text-6xl text-text-dark leading-tight mb-8"
+              >
+                {content.title}
+              </h2>
+            </AnimatedContainer>
+
+            <AnimatedContainer animationName="fadeUp" delay={0.5}>
+              <p className="font-dm-sans text-text-light text-lg leading-relaxed mb-10 text-justify">
+                {content.description}
+              </p>
+              <span className={`block w-16 h-0.5 bg-primary/40 mb-6 `} />
+            </AnimatedContainer>
+            <AnimatedContainer animationName="fadeUp" delay={0.5}>
+              <p className=" text-primary text-xl leading-relaxed mb-10 font-cinzel text-justify">
+                {content.subtitle}
+              </p>
+            </AnimatedContainer>
+
+            {/* <AnimatedContainer animationName="fadeUp" delay={0.6}>
+              <button
+                className="btn-primary self-start uppercase tracking-wider text-sm font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                aria-label={content.primaryButton.text}
+              >
+                {content.primaryButton.text}
+              </button>
             </AnimatedContainer> */}
           </div>
-
-          {/* Right Image Gallery */}
-          <AnimatedContainer animationName="fadeIn" delay={0.2}>
-            <div className="relative">
-              <Image
-                src={getImageUrl(content.image.src)}
-                alt={content.image.alt}
-                width={300}
-                height={250}
-                className="rounded-lg object-cover"
-                loading="lazy"
-              />
-              {/* <button
-                className="absolute bottom-4 right-4 bg-white/50 backdrop-blur-sm p-3 rounded-full text-gray-800 hover:bg-white transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                aria-label="View more about us"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </button> */}
-            </div>
-          </AnimatedContainer>
         </div>
       </div>
     </section>

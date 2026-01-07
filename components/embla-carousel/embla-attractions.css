@@ -142,8 +142,8 @@
   content: "";
   position: absolute;
   right: calc(var(--slide-spacing) / -2);
-  top: 10%;
-  bottom: 10%;
+  top: 0%;
+  bottom: 8%;
   width: 1px;
   background-color: rgba(200, 200, 200, 0.5);
   z-index: 1;

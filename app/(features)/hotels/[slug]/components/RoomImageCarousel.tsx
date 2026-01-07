@@ -71,9 +71,7 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
 
     return (
       <div
-        className={`embla-room ${
-          isModal ? "fullscreen-carousel" : "h-56 md:!h-64"
-        }`}
+        className={`embla-room ${isModal ? "fullscreen-carousel" : "h-full"}`}
       >
         <div className="embla-room__viewport" ref={ref}>
           <div className="embla-room__container">
@@ -110,7 +108,7 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
   };
 
   return (
-    <div className="relative h-56 md:h-96">
+    <div className="relative h-full">
       {renderCarousel(false)}
       <button
         onClick={showModal}
@@ -127,10 +125,10 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
         closable={false}
         width="100vw"
         centered
-        style={{ 
-          top: 0, 
-          padding: 0, 
-          height: "100vh", 
+        style={{
+          top: 0,
+          padding: 0,
+          height: "100vh",
           maxWidth: "100vw",
         }}
         styles={{
@@ -152,7 +150,7 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
           mask: {
             backgroundColor: "rgba(0, 0, 0, 0.4)",
             backdropFilter: "blur(10px)",
-          }
+          },
         }}
       >
         <div className="relative w-full h-full flex items-center justify-center">
@@ -163,12 +161,16 @@ const RoomImageCarousel: React.FC<PropType> = (props) => {
                 src={getImageUrl(slides[selectedIndexModal].url)}
                 alt="Background blur"
                 fill
-                style={{ objectFit: "cover", filter: "blur(40px)", opacity: 0.3 }}
+                style={{
+                  objectFit: "cover",
+                  filter: "blur(40px)",
+                  opacity: 0.3,
+                }}
                 priority={false}
               />
             ) : null}
           </div>
-          
+
           {renderCarousel(true)}
           <button
             onClick={handleCancel}

@@ -69,8 +69,8 @@ const AttractionCarousel: React.FC<{ attractions: Attraction[] }> = ({
                     <h3 className="text-lg text-left font-cinzel text-text-dark mb-1 truncate">
                       {attraction.name}
                     </h3>
-                    <p className="text-sm text-left text-text-light line-clamp-1">
-                      @ {attraction.content.hero.subtitle}
+                    <p className="text-sm text-left text-text-light">
+                      {attraction.content.hero.subtitle}
                     </p>
                   </div>
                   <div className="ml-2 flex-shrink-0">

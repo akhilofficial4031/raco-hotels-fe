@@ -15,6 +15,9 @@ import CheckAvailability from "./CheckAvailability";
 import HeroCarousel from "./HeroCarousel";
 import LocationInfo from "./LocationInfo";
 import RoomTypes from "./RoomTypes";
+import HotelAbout from "./HotelAbout";
+import { useQuickBooking } from "@/contexts/QuickBookingContext";
+import HotelSignature from "@/app/components/HotelSignature";
 interface HotelDetailsClientProps {
   hotel: Hotel;
   initialRoomTypes: RoomType[];
@@ -33,6 +36,7 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   const [availableRooms, _setAvailableRooms] = useState<RoomType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [rooms, setRooms] = useState(1);
+  const { openModal } = useQuickBooking();
 
   const handleCheckAvailability = async () => {
     if (!hotel || !dates[0] || !dates[1]) {
@@ -75,9 +79,12 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
           <HeroCarousel slides={hotel.images} options={{ loop: true }} />
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center h-full text-white text-center">
             <AnimatedContainer animationName="fadeIn" delay={0.3}>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl tracking-wider !font-cinzel">
+              <h1 className="text-5xl md:text-6xl !mb-2 tracking-wider !font-cinzel">
                 {hotel.name}
               </h1>
+            </AnimatedContainer>
+            <AnimatedContainer animationName="fadeIn" delay={0.6}>
+              <p className="text-xl">{hotel.tagline}</p>
             </AnimatedContainer>
             {/* <div className="flex items-center mt-4">
               {Array.from({ length: hotel.starRating }, (_, i) => (
@@ -139,29 +146,37 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
           />
           {/* </AnimatedContainer> */}
         </div>
-        <div className="pt-44 pb-16 bg-white">
+        <div className="pt-44 pb-16 bg-background-ultra-light">
           {/* <AnimatedContainer animationName="fadeUp" delay={0.5}> */}
           <div className="container mx-auto px-4 text-center">
-            <p className="mt-4 text-sm font-semibold tracking-widest text-primary">
-              WELCOME TO {hotel.name.toUpperCase()}
+            <p className="mt-4 text-sm font-semibold text-text-light tracking-widest ">
+              WELCOME TO
             </p>
-            <h2 className="mt-4 text-5xl text-text-dark !font-cinzel">
-              A Serene & Exclusive Experience
+            <h2 className="mt-4 text-5xl  text-primary !font-cinzel">
+              {hotel.name.toUpperCase()}
             </h2>
             <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-500 leading-relaxed font-sans">
               {hotel.description}
             </p>
           </div>
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <button className="btn-primary inline-block" onClick={openModal}>
+              Book Your Stay
+            </button>
+            <button className="btn-outline inline-block">View Gallery</button>
+          </div>
           {/* </AnimatedContainer> */}
         </div>
-        {hotel.attractions && hotel.attractions.length > 0 ? (
-          <>
-            <OurStays content={hotelAttractions} />
-            <div className="container mx-auto px-4 text-center py-16 border-t border-border">
-              <AttractionCarousel attractions={hotel.attractions} />
-            </div>
-          </>
-        ) : null}
+
+        {/* about the hotel */}
+        <HotelAbout
+          headline={hotel.aboutTitle}
+          subHeadline={hotel.aboutSubtitle}
+          body={hotel.aboutDescription}
+          statement={hotel.aboutStatement}
+          imageUrl={hotel.images?.[0]?.url}
+          imageAlt={`${hotel.name} About`}
+        />
 
         <div className="">
           {initialRoomTypes && initialRoomTypes.length > 0 ? (
@@ -172,6 +187,17 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
             </div>
           ) : null}
 
+          {hotel.attractions && hotel.attractions.length > 0 ? (
+            <>
+              <OurStays content={hotelAttractions} />
+              <div className="container mx-auto px-4 text-center py-16 border-t border-border">
+                <AttractionCarousel attractions={hotel.attractions} />
+              </div>
+            </>
+          ) : null}
+
+          <HotelSignature content={hotel.signature} theme="theme-light" />
+
           <div>
             <div className="max-w-7xl mx-auto px-4">
               <LocationInfo locationInfo={hotel.locationInfo} />
@@ -179,11 +205,13 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 py-16">
-        <h2 className="text-4xl font-cinzel text-text-dark mb-8 text-center">
-          Where we are
-        </h2>
-        <MapComponent latitude={hotel.latitude} longitude={hotel.longitude} />
+      <div className="py-16 bg-background-ultra-light ">
+        <div className="container mx-auto px-4 rounded-lg">
+          <h2 className="text-4xl font-cinzel text-text-dark !mb-10 text-center">
+            Where we are
+          </h2>
+          <MapComponent latitude={hotel.latitude} longitude={hotel.longitude} />
+        </div>
       </div>
       <AvailableRoomsModal
         open={isModalVisible}

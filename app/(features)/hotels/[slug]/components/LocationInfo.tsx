@@ -16,7 +16,7 @@ const LocationInfo = ({ locationInfo }: Props) => {
 
   return (
     <div className="py-24 px-4">
-      <h2 className="text-4xl font-cinzel text-text-dark mb-16 text-center">
+      <h2 className="text-4xl font-cinzel text-text-dark !mb-10 text-center">
         Discover the Area
       </h2>
       <div className="space-y-24">

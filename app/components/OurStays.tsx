@@ -14,7 +14,7 @@ const OurStays = ({ content }: OurStaysProps) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-2">
-            <AnimatedContainer animationName="zoomIn">
+            <AnimatedContainer animationName="fadeUp">
               <div
                 className="font-semibold tracking-wider mb-4"
                 role="doc-subtitle"
@@ -32,8 +32,10 @@ const OurStays = ({ content }: OurStaysProps) => {
             </AnimatedContainer>
           </div>
           <div>
-            <AnimatedContainer animationName="zoomIn">
-              <p className="text-gray-600 dm-sans">{content.description}</p>
+            <AnimatedContainer animationName="fadeUp">
+              <p className="text-gray-600 text-lg dm-sans text-justify">
+                {content.description}
+              </p>
             </AnimatedContainer>
           </div>
         </div>

@@ -3,12 +3,17 @@ import { getImageUrl } from "@/lib/utils";
 import { Hotel } from "@/types/hotel";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRightOutlined } from "@ant-design/icons";
 
 interface HotelListingGridProps {
   hotels: Hotel[];
+  showTitles?: boolean;
 }
 
-const HotelListingGrid = ({ hotels }: HotelListingGridProps) => {
+const HotelListingGrid = ({
+  hotels,
+  showTitles = true,
+}: HotelListingGridProps) => {
   const hotelCount = hotels.length;
 
   return (
@@ -18,27 +23,29 @@ const HotelListingGrid = ({ hotels }: HotelListingGridProps) => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
-        <AnimatedContainer animationName="fadeDown">
-          <div className="text-center mb-16 md:mb-24">
-            <span
-              className="tag-head !font-cinzel inline-block mb-4"
-              role="doc-subtitle"
-            >
-              Discover Our Collection
-            </span>
-            <h1
-              id="hotels-heading"
-              className="text-4xl md:text-5xl lg:text-6xl font-normal text-primary leading-tight !font-cinzel mb-6"
-            >
-              Premium Hotels
-            </h1>
-            <p className="text-gray-600 dm-sans text-lg max-w-2xl mx-auto leading-relaxed">
-              Experience luxury and comfort at our carefully curated selection
-              of hotels, each offering unique amenities and exceptional service.
-            </p>
-          </div>
-        </AnimatedContainer>
-
+        {showTitles ? (
+          <AnimatedContainer animationName="fadeDown">
+            <div className="text-center mb-16 md:mb-24">
+              <span
+                className="tag-head !font-cinzel inline-block mb-4"
+                role="doc-subtitle"
+              >
+                Discover Our Collection
+              </span>
+              <h1
+                id="hotels-heading"
+                className="text-4xl md:text-5xl lg:text-6xl font-normal text-primary leading-tight !font-cinzel mb-6"
+              >
+                Premium Hotels
+              </h1>
+              <p className="text-gray-600 dm-sans text-lg max-w-2xl mx-auto leading-relaxed">
+                Experience luxury and comfort at our carefully curated selection
+                of hotels, each offering unique amenities and exceptional
+                service.
+              </p>
+            </div>
+          </AnimatedContainer>
+        ) : null}
         {/* Hotels List - Alternating Layout */}
         <div className="space-y-24 md:space-y-32">
           {hotelCount === 0 ? (
@@ -103,7 +110,7 @@ const HotelListItem = ({ hotel, index }: HotelListItemProps) => {
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
 
             {/* Star Rating Badge - Floating */}
-            {hotel.starRating > 0 && (
+            {/* {hotel.starRating > 0 && (
               <div className="absolute top-6 right-6 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5">
                 {[...Array(hotel.starRating)].map((_, i) => (
                   <svg
@@ -117,7 +124,7 @@ const HotelListItem = ({ hotel, index }: HotelListItemProps) => {
                   </svg>
                 ))}
               </div>
-            )}
+            )} */}
           </div>
         </Link>
       </div>
@@ -141,20 +148,20 @@ const HotelListItem = ({ hotel, index }: HotelListItemProps) => {
             </Link>
           </h2>
 
-          <p className="text-gray-600 dm-sans leading-relaxed text-lg line-clamp-4">
+          <p className="text-gray-600 dm-sans leading-relaxed text-lg text-justify">
             {hotel.description}
           </p>
         </div>
 
         {/* Amenities Preview - Horizontal Scrollable or Wrap */}
-        {!!hotel.amenities?.length && (
+        {/* {!!hotel.amenities?.length && (
           <div className="flex flex-wrap gap-x-6 gap-y-3 py-4 border-t border-border/50">
             {hotel.amenities.slice(0, 4).map((amenity) => (
               <div
                 key={amenity.id}
                 className="flex items-center text-text-light dm-sans text-sm group"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary mr-2 transition-colors" />
+                <span className="w-1.5 h-1.5 rounded-full capitalize bg-primary/40 group-hover:bg-primary mr-2 transition-colors" />
                 {amenity.name}
               </div>
             ))}
@@ -164,7 +171,7 @@ const HotelListItem = ({ hotel, index }: HotelListItemProps) => {
               </span>
             )}
           </div>
-        )}
+        )} */}
 
         <div className="pt-4">
           <Link
@@ -172,23 +179,10 @@ const HotelListItem = ({ hotel, index }: HotelListItemProps) => {
             className="inline-flex items-center gap-3 text-text-dark hover:text-primary transition-colors duration-300 group"
           >
             <span className="text-lg font-cinzel font-semibold border-b border-transparent group-hover:border-primary transition-all">
-              Explore Property
+              Explore Hotel
             </span>
-            <span className="p-2 rounded-full bg-background-medium group-hover:bg-primary group-hover:text-white transition-all duration-300">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 transform group-hover:translate-x-1 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
+            <span className="p-2 rounded-full bg-background-light group-hover:bg-primary group-hover:text-white transition-all duration-300">
+              <ArrowRightOutlined className="h-5 w-5 !text-primary group-hover:!text-white" />
             </span>
           </Link>
         </div>

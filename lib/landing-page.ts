@@ -117,6 +117,8 @@ function getFallbackContent(): LandingPageContent {
       sectionTag: "ABOUT US",
       title: "We create exceptional experiences",
       description: "Luxury hospitality at its finest.",
+      subtitle: "Experience",
+      statement: "Exceptional hospitality and luxury accommodations.",
       badge: {
         src: "/best-choice.png",
         alt: "Best Choice",
@@ -208,6 +210,27 @@ function getFallbackContent(): LandingPageContent {
       title: "MOMENTS",
       images: [{ src: "/experience1.png", alt: "Gallery" }],
       buttons: [{ text: "View More", type: "primary" }],
+    },
+    signature: {
+      title: "The Raco Signature",
+      items: [
+        {
+          title: "Excellence Without Exception",
+          description: "A gold standard of comfort in every corner.",
+        },
+        {
+          title: "Serenity by Design",
+          description:
+            "A calm, sophisticated oasis amidst the city’s vibrant energy.",
+        },
+        {
+          title: "The Power of Personalization",
+          description:
+            "Bespoke experiences that feel considered, never generic.",
+        },
+      ],
+      description:
+        "You are not just booking a room. You are securing a legacy of peace, prestige, and perfection.",
     },
     seo: {
       title: "Raco Hotels - Luxury Accommodations",

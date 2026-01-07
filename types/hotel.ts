@@ -1,4 +1,5 @@
 import { PaginationResponse } from "./api";
+import { SignatureContent } from "./landing-page";
 
 export interface LocationImage {
   url: string;
@@ -45,6 +46,11 @@ export interface Amenity {
 export interface Hotel {
   id: number;
   name: string;
+  tagline: string;
+  aboutTitle: string;
+  aboutSubtitle: string;
+  aboutStatement: string;
+  aboutDescription: string;
   slug: string;
   description: string;
   email: string;
@@ -69,6 +75,7 @@ export interface Hotel {
   features: Feature[];
   amenities: Amenity[];
   attractions: Attraction[];
+  signature: SignatureContent;
 }
 
 export interface Addon {

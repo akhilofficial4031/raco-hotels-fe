@@ -30,10 +30,12 @@ export interface HeroContent {
 export interface AboutUsContent {
   sectionTag: string;
   title: string;
+  subtitle: string;
   description: string;
   badge: Image;
   primaryButton: Button;
   image: Image;
+  statement: string;
 }
 
 export interface OurStaysContent {
@@ -106,6 +108,17 @@ export interface GalleryContent {
   buttons: Button[];
 }
 
+export interface SignatureItem {
+  title: string;
+  description: string;
+}
+
+export interface SignatureContent {
+  title: string;
+  items: SignatureItem[];
+  description: string;
+}
+
 export interface SEOContent {
   title: string;
   description: string;
@@ -123,6 +136,7 @@ export interface LandingPageContent {
   restaurant: RestaurantContent;
   testimonials: TestimonialsContent;
   gallery: GalleryContent;
+  signature: SignatureContent;
   seo: SEOContent;
 }
 

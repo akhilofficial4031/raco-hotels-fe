@@ -32,7 +32,7 @@ export default function MapComponent({
       center={[latitude, longitude]}
       zoom={zoom}
       scrollWheelZoom={false}
-      style={{ height: "400px", width: "100%" }}
+      style={{ height: "400px", width: "100%", borderRadius: "10px" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

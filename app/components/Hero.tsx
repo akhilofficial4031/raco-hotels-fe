@@ -17,24 +17,24 @@ const Hero = ({ content }: HeroProps) => {
       <div className="mx-auto pl-4 pr-4 sm:pr-0 sm:pl-6 lg:pl-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="text-center md:text-left py-12 md:py-24 pl-0 md:pl-20 ">
-            <AnimatedContainer animationName="fadeUp" delay={0.1}>
+            {/* <AnimatedContainer animationName="fadeUp" delay={0.1}>
               <p
                 className="text-lg font-dm-sans uppercase tracking-widest text-primary"
                 role="doc-subtitle"
               >
                 {content.tagline}
               </p>
-            </AnimatedContainer>
+            </AnimatedContainer> */}
 
             <AnimatedContainer animationName="fadeUp" delay={0.2}>
-              <h1 className="text-5xl md:text-6xl font-light my-4 leading-tight">
-                <span className="text-text-dark  !font-cinzel">
-                  {content.title.highlight}
+              <h1 className="text-5xl md:text-6xl font-light my-4 leading-tight text-center">
+                <span className="text-primary  !font-cinzel text-center">
+                  {content.tagline}
                 </span>
                 <br />
-                <span className="text-text-dark !font-cinzel">
+                {/* <span className="!text-primary !font-cinzel">
                   {content.title.subtitle}
-                </span>
+                </span> */}
               </h1>
             </AnimatedContainer>
             {/* <TextAnimate
@@ -46,12 +46,12 @@ const Hero = ({ content }: HeroProps) => {
               {content.description}
             </TextAnimate> */}
             <AnimatedContainer animationName="fadeUp" delay={0.2}>
-              <p className="text-text-light !font-dm-sans">
+              <p className="text-text-light text-2xl !font-dm-sans text-center">
                 {content.description}
               </p>
             </AnimatedContainer>
             <AnimatedContainer animationName="fadeUp" delay={0.4}>
-              <div className="mt-8">
+              <div className="mt-8 flex justify-center">
                 <button
                   onClick={openModal}
                   className="btn-primary"

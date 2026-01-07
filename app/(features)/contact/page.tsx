@@ -107,15 +107,15 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background-light py-12 px-4 !font-cinzel">
+    <div className="min-h-screen bg-background-light py-12 px-4 ">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4 !">
             Contact Us
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We&rsquo;re here to help you with any questions or inquiries. Get in
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto ">
+            We are here to help you with any questions or inquiries. Get in
             touch with our team for personalized assistance.
           </p>
         </div>
@@ -125,14 +125,14 @@ export default function ContactPage() {
           <div className="space-y-8">
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
               <div className="p-6">
-                <h2 className="text-2xl font-semibold font-cinzel text-gray-800 mb-6">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-6">
                   Get In Touch
                 </h2>
 
                 <div className="space-y-6">
                   {/* Company Name */}
                   <div>
-                    <h3 className="text-xl font-medium font-cinzel text-gray-800 mb-2">
+                    <h3 className="text-xl font-medium  text-gray-800 mb-2">
                       Raco Facility Managements and Trading Pvt Ltd
                     </h3>
                   </div>
@@ -143,10 +143,10 @@ export default function ContactPage() {
                       <HomeOutlined className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-800 mb-1 font-cinzel">
+                      <h4 className="font-medium text-gray-800 mb-1">
                         Address
                       </h4>
-                      <p className="text-gray-600 leading-relaxed font-cinzel">
+                      <p className="text-gray-600 leading-relaxed">
                         Medical College PO, Murinjapalam
                         <br />
                         Thiruvananthapuram, Kerala
@@ -162,12 +162,10 @@ export default function ContactPage() {
                       <MailOutlined className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-800 mb-1 font-cinzel">
-                        Email
-                      </h4>
+                      <h4 className="font-medium text-gray-800 mb-1">Email</h4>
                       <a
                         href="mailto:racohotelgroup@gmail.com"
-                        className="!text-primary font-cinzel"
+                        className="!text-primary"
                       >
                         racohotelgroup@gmail.com
                       </a>
@@ -180,13 +178,8 @@ export default function ContactPage() {
                       <PhoneOutlined className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-800 mb-1 font-cinzel">
-                        Phone
-                      </h4>
-                      <a
-                        href="tel:888766734"
-                        className="!text-primary font-cinzel"
-                      >
+                      <h4 className="font-medium text-gray-800 mb-1">Phone</h4>
+                      <a href="tel:888766734" className="!text-primary">
                         888766734
                       </a>
                     </div>
@@ -198,23 +191,23 @@ export default function ContactPage() {
             {/* Business Hours or Additional Info Card */}
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 !mt-4">
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 font-cinzel">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 ">
                   Why Choose Us?
                 </h3>
                 <ul className="space-y-3 text-gray-600">
-                  <li className="flex items-center gap-3 font-cinzel">
+                  <li className="flex items-center gap-3 ">
                     <div className="w-2 h-2 bg-primary rounded-full" />
                     Professional facility management services
                   </li>
-                  <li className="flex items-center gap-3 font-cinzel">
+                  <li className="flex items-center gap-3 ">
                     <div className="w-2 h-2 bg-primary rounded-full" />
                     Quality hotel booking experiences
                   </li>
-                  <li className="flex items-center gap-3 font-cinzel">
+                  <li className="flex items-center gap-3 ">
                     <div className="w-2 h-2 bg-primary rounded-full" />
                     24/7 customer support
                   </li>
-                  <li className="flex items-center gap-3 font-cinzel">
+                  <li className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full " />
                     Competitive pricing and packages
                   </li>
@@ -227,10 +220,10 @@ export default function ContactPage() {
           <div>
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
               <div className="p-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-6 font-cinzel">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-6 ">
                   Send us a Message
                 </h2>
-                <p className="text-gray-600 mb-6 font-cinzel">
+                <p className="text-gray-600 mb-6 ">
                   Fill out the form below and we&rsquo;ll get back to you as
                   soon as possible.
                 </p>
@@ -243,7 +236,7 @@ export default function ContactPage() {
                 >
                   <Form.Item
                     label="Full Name"
-                    className="font-cinzel"
+                    className=""
                     validateStatus={errors.name ? "error" : ""}
                     help={
                       errors.name?.message
@@ -268,7 +261,7 @@ export default function ContactPage() {
 
                   <Form.Item
                     label="Phone Number"
-                    className="font-cinzel"
+                    className=""
                     validateStatus={errors.phone ? "error" : ""}
                     help={
                       errors.phone?.message
@@ -293,7 +286,7 @@ export default function ContactPage() {
 
                   <Form.Item
                     label="Message"
-                    className="font-cinzel"
+                    className=""
                     validateStatus={errors.message ? "error" : ""}
                     help={
                       errors.message?.message
@@ -318,7 +311,7 @@ export default function ContactPage() {
                     />
                   </Form.Item>
 
-                  <Form.Item className="mb-0 font-cinzel">
+                  <Form.Item className="mb-0 ">
                     <div className="flex gap-3 justify-end pt-4">
                       <button onClick={handleReset} className="btn-secondary">
                         Reset

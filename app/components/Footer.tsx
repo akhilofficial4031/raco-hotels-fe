@@ -129,7 +129,7 @@ const Footer = () => {
                 className="font-semibold tracking-wider uppercase mb-4 font-cinzel text-2xl"
                 role="doc-subtitle"
               >
-                <span className="text-white">DO YOU NEED HELP?</span>
+                <span className="text-white">Empowering Your Journey</span>
               </p>
               <p className="text-gray-300">
                 {

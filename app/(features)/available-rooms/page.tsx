@@ -72,7 +72,7 @@ const AvailableRoomsPageContent = () => {
   if (!hotel) return <div>Could not load booking information.</div>;
 
   return (
-    <div className="bg-background-light min-h-screen dm-sans">
+    <div className="bg-white min-h-screen dm-sans">
       {hotel.images?.length > 0 && (
         <div
           className="h-[50vh] bg-cover bg-center relative"
@@ -83,10 +83,7 @@ const AvailableRoomsPageContent = () => {
           <div className="absolute inset-0 bg-black opacity-50" />
           <div className="container mx-auto h-full flex flex-col items-center justify-center">
             <h1 className="text-4xl text-center md:text-left sm:text-5xl lg:text-6xl font-cinzel text-white z-10">
-              Book {hotel.name}
-            </h1>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-cinzel text-white z-10">
-              Available Rooms
+              {hotel.name}
             </h1>
           </div>
         </div>
