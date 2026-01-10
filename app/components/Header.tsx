@@ -85,7 +85,7 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
   // };
 
   return (
-    <div className="sticky w-full top-0 z-[99]">
+    <div className="fixed w-full top-0 z-[99]">
       {topBannerContent.isVisible ? (
         <TopBanner content={topBannerContent} />
       ) : null}

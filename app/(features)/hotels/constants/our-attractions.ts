@@ -4,6 +4,7 @@ import { OurStaysContent } from "@/types/landing-page";
 export const hotelAttractions: OurStaysContent = {
   sectionTag: "OUR ATTRACTIONS",
   title: "DISCOVER OUR CURATED COLLECTION OF EXQUISITE STAYS",
+  title2: "",
   description:
     "In a world that moves too fast, we believe in the art of slow living. Natural textures, warm lighting, and thoughtful spaces create an atmosphere of comfort and timeless elegance.",
 };

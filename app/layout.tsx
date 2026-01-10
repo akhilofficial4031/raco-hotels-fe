@@ -139,7 +139,9 @@ export default async function RootLayout({
                   hotels={hotels}
                   topBannerContent={topBannerContent}
                 />
-                <main>{children}</main>
+                <div className="mt-20">
+                  <main>{children}</main>
+                </div>
                 <Footer />
               </SmoothScroll>
             </QuickBookingProvider>
