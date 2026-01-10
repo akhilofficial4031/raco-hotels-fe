@@ -32,7 +32,7 @@ const OurStays = ({ content }: OurStaysProps) => {
               {content.title2 ? (
                 <h2
                   id="our-stays-heading"
-                  className="text-5xl md:text-6xl font-normal !mt-0 !leading-none text-primary  !font-cinzel"
+                  className="text-3xl md:text-6xl font-normal !mt-0 !leading-none text-primary  !font-cinzel"
                 >
                   {content.title2}
                 </h2>
