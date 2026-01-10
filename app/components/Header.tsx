@@ -58,7 +58,8 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
   // Generate hotel dropdown items from API data
   const hotelDropdownItems = hotels.map((hotel) => ({
     href: `/hotels/${hotel.slug}`,
-    label: `${hotel.name} - ${hotel.city}, ${hotel.state}`,
+    label: `${hotel.name} `,
+    subLabel: `${hotel.addressLine2}, ${hotel.state}`,
   }));
 
   const navLinks: NavLink[] = [
@@ -158,6 +159,9 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
                             role="menuitem"
                           >
                             {item.label}
+                            <span className="text-gray-500 text-xs block">
+                              {item.subLabel ?? ""}
+                            </span>
                           </Link>
                         ))}
                       </div>

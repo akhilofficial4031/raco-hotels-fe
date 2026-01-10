@@ -48,7 +48,7 @@ export async function getLandingPageContent(): Promise<LandingPageContent> {
     }
 
     const content = response.data;
-
+    console.log("content2", content);
     // Validate the content structure (basic validation)
     if (!content.hero || !content.aboutUs || !content.seo) {
       throw new Error("Invalid landing page content structure");
@@ -135,6 +135,7 @@ function getFallbackContent(): LandingPageContent {
     ourStays: {
       sectionTag: "OUR STAYS",
       title: "DISCOVER OUR COLLECTION",
+      title2: "",
       description: "Premium accommodations worldwide.",
     },
     featuredStays: {
@@ -211,7 +212,7 @@ function getFallbackContent(): LandingPageContent {
       images: [{ src: "/experience1.png", alt: "Gallery" }],
       buttons: [{ text: "View More", type: "primary" }],
     },
-    signature: {
+    signatureSection: {
       title: "The Raco Signature",
       items: [
         {

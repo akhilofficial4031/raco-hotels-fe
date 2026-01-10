@@ -48,7 +48,7 @@ const HotelAbout: React.FC<HotelAboutProps> = ({
           >
             <AnimatedContainer animationName="fadeUp">
               <div>
-                <h2 className="text-4xl md:text-5xl font-cinzel text-primary mb-4 tracking-wide leading-tight">
+                <h2 className="text-3xl md:text-5xl font-cinzel text-primary mb-4 tracking-wide leading-tight">
                   {headline}
                 </h2>
                 <h3 className="text-xl md:text-2xl font-cinzel text-text-dark mb-8 tracking-wider">

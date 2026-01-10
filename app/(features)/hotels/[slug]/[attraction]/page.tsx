@@ -54,7 +54,8 @@ const AttractionPage = async ({ params }: Props) => {
 
   return (
     <div>
-      <section className="h-[calc(100vh-120px)]">
+      <section className="h-[calc(100vh-120px)] relative">
+        <div className="absolute h-full w-full bg-black/60 z-10" />
         <div className="relative h-full w-full">
           <Image
             src={heroImageUrl}
@@ -64,11 +65,11 @@ const AttractionPage = async ({ params }: Props) => {
             priority
           />
 
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center border border-white/70 text-white text-center bg-white/20 p-8 rounded-3xl backdrop-blur-sm w-max max-w-[90%] mx-auto">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center  text-white text-center p-8 rounded-3xl  w-max max-w-[90%] mx-auto">
             <h1 className="text-5xl font-cinzel capitalize">
               {attraction.attraction.content.hero.title}
             </h1>
-            <p className="text-2xl font-cinzel tracking-widest !text-black">
+            <p className="text-2xl  tracking-widest !text-white w-full md:max-w-3xl mx-auto">
               {attraction.attraction.content.hero.subtitle}
             </p>
           </div>

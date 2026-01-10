@@ -25,10 +25,18 @@ const OurStays = ({ content }: OurStaysProps) => {
               </div>
               <h2
                 id="our-stays-heading"
-                className="text-5xl md:text-6xl font-normal text-primary leading-tight !font-cinzel"
+                className="text-3xl md:text-6xl font-normal !mb-0 text-primary leading-tight !font-cinzel"
               >
                 {content.title}
               </h2>
+              {content.title2 ? (
+                <h2
+                  id="our-stays-heading"
+                  className="text-5xl md:text-6xl font-normal !mt-0 !leading-none text-primary  !font-cinzel"
+                >
+                  {content.title2}
+                </h2>
+              ) : null}
             </AnimatedContainer>
           </div>
           <div>

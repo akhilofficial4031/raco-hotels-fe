@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { AboutSectionContent } from "@/types/hotel";
-import Image from "next/image";
 import { getImageUrl } from "@/lib/utils";
 
 interface Props {
@@ -11,23 +11,19 @@ const AboutSectionL1: React.FC<Props> = ({ content }) => {
   return (
     <div className="">
       <div className="container mx-auto">
-        <div className=" grid grid-cols-1 md:grid-cols-3 gap-2">
-          <div className="col-span-2">
-            <Image
+        <div className=" grid grid-cols-1 md:grid-cols-3 gap-2 ">
+          <div className="col-span-2 ">
+            <img
               src={getImageUrl(content.images[0])}
               alt={content.title}
-              width={500}
-              height={500}
-              className="w-full h-full object-cover"
+              className="w-full max-h-[500px] object-cover"
             />
           </div>
-          <div className="col-span-1">
-            <Image
+          <div className="col-span-1 max-h-[500px]">
+            <img
               src={getImageUrl(content.images[1])}
               alt={content.title}
-              width={500}
-              height={500}
-              className="w-full h-full object-cover"
+              className="w-full h-full max-h-[500px] object-cover"
             />
           </div>
         </div>

@@ -41,6 +41,7 @@ export interface AboutUsContent {
 export interface OurStaysContent {
   sectionTag: string;
   title: string;
+  title2: string;
   description: string;
 }
 
@@ -136,7 +137,7 @@ export interface LandingPageContent {
   restaurant: RestaurantContent;
   testimonials: TestimonialsContent;
   gallery: GalleryContent;
-  signature: SignatureContent;
+  signatureSection: SignatureContent;
   seo: SEOContent;
 }
 

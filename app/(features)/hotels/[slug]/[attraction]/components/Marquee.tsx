@@ -11,7 +11,7 @@ const Marquee = ({ texts }: MarqueeProps) => {
   return (
     <div className="relative w-full overflow-hidden flex">
       <motion.div
-        className="flex whitespace-nowrap"
+        className="flex whitespace-nowrap item-center"
         animate={{
           x: ["0%", "-50%"],
         }}
@@ -26,7 +26,7 @@ const Marquee = ({ texts }: MarqueeProps) => {
       >
         {[...texts, ...texts].map((text, index) => (
           <div key={index} className="flex items-center flex-shrink-0">
-            <p className="text-2xl font-cinzel tracking-widest !text-black mx-4">
+            <p className="text-2xl font-cinzel tracking-widest !text-black mx-4 !mb-0">
               {text}
             </p>
             <Image

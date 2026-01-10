@@ -75,6 +75,7 @@ export async function getHotelsForNavigation() {
         slug: hotel.slug,
         city: hotel.city,
         state: hotel.state,
+        addressLine2: hotel.addressLine2,
       }));
 
     return activeHotels;

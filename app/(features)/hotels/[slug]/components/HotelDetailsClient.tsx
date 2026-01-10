@@ -18,6 +18,8 @@ import RoomTypes from "./RoomTypes";
 import HotelAbout from "./HotelAbout";
 import { useQuickBooking } from "@/contexts/QuickBookingContext";
 import HotelSignature from "@/app/components/HotelSignature";
+import { Image } from "antd";
+import { getImageUrl } from "@/lib/utils";
 interface HotelDetailsClientProps {
   hotel: Hotel;
   initialRoomTypes: RoomType[];
@@ -68,6 +70,13 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   const handleProceedToBooking = (_roomType: RoomType) => {
     // TODO: Implement booking logic
     setIsModalVisible(false);
+  };
+
+  const scrollToGallery = () => {
+    const gallerySection = document.getElementById("gallery-section");
+    if (gallerySection) {
+      gallerySection.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -152,7 +161,7 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
             <p className="mt-4 text-sm font-semibold text-text-light tracking-widest ">
               WELCOME TO
             </p>
-            <h2 className="mt-4 text-5xl  text-primary !font-cinzel">
+            <h2 className="mt-4 text-3xl md:text-5xl text-primary !font-cinzel">
               {hotel.name.toUpperCase()}
             </h2>
             <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-500 leading-relaxed font-sans">
@@ -163,7 +172,12 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
             <button className="btn-primary inline-block" onClick={openModal}>
               Book Your Stay
             </button>
-            <button className="btn-outline inline-block">View Gallery</button>
+            <button
+              className="btn-outline inline-block"
+              onClick={scrollToGallery}
+            >
+              View Gallery
+            </button>
           </div>
           {/* </AnimatedContainer> */}
         </div>
@@ -213,6 +227,31 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
           <MapComponent latitude={hotel.latitude} longitude={hotel.longitude} />
         </div>
       </div>
+      <section id="gallery-section">
+        <div className=" bg-background-light">
+          <div className="container mx-auto px-4 py-16">
+            <h2 className="text-4xl font-cinzel text-text-dark !mb-10 text-center">
+              Gallery
+            </h2>
+            <div className="grid grid-cols-2 gap-4" role="list">
+              {hotel.images.map((image, index) => (
+                <div
+                  key={index}
+                  role="listitem"
+                  className="gallery-item overflow-hidden rounded-lg"
+                >
+                  <Image
+                    src={getImageUrl(image.url)}
+                    alt={image.alt}
+                    className="!w-full !h-auto md:!h-100 object-cover transform rounded-lg group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
       <AvailableRoomsModal
         open={isModalVisible}
         onClose={() => setIsModalVisible(false)}

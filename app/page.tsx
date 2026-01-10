@@ -8,28 +8,8 @@ import FeaturedStays from "./components/FeaturedStays";
 import Gallery from "./components/Gallery";
 import Hero from "./components/Hero";
 import OurStays from "./components/OurStays";
-import StayWithComfort from "./components/HotelSignature";
+import HotelSignature from "./components/HotelSignature";
 
-const stayWithComfort = {
-  title: "The Raco Signature",
-  items: [
-    {
-      title: "Excellence Without Exception",
-      description: "A gold standard of comfort in every corner.",
-    },
-    {
-      title: "Serenity by Design",
-      description:
-        "A calm, sophisticated oasis amidst the city’s vibrant energy.",
-    },
-    {
-      title: "The Power of Personalization",
-      description: "Bespoke experiences that feel considered, never generic.",
-    },
-  ],
-  description:
-    "You are not just booking a room. You are securing a legacy of peace, prestige, and perfection.",
-};
 // Generate metadata dynamically based on content
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -71,7 +51,7 @@ export default async function Home() {
         <AboutUs content={content.aboutUs} />
         <OurStays content={content.ourStays} />
         <FeaturedStays content={content.featuredStays} />
-        <StayWithComfort content={stayWithComfort} />
+        <HotelSignature content={content.signatureSection} />
 
         {/* <SignatureExperiences content={content.signatureExperiences} /> */}
         {/* <GravityBar content={content.gravityBar} /> */}

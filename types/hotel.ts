@@ -103,14 +103,17 @@ export interface HotelNavItem {
   slug: string;
   city: string;
   state: string;
+  addressLine2: string;
 }
 
 export interface NavLink {
   href: string;
   label: string;
+  subLabel?: string;
   dropdown?: Array<{
     href: string;
     label: string;
+    subLabel?: string;
   }>;
 }
 
