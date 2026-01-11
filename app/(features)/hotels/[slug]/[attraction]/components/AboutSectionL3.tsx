@@ -32,7 +32,7 @@ const AboutSectionL3: React.FC<Props> = ({ content }) => {
           {description}
         </p>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-4 w-full p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-1 gap-4 w-full p-4">
         {/* Text Card 1: Title & Subtext */}
         <div className="lg:col-start-3 lg:row-start-1 rounded-2xl bg-black-bg px-8 tracking-widest text-center p-4 flex flex-col justify-center items-center min-h-[200px]">
           <p className="text-3xl text-left font-cinzel text-blackbg-text1 mb-4">
@@ -44,9 +44,6 @@ const AboutSectionL3: React.FC<Props> = ({ content }) => {
         </div>
 
         {/* Text Card 2: Description */}
-        <div className="lg:row-start-2 lg:col-start-1 bg-background-light flex justify-center items-center rounded-2xl text-text-dark font-dm-sans tracking-widest text-center text-lg p-4 min-h-[200px]">
-          {description}
-        </div>
 
         {/* Image 1 */}
         <div className="lg:col-span-2 lg:row-start-1 lg:col-start-1">
@@ -58,22 +55,6 @@ const AboutSectionL3: React.FC<Props> = ({ content }) => {
         </div>
 
         {/* Image 2 */}
-        <div className="lg:row-start-2">
-          <img
-            className="w-full h-[400px] object-cover rounded-2xl"
-            src={getImageUrl(displayImages[1])}
-            alt={title}
-          />
-        </div>
-
-        {/* Image 3 */}
-        <div className="lg:row-start-2">
-          <img
-            className="w-full h-[400px] object-cover rounded-2xl"
-            src={getImageUrl(displayImages[2])}
-            alt={title}
-          />
-        </div>
       </div>
     </div>
   );
