@@ -73,6 +73,7 @@ const Footer = () => {
   }, []);
 
   const quickLinks = [
+    { href: "/", label: "Home" },
     { href: "/hotels", label: "Properties" },
     { href: "/contact", label: "Contact" },
   ];
