@@ -336,17 +336,17 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
   const steps = [
     {
       number: 1,
-      title: "Property amenities",
+      title: "Property Details",
       component: <Step1Amenities hotel={hotel} roomType={roomType} />,
     },
     {
       number: 2,
-      title: "Personal data",
+      title: "Personal Details",
       component: <Step2PersonalData />,
     },
     {
       number: 3,
-      title: "Payment details",
+      title: "Payment Details",
       component: (
         <Step3PaymentDetails
           roomType={roomType}
@@ -417,7 +417,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
             <div>{step.component}</div>
           </div>
         ))}
-        <div className="flex gap-4 px-8 pt-4 mb-4">
+        <div className="flex gap-4 px-8 pt-8 mb-4 flex-wrap border-t mt-8 border-gray-200">
           <Button size="large" className="flex-1" type="default">
             Cancel
           </Button>

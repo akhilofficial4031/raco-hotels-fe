@@ -15,6 +15,6 @@ export enum FooterContactContent {
 
 export const FooterImagePath = {
   "raco-cyber-residency": "/footer-raco-cyber-residency.jpg",
-  "raco-regency": "/footer-raco-regency.jpg",
+  "raco-regency": "/footer-raco-regency.webp",
   home: "/footer-home.webp",
 };
