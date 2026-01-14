@@ -59,7 +59,7 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
   const hotelDropdownItems = hotels.map((hotel) => ({
     href: `/hotels/${hotel.slug}`,
     label: `${hotel.name} `,
-    subLabel: `${hotel.addressLine2}, ${hotel.state}`,
+    subLabel: `${hotel.addressLine2}, ${hotel.city}, ${hotel.state}`,
   }));
 
   const navLinks: NavLink[] = [
@@ -146,7 +146,7 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
                     </button>
                     {openDropdown === link.label && (
                       <div
-                        className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10"
+                        className="absolute top-full left-0 mt-2 w-58 bg-white rounded-md shadow-lg border border-gray-200 z-10"
                         role="menu"
                         aria-label={`${link.label} submenu`}
                       >

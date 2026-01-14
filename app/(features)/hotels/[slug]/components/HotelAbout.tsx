@@ -54,7 +54,7 @@ const HotelAbout: React.FC<HotelAboutProps> = ({
                 <h3 className="text-xl md:text-2xl font-cinzel text-text-dark mb-8 tracking-wider">
                   {subHeadline}
                 </h3>
-                <p className="text-lg md:text-xl text-text-light font-sans leading-relaxed mb-10 text-justify">
+                <p className="text-lg md:text-xl text-text-light font-sans leading-relaxed mb-10 text-left">
                   {body}
                 </p>
                 <div

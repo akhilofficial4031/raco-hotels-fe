@@ -235,7 +235,7 @@ export default function ContactPage() {
                   className="space-y-4"
                 >
                   <Form.Item
-                    label="Full Name"
+                    label="Name"
                     className=""
                     validateStatus={errors.name ? "error" : ""}
                     help={
@@ -252,7 +252,7 @@ export default function ContactPage() {
                         <Input
                           {...field}
                           size="large"
-                          placeholder="Enter your full name"
+                          placeholder="Enter your name"
                           className="hover:border-blue-400 focus:border-blue-600"
                         />
                       )}

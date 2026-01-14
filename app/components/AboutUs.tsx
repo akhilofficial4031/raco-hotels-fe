@@ -15,14 +15,12 @@ const AboutUs = ({ content }: AboutUsProps) => {
       aria-labelledby="about-us-heading"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 xl:gap-24 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 xl:gap-24 items-center">
           {/* Left Column: Image Composition */}
           <div className="relative">
-            {/* Decorative Background Frame */}
-            {/* <div className="absolute -top-6 -left-6 w-[80%] h-[90%] border-[8px] border-primary/20 rounded-lg -z-10" /> */}
             <AnimatedContainer animationName="fadeRight">
               {/* Main Image */}
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl z-10 aspect-[4/3] w-full hidden md:block">
+              <div className="relative rounded-2xl overflow-hidden z-10 aspect-[4/3] w-full hidden md:block">
                 <Image
                   src={getImageUrl(content.image.src)}
                   alt={content.image.alt}
@@ -33,11 +31,11 @@ const AboutUs = ({ content }: AboutUsProps) => {
               </div>
 
               {/* Floating Badge (Bottom Right Overlap) */}
-              <div className="absolute -bottom-10 -right-4 sm:-bottom-12 sm:-right-12 z-20 bg-white rounded-full p-4 shadow-xl hidden md:flex justify-center items-center">
+              <div className="absolute -bottom-10 size-40  -right-4 sm:-bottom-12 sm:-right-12 z-20 bg-background-ultra-light rounded-full p-4 hidden md:flex justify-center items-center">
                 <img
                   src={getImageUrl(content.badge.src)}
                   alt={content.badge.alt}
-                  className="w-24 h-24 sm:w-32 sm:h-32 object-contain"
+                  className="w-24 h-24 mt-2 ml-2 sm:w-32 sm:h-32 object-contain object-center"
                 />
               </div>
             </AnimatedContainer>
@@ -54,14 +52,14 @@ const AboutUs = ({ content }: AboutUsProps) => {
             <AnimatedContainer animationName="fadeUp" delay={0.4}>
               <h2
                 id="about-us-heading"
-                className="font-cinzel text-4xl md:text-5xl lg:text-6xl text-text-dark leading-tight mb-8"
+                className="font-cinzel text-3xl md:text-5xl lg:text-6xl text-text-dark leading-tight mb-8"
               >
                 {content.title}
               </h2>
             </AnimatedContainer>
 
             <AnimatedContainer animationName="fadeUp" delay={0.5}>
-              <p className="font-dm-sans text-text-light text-lg leading-relaxed mb-10 text-justify">
+              <p className="font-dm-sans text-text-light text-lg leading-relaxed mb-10 text-left">
                 {content.description}
               </p>
               <span className={`block w-16 h-0.5 bg-primary/40 mb-6 `} />

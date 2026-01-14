@@ -23,7 +23,7 @@ const Gallery = ({ content }: GalleryProps) => {
           </p>
           <h2
             id="gallery-heading"
-            className="text-4xl md:text-5xl font-normal text-primary leading-tight"
+            className="text-4xl md:text-5xl font-normal font-cinzel text-primary leading-tight"
           >
             {content.title}
           </h2>

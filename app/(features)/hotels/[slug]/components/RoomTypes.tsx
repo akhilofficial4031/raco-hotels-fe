@@ -160,7 +160,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                     </div>
 
                     <p
-                      className="text-gray-600 font-dm-sans mb-6 leading-relaxed line-clamp-3 lg:line-clamp-4 text-base text-justify"
+                      className="text-gray-600 font-dm-sans mb-6 leading-relaxed line-clamp-3 lg:line-clamp-4 text-base text-left"
                       data-testid="room-description"
                     >
                       {roomType.description}
@@ -198,7 +198,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                       <div className="flex items-center gap-2 group/icon">
                         <div className="w-8 h-8 rounded-full bg-background-light flex items-center justify-center text-primary group-hover/icon:bg-primary group-hover/icon:text-white transition-colors duration-300">
                           <i
-                            className={`fa ${roomType.smokingAllowed ? "fa-smoking" : "fa-smoking-ban"}`}
+                            className={`fa ${roomType.smokingAllowed ? "fa-check" : "fa-ban"}`}
                           />
                         </div>
                         <span className="font-medium text-text-light">

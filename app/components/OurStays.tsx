@@ -41,7 +41,7 @@ const OurStays = ({ content }: OurStaysProps) => {
           </div>
           <div>
             <AnimatedContainer animationName="fadeUp">
-              <p className="text-gray-600 text-lg dm-sans text-justify">
+              <p className="text-gray-600 text-lg dm-sans text-left">
                 {content.description}
               </p>
             </AnimatedContainer>

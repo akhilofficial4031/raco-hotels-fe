@@ -135,7 +135,7 @@ const HotelListItem = ({ hotel, index }: HotelListItemProps) => {
           <div className="flex items-center gap-3 text-primary dm-sans tracking-wide text-sm font-medium uppercase">
             <span className="w-8 h-[1px] bg-primary" />
             <span>
-              {hotel.addressLine2}, {hotel.state}
+              {hotel.addressLine2}, {hotel.city}, {hotel.state}
             </span>
           </div>
 
@@ -148,7 +148,7 @@ const HotelListItem = ({ hotel, index }: HotelListItemProps) => {
             </Link>
           </h2>
 
-          <p className="text-gray-600 dm-sans leading-relaxed text-lg text-justify">
+          <p className="text-gray-600 dm-sans leading-relaxed text-lg text-left">
             {hotel.description}
           </p>
         </div>

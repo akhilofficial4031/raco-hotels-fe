@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { PhoneOutlined, MailOutlined } from "@ant-design/icons";
 const Footer = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { openModal, openAttractionModal } = useQuickBooking();
@@ -113,7 +113,7 @@ const Footer = () => {
         />
         <div className="bg-black/50 absolute top-0 left-0 w-full h-full" />
         <div className="relative z-10 flex flex-col items-center justify-center gap-4">
-          <p className="text-white text-5xl font-cinzel text-center">
+          <p className="text-white text-3xl md:text-5xl font-cinzel text-center">
             Your next unforgettable
             <br /> escape awaits.
           </p>
@@ -124,8 +124,8 @@ const Footer = () => {
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 mt-18">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0 w-full bg-footer-dark-bg rounded-4xl mb-12">
-          <div className="p-8 items-center justify-center mb-12  col-span-2">
-            <div className="flex-grow text-center md:text-left mb-6 md:mb-0">
+          <div className="p-8 items-center justify-center col-span-2">
+            <div className="flex-grow text-center h-full md:text-left mb-6 md:mb-0">
               <p
                 className="font-semibold tracking-wider uppercase mb-4 font-cinzel text-2xl"
                 role="doc-subtitle"
@@ -141,7 +141,7 @@ const Footer = () => {
               </p>
             </div>
           </div>
-          <div className="flex bg-footer-cta-bg items-center rounded-l-[72px] justify-center rounded-r-4xl relative">
+          <div className="flex bg-footer-cta-bg items-center rounded-tl-none rounded-tr-none rounded-bl-4xl rounded-br-4xl rounded-l-[72px] justify-center md:rounded-tl-[72px] md:rounded-bl-[72px] md:rounded-r-4xl relative">
             {/* <div className="bg-footer-cta-bg rounded-l-full h-[400px] w-40 absolute -left-10" /> */}
             <button
               onClick={() => router.push("/contact")}
@@ -242,17 +242,22 @@ const Footer = () => {
               />
             </Link>
             <div className="mt-auto">
-              <p className="text-sm">092490 97929</p>
-              <p className="text-sm">racohotelgroup@gmail.com</p>
+              <p className="text-sm !mb-1">
+                <PhoneOutlined className="w-4 h-4" /> <span>092490 97929</span>
+              </p>
+              <p className="text-sm">
+                <MailOutlined className="w-4 h-4" />{" "}
+                <span>racohotelgroup@gmail.com</span>
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="pt-8 items-center text-gray-600 mt-[100px]">
+        <div className="pt-8 items-center text-gray-600">
           <div className="grid grid-cols-3 gap-18 mb-18">
             <div className="border-t border-gray-300 pt-4">
               <Link
-                href="https://instagram.com"
+                href="https://www.instagram.com/racohotels?igsh=MXhmOXBzdjJ1bmNlaQ=="
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-primary"
@@ -264,13 +269,13 @@ const Footer = () => {
             </div>
             <div className="border-t border-gray-300 pt-4">
               <Link
-                href="https://whatsapp.com"
+                href="https://youtube.com/@racohotels?si=nFS6blGEftYfDyQ7"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-primary"
               >
                 <span className="flex justify-between w-full">
-                  Whatsapp <i className="fa fa-whatsapp" />
+                  Youtube <i className="fa fa-youtube" />
                 </span>
               </Link>
             </div>
