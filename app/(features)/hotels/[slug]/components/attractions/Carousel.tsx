@@ -95,6 +95,53 @@ const ArrowButtons = ({
   </>
 );
 
+const ArrowButtonsTestimonials = ({
+  onPrev,
+  onNext,
+}: {
+  onPrev: () => void;
+  onNext: () => void;
+}) => (
+  <div className={`${styles.testimonialsNav} absolute -top-15 right-0 !w-auto`}>
+    <button
+      className={styles.embla__button}
+      onClick={onPrev}
+      aria-label="Previous slide"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <button
+      className={styles.embla__button}
+      onClick={onNext}
+      aria-label="Next slide"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  </div>
+);
+
 const Carousel: React.FC<Props> = ({
   items,
   type,
@@ -119,7 +166,7 @@ const Carousel: React.FC<Props> = ({
     <div
       className={`${styles.embla} ${
         type === "image" ? styles[imageCarouselType] : ""
-      } container mx-auto`}
+      } container mx-auto relative`}
     >
       {type === "image" && imageCarouselType === "darkHeader" && (
         <div className={styles.header}>
@@ -156,8 +203,10 @@ const Carousel: React.FC<Props> = ({
         </div>
       </div>
 
-      {(type === "review" ||
-        (type === "image" && imageCarouselType === "default")) && (
+      {type === "review" && imageCarouselType === "default" && (
+        <ArrowButtonsTestimonials onPrev={scrollPrev} onNext={scrollNext} />
+      )}
+      {type === "image" && imageCarouselType === "default" && (
         <ArrowButtons onPrev={scrollPrev} onNext={scrollNext} />
       )}
       {type === "image" && imageCarouselType === "lightFooterNav" && (

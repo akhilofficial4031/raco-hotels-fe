@@ -9,6 +9,7 @@ import Gallery from "./components/Gallery";
 import Hero from "./components/Hero";
 import OurStays from "./components/OurStays";
 import HotelSignature from "./components/HotelSignature";
+import AllAttractions from "./components/AllAttractions";
 
 // Generate metadata dynamically based on content
 export async function generateMetadata(): Promise<Metadata> {
@@ -51,12 +52,8 @@ export default async function Home() {
         <AboutUs content={content.aboutUs} />
         <OurStays content={content.ourStays} />
         <FeaturedStays content={content.featuredStays} />
+        <AllAttractions />
         <HotelSignature content={content.signatureSection} />
-
-        {/* <SignatureExperiences content={content.signatureExperiences} /> */}
-        {/* <GravityBar content={content.gravityBar} /> */}
-        {/* <Restaurant content={content.restaurant} /> */}
-        {/* <Testimonials content={content.testimonials} /> */}
         <Gallery content={content.gallery} />
       </main>
     </>

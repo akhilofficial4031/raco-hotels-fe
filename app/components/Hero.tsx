@@ -1,21 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
 import { useQuickBooking } from "@/contexts/QuickBookingContext";
-import { getImageUrl } from "@/lib/utils";
 import { HeroContent } from "@/types/landing-page";
+// import LandingCarousel from "./LandingCarousel";
+import { getImageUrl } from "@/lib/utils";
 import Image from "next/image";
 
 interface HeroProps {
   content: HeroContent;
+  // slides: Image[];
 }
 
 const Hero = ({ content }: HeroProps) => {
   const { openModal } = useQuickBooking();
   return (
-    <section className="bg-background-light" aria-label="Hero section">
+    <section className="bg-background-light " aria-label="Hero section">
       <div className="mx-auto pl-4 pr-4 sm:pr-0 sm:pl-6 lg:pl-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center min-h-[calc(100vh-300px)]">
           <div className="text-center md:text-left py-12 md:py-24 pl-0 md:pl-20 ">
             {/* <AnimatedContainer animationName="fadeUp" delay={0.1}>
               <p
@@ -63,7 +66,7 @@ const Hero = ({ content }: HeroProps) => {
             </AnimatedContainer>
           </div>
 
-          <div className="relative h-full">
+          <div className="relative h-full min-h-100">
             <Image
               src={getImageUrl(content.image.src)}
               alt={content.image.alt}
@@ -72,6 +75,7 @@ const Hero = ({ content }: HeroProps) => {
               className="w-full h-full object-cover"
               priority
             />
+            {/* <LandingCarousel slides={slides} /> */}
           </div>
         </div>
       </div>

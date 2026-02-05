@@ -175,3 +175,9 @@ export async function getAttractionBySlug(
     `/api/attractions/slug/${slug}`
   );
 }
+
+export async function getAllAttractions(): Promise<
+  ApiResponse<AttractionResponse[]>
+> {
+  return getFetcher<ApiResponse<AttractionResponse[]>>(`/api/attractions`);
+}

@@ -63,10 +63,11 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
   }));
 
   const navLinks: NavLink[] = [
-    { href: "/", label: "Home" },
+    { href: "/", label: "Home", menu: "/" },
     {
       href: "/hotels",
       label: "Our Properties",
+      menu: "hotels",
       dropdown:
         hotelDropdownItems.length > 0
           ? hotelDropdownItems
@@ -74,7 +75,7 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
     },
 
     // { href: "/offers", label: "Offers" },
-    { href: "/contact", label: "Contact" },
+    { href: "/contact", label: "Contact", menu: "contact" },
   ];
 
   // const topBannerContent: TopBannerContent = {
@@ -83,6 +84,12 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
   //   linkText: "Book Now",
   //   onClick: openModal,
   // };
+  const isCurrentMenu = (menu: string) => {
+    if (menu === "/") {
+      return pathname === "/";
+    }
+    return pathname.includes(menu);
+  };
 
   return (
     <div className="fixed w-full top-0 z-[99]">
@@ -120,7 +127,7 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
                   <div key={link.label} className="relative">
                     <button
                       onClick={() => handleDropdownToggle(link.label)}
-                      className="flex cursor-pointer items-center hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                      className={`flex cursor-pointer items-center hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded ${isCurrentMenu(link.menu) ? "!text-primary" : ""}`}
                       aria-expanded={openDropdown === link.label}
                       aria-haspopup="true"
                       aria-label={`${link.label} menu`}
@@ -154,7 +161,7 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
                           <Link
                             key={item.label}
                             href={item.href}
-                            className="block cursor-pointer capitalize px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary first:rounded-t-md last:rounded-b-md"
+                            className={`block cursor-pointer capitalize px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary first:rounded-t-md last:rounded-b-md ${isCurrentMenu(item.href ?? "") ? "text-primary !bg-primary/10" : ""}`}
                             onClick={() => setOpenDropdown(null)}
                             role="menuitem"
                           >
@@ -171,7 +178,7 @@ const Header = ({ hotels = [], topBannerContent }: HeaderProps) => {
                   <Link
                     key={link.label}
                     href={link.href}
-                    className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 py-1"
+                    className={`hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 py-1 ${isCurrentMenu(link.menu) ? "text-primary" : ""}`}
                   >
                     {link.label}
                   </Link>

@@ -109,6 +109,7 @@ export interface HotelNavItem {
 export interface NavLink {
   href: string;
   label: string;
+  menu: string;
   subLabel?: string;
   dropdown?: Array<{
     href: string;
@@ -277,6 +278,7 @@ export interface Attraction {
   updatedAt: string;
   hotelName?: string;
   layout: string;
+  hotelSlug: string;
 }
 
 export interface ButtonContent {
