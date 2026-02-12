@@ -101,12 +101,20 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
             dropdownStyle={{ zIndex: 10000 }}
           />
         </Form.Item>
+
+
+        <div className=" gap-4">
+          <Form.Item name="rooms" label="Rooms">
+            <InputNumber min={1} max={20} className="!w-full" size="large" />
+          </Form.Item>
+        </div>
         <Form.Item
           name="dates"
           label="Check In - Check Out"
           rules={[{ required: true, message: "Please select dates!" }]}
         >
           <RangePicker
+            placement="bottomRight"
             size="large"
             className="w-full"
             disabledDate={(current) =>
@@ -114,12 +122,6 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
             }
           />
         </Form.Item>
-
-        <div className=" gap-4">
-          <Form.Item name="rooms" label="Rooms">
-            <InputNumber min={1} max={20} className="!w-full" size="large" />
-          </Form.Item>
-        </div>
         <Form.Item>
           <Button
             type="primary"

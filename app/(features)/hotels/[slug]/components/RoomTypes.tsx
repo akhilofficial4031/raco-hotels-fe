@@ -312,26 +312,32 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select your dates and number of rooms:
               </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <RangePicker
-                  value={dates}
-                  onChange={(dates) => {
-                    setDates(dates as [dayjs.Dayjs | null, dayjs.Dayjs | null]);
-                    setIsAvailable(null); // Reset availability when dates change
-                    setAvailableRooms([]);
-                  }}
-                  disabledDate={(current) =>
-                    current && current < dayjs().startOf("day")
-                  }
-                  className="!w-full !mt-2"
-                />
-                <InputNumber
-                  min={1}
-                  placeholder="Number of rooms"
-                  value={numberOfRooms}
-                  onChange={(value) => setNumberOfRooms(value ?? 1)}
-                  className="!w-full !mt-2"
-                />
+              <div className="grid grid-cols-1  gap-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Number of rooms</label>
+                  <InputNumber
+                    min={1}
+                    placeholder="Number of rooms"
+                    value={numberOfRooms}
+                    onChange={(value) => setNumberOfRooms(value ?? 1)}
+                    className="!w-full !mt-2 !mb-3"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Select your dates</label>
+                  <RangePicker
+                    value={dates}
+                    onChange={(dates) => {
+                      setDates(dates as [dayjs.Dayjs | null, dayjs.Dayjs | null]);
+                      setIsAvailable(null); // Reset availability when dates change
+                      setAvailableRooms([]);
+                    }}
+                    disabledDate={(current) =>
+                      current && current < dayjs().startOf("day")
+                    }
+                    className="!w-full !mt-2"
+                  />
+                </div>
               </div>
             </div>
 
