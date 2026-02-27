@@ -16,7 +16,7 @@ const Step2PersonalData = () => {
   } = useFormContext<BookingFormValues>();
 
   return (
-    <Form layout="vertical">
+    <Form layout="vertical" component={false}>
       <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item

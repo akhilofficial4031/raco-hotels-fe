@@ -55,6 +55,7 @@ interface BookingStepperProps {
   checkOutDate: string | null;
   numAdults: number;
   numChildren: number;
+  childAges: number[];
 }
 
 const BookingStepper: React.FC<BookingStepperProps> = ({
@@ -65,6 +66,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
   checkOutDate,
   numAdults,
   numChildren,
+  childAges,
 }) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -355,6 +357,8 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
           checkInDate={checkInDate}
           checkOutDate={checkOutDate}
           numberOfRooms={roomIds.length}
+          numAdults={numAdults}
+          childAges={childAges}
         />
       ),
     },
@@ -403,7 +407,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
 
   return (
     <FormProvider {...methods}>
-      <form className="h-full bg-white rounded-lg border border-gray-200 relative">
+      <div className="h-full bg-white rounded-lg border border-gray-200 relative">
         {steps.map((step, index) => (
           <div
             key={step.number}
@@ -442,7 +446,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
             {isSubmitting ? "Processing..." : "Book Now and Pay"}
           </Button>
         </div>
-      </form>
+      </div>
 
       {/* Booking Confirmation Modal */}
       <BookingConfirmationModal

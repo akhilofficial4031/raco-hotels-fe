@@ -4,7 +4,7 @@ import { getAvailableRoomTypesForHotel, getHotelById } from "@/lib/hotels";
 import { getImageUrl } from "@/lib/utils";
 import { AvailableRoomType, Hotel } from "@/types/hotel";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import AvailableRoomTypeList from "./components/AvailableRoomTypeList";
 
 const AvailableRoomsPageContent = () => {
@@ -13,36 +13,49 @@ const AvailableRoomsPageContent = () => {
   const checkIn = searchParams.get("checkIn");
   const checkOut = searchParams.get("checkOut");
   const numberOfRooms = searchParams.get("numberOfRooms");
+  const adults = parseInt(searchParams.get("adults") ?? "1", 10);
+  const children = parseInt(searchParams.get("children") ?? "0", 10);
+  const childAges = (searchParams.get("childAges") ?? "")
+    .split(",")
+    .filter(Boolean)
+    .map(Number);
+  const effectiveAdults = adults + childAges.filter((age) => age > 10).length;
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [availableRooms, setAvailableRooms] = useState<AvailableRoomType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const isFetching = useRef(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!hotelId || !checkIn || !checkOut || isFetching.current) {
-        return;
-      }
+    if (!hotelId || !checkIn || !checkOut) return;
 
+    let cancelled = false;
+
+    const fetchData = async () => {
       try {
-        isFetching.current = true;
         setLoading(true);
-        const hotelRes = await getHotelById(parseInt(hotelId, 10));
+        setHotel(null);
+        setAvailableRooms([]);
+        setError(null);
+
+        const [hotelRes, availableRoomsRes] = await Promise.all([
+          getHotelById(parseInt(hotelId, 10)),
+          getAvailableRoomTypesForHotel(
+            parseInt(hotelId, 10),
+            checkIn,
+            checkOut,
+            undefined,
+            parseInt(numberOfRooms ?? "1", 10)
+          ),
+        ]);
+
+        if (cancelled) return;
+
         if (hotelRes.data.hotel) {
           setHotel(hotelRes.data.hotel);
         } else {
           setError("Hotel not found.");
         }
-
-        const availableRoomsRes = await getAvailableRoomTypesForHotel(
-          parseInt(hotelId, 10),
-          checkIn,
-          checkOut,
-          undefined,
-          parseInt(numberOfRooms ?? "1", 10)
-        );
 
         if (availableRoomsRes.success) {
           setAvailableRooms(availableRoomsRes.data.roomTypes);
@@ -50,15 +63,17 @@ const AvailableRoomsPageContent = () => {
           setError("Could not fetch available rooms.");
         }
       } catch {
-        setError("Failed to fetch data.");
+        if (!cancelled) setError("Failed to fetch data.");
       } finally {
-        setLoading(false);
-        isFetching.current = false;
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchData();
-  }, [hotelId, checkIn, checkOut]);
+    return () => {
+      cancelled = true;
+    };
+  }, [hotelId, checkIn, checkOut, numberOfRooms]);
 
   if (loading) {
     return (
@@ -96,6 +111,10 @@ const AvailableRoomsPageContent = () => {
             checkIn={checkIn}
             checkOut={checkOut}
             numberOfRooms={parseInt(numberOfRooms ?? "1", 10)}
+            adults={adults}
+            children={children}
+            childAges={childAges}
+            effectiveAdults={effectiveAdults}
           />
         ) : (
           <div className="text-center">

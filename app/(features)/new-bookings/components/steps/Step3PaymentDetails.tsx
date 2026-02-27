@@ -8,6 +8,10 @@ import { BookingFormValues } from "../form-schema";
 import { getFetcher } from "@/lib/fetcher";
 import { ApiResponse } from "@/types/api";
 
+const ROOM_TAX_RATE = 0.05;
+const EXTRA_ADULT_CHARGE_CENTS = 100000; // ₹1,000 in paise
+const EXTRA_ADULT_TAX_RATE = 0.05;
+
 interface Step3PaymentDetailsProps {
   roomType: RoomType;
   hotelId: number;
@@ -15,6 +19,8 @@ interface Step3PaymentDetailsProps {
   checkInDate: string | null;
   checkOutDate: string | null;
   numberOfRooms: number;
+  numAdults: number;
+  childAges: number[];
 }
 
 const formatCurrency = (amount: number, currencyCode: string) => {
@@ -58,6 +64,8 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   checkInDate,
   checkOutDate,
   numberOfRooms,
+  numAdults,
+  childAges,
 }) => {
   const { control, watch, setValue } = useFormContext<BookingFormValues>();
   const selectedAddonIds: number[] = watch("addons", []);
@@ -76,6 +84,10 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   // Calculate number of nights
   const numberOfNights = calculateNumberOfNights(checkInDate, checkOutDate);
 
+  const childrenTreatedAsAdults = childAges.filter((age) => age > 10).length;
+  const effectiveAdults = numAdults + childrenTreatedAsAdults;
+  const hasExtraAdult = effectiveAdults === roomType.maxOccupancy + 1;
+
   const getRoomRent = useCallback(() => {
     if (roomType.offerPrice) {
       if (!roomType.offerStartDate || !roomType.offerEndDate) {
@@ -93,25 +105,34 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   }, [roomType]);
 
   useEffect(() => {
-    const TAX_RATE = 0.18;
     const addonsTotal = selectedAddonIds.reduce((sum, addonId) => {
       const addon = roomType.addons?.find((a) => a.addonId === addonId);
       return sum + (addon?.priceCents ?? 0);
     }, 0);
 
     const basePrice = getRoomRent() ?? 0;
-    const totalRoomRent = basePrice * numberOfNights * numberOfRooms; // Multiply by number of nights
+    const totalRoomRent = basePrice * numberOfNights * numberOfRooms;
     const subtotal = totalRoomRent + addonsTotal;
+
     if (discountAmount > 0) {
       setTotalAfterDiscount(subtotal - discountAmount * 100);
     }
     setSubtotalAmount(subtotal);
-    const taxableAmount =
-      totalAfterDiscount > 0 ? totalAfterDiscount : subtotal;
-    const tax = Math.round(taxableAmount * TAX_RATE);
 
-    setValue("taxAmount", tax);
-    setValue("totalAmount", taxableAmount + tax);
+    const taxableRoomAmount =
+      totalAfterDiscount > 0 ? totalAfterDiscount : subtotal;
+    const roomTax = Math.round(taxableRoomAmount * ROOM_TAX_RATE);
+
+    const extraAdultSubtotal = hasExtraAdult
+      ? EXTRA_ADULT_CHARGE_CENTS * numberOfNights
+      : 0;
+    const extraAdultTax = Math.round(extraAdultSubtotal * EXTRA_ADULT_TAX_RATE);
+
+    setValue("taxAmount", roomTax + extraAdultTax);
+    setValue(
+      "totalAmount",
+      taxableRoomAmount + roomTax + extraAdultSubtotal + extraAdultTax
+    );
   }, [
     selectedAddonIds,
     roomType?.addons,
@@ -121,6 +142,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
     totalAfterDiscount,
     numberOfNights,
     numberOfRooms,
+    hasExtraAdult,
   ]);
 
   const handleApplyPromoCode = async () => {
@@ -172,25 +194,36 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
     return <div>Loading room details...</div>;
   }
 
+  const basePrice = getRoomRent() ?? 0;
+  const totalRoomRentDisplay =
+    basePrice * (numberOfNights ?? 1) * (numberOfRooms ?? 1);
+  const taxableRoomAmount =
+    totalAfterDiscount > 0 ? totalAfterDiscount : subtotalAmount;
+  const roomTaxDisplay = Math.round(taxableRoomAmount * ROOM_TAX_RATE);
+  const extraAdultSubtotalDisplay = hasExtraAdult
+    ? EXTRA_ADULT_CHARGE_CENTS * numberOfNights
+    : 0;
+  const extraAdultTaxDisplay = Math.round(
+    extraAdultSubtotalDisplay * EXTRA_ADULT_TAX_RATE
+  );
+
   return (
     <div className="space-y-6">
       {/* Payment Summary */}
       <div>
         <h3 className="text-lg font-semibold text-gray-800">Payment Summary</h3>
-        <div className="space-y-3">
+        <div className="space-y-3 mt-3">
           <div className="flex justify-between items-center text-gray-600">
             <span>Room Rent</span>
             <span>
-              {formatCurrency(
-                getRoomRent() ?? 0,
-                roomType.currencyCode ?? "INR"
-              )}
+              {formatCurrency(basePrice, roomType.currencyCode ?? "INR")}
             </span>
           </div>
 
-          <div className="flex justify-between items-center text-gray-500 text-sm pl-4  border-b border-gray-200 pb-2">
+          <div className="flex justify-between items-center text-gray-500 text-sm pl-4 border-b border-gray-200 pb-2">
             <span className="text-xs">
-              Number of Nights: <strong>{numberOfNights}</strong> <br />
+              Number of Nights: <strong>{numberOfNights}</strong>
+              <br />
               Number of Rooms: <strong>{numberOfRooms}</strong>
             </span>
             <span />
@@ -200,9 +233,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
             <span>Total Room Rent</span>
             <span>
               {formatCurrency(
-                (getRoomRent() ?? 0) *
-                  (numberOfNights ?? 1) *
-                  (numberOfRooms ?? 1),
+                totalRoomRentDisplay,
                 roomType.currencyCode ?? "INR"
               )}
             </span>
@@ -213,7 +244,6 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
               <div className="flex justify-between items-center text-gray-600">
                 <span>Add-ons</span>
               </div>
-
               <div className="border-b border-gray-200 pb-2">
                 {selectedAddonIds.map((addonId) => {
                   const addon = roomType.addons?.find(
@@ -244,10 +274,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
         <div className="flex justify-between items-center text-gray-600 border-b border-gray-200 mt-2 pb-2">
           <span>Subtotal</span>
           <span>
-            {formatCurrency(
-              subtotalAmount ?? 0,
-              roomType.currencyCode || "INR"
-            )}
+            {formatCurrency(subtotalAmount ?? 0, roomType.currencyCode || "INR")}
           </span>
         </div>
 
@@ -259,7 +286,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
                 -{formatNumber(discountAmount, roomType.currencyCode || "INR")}
               </span>
             </div>
-            <div className="flex justify-between items-center mt-2">
+            <div className="flex justify-between items-center mt-2 border-b border-gray-200 pb-2">
               <span>Total after discount</span>
               <span>
                 {formatCurrency(
@@ -271,12 +298,43 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
           </>
         )}
 
-        <div className="flex justify-between items-center text-gray-600 border-b border-gray-200 pb-2 mt-2">
-          <span>Tax(18%)</span>
+        <div className="flex justify-between items-center text-gray-600 pb-2 mt-2">
+          <span>Room Tax ({(ROOM_TAX_RATE * 100).toFixed(0)}%)</span>
           <span>
-            {formatCurrency(taxAmount ?? 0, roomType.currencyCode ?? "INR")}
+            {formatCurrency(roomTaxDisplay, roomType.currencyCode ?? "INR")}
           </span>
         </div>
+
+        {hasExtraAdult && (
+          <>
+            <div className="flex justify-between items-center text-gray-600 pb-2 mt-2">
+              <span>
+                Extra Adult Charge (₹
+                {(EXTRA_ADULT_CHARGE_CENTS / 100).toLocaleString("en-IN")} ×{" "}
+                {numberOfNights} {numberOfNights === 1 ? "night" : "nights"})
+              </span>
+              <span>
+                {formatCurrency(
+                  extraAdultSubtotalDisplay,
+                  roomType.currencyCode ?? "INR"
+                )}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-gray-600 pb-2 mt-2">
+              <span>
+                Tax on Extra Adult ({(EXTRA_ADULT_TAX_RATE * 100).toFixed(0)}%)
+              </span>
+              <span>
+                {formatCurrency(
+                  extraAdultTaxDisplay,
+                  roomType.currencyCode ?? "INR"
+                )}
+              </span>
+            </div>
+          </>
+        )}
+
+        <div className="border-b border-gray-200 mb-2" />
 
         <div className="flex justify-between items-center font-bold text-lg text-gray-800 mt-3">
           <span>Total</span>

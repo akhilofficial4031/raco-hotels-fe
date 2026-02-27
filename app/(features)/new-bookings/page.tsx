@@ -20,6 +20,12 @@ const NewBookingsPageContent = () => {
   const checkIn = searchParams.get("checkIn");
   const checkOut = searchParams.get("checkOut");
   const numberOfRooms = searchParams.get("numberOfRooms") ?? "1";
+  const adults = parseInt(searchParams.get("adults") ?? "1", 10);
+  const children = parseInt(searchParams.get("children") ?? "0", 10);
+  const childAges = (searchParams.get("childAges") ?? "")
+    .split(",")
+    .filter(Boolean)
+    .map(Number);
 
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [roomType, setRoomType] = useState<RoomType | null>(null);
@@ -172,8 +178,9 @@ const NewBookingsPageContent = () => {
               roomIds={roomIds ?? []}
               checkInDate={checkIn}
               checkOutDate={checkOut}
-              numAdults={parseInt(searchParams.get("adults") ?? "1", 10)}
-              numChildren={parseInt(searchParams.get("children") ?? "0", 10)}
+              numAdults={adults}
+              numChildren={children}
+              childAges={childAges}
             />
           </div>
           <div className="lg:col-span-1">
@@ -184,6 +191,9 @@ const NewBookingsPageContent = () => {
                 checkIn={checkIn}
                 checkOut={checkOut}
                 numberOfRooms={parseInt(numberOfRooms, 10)}
+                adults={adults}
+                children={children}
+                childAges={childAges}
               />
             </div>
           </div>

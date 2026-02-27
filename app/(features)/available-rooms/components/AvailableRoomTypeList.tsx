@@ -14,6 +14,24 @@ interface AvailableRoomTypeListProps {
   checkIn: string;
   checkOut: string;
   numberOfRooms: number;
+  adults: number;
+  children: number;
+  childAges: number[];
+  effectiveAdults: number;
+}
+
+const EXTRA_ADULT_CHARGE = 1000;
+
+function getRoomsNeeded(effectiveAdults: number, maxOccupancy: number): number {
+  return Math.ceil(effectiveAdults / maxOccupancy);
+}
+
+function formatCurrency(amount: number, currencyCode: string): string {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: currencyCode,
+    minimumFractionDigits: 0,
+  }).format(amount);
 }
 
 const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
@@ -22,6 +40,10 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
   checkIn,
   checkOut,
   numberOfRooms,
+  adults,
+  children,
+  childAges,
+  effectiveAdults,
 }) => {
   const router = useRouter();
   const [showAllAmenities, setShowAllAmenities] = useState(false);
@@ -29,13 +51,27 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
     null
   );
 
+  const visibleRoomTypes = roomTypes.filter((rt) => {
+    if (effectiveAdults <= rt.maxOccupancy + 1) return true;
+    const needed = getRoomsNeeded(effectiveAdults, rt.maxOccupancy);
+    return rt.availableRooms >= needed;
+  });
+
   const handleProceedToBooking = (roomType: AvailableRoomType) => {
+    const roomsNeeded =
+      effectiveAdults > roomType.maxOccupancy + 1
+        ? getRoomsNeeded(effectiveAdults, roomType.maxOccupancy)
+        : numberOfRooms;
+
     const params = new URLSearchParams({
       hotelId: hotelId.toString(),
       roomTypeId: roomType.roomTypeId.toString(),
       checkIn,
       checkOut,
-      numberOfRooms: numberOfRooms.toString(),
+      numberOfRooms: roomsNeeded.toString(),
+      adults: adults.toString(),
+      children: children.toString(),
+      childAges: childAges.join(","),
     });
     router.push(`/new-bookings?${params.toString()}`);
   };
@@ -56,7 +92,21 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
         <span className="relative z-10">Available Rooms</span>
       </h2>
       <div className="flex flex-col gap-16">
-        {roomTypes.map((roomType, index) => (
+        {visibleRoomTypes.map((roomType, index) => {
+          const needsMultipleRooms = effectiveAdults > roomType.maxOccupancy + 1;
+          const roomsNeeded = getRoomsNeeded(effectiveAdults, roomType.maxOccupancy);
+          const hasExtraAdult =
+            !needsMultipleRooms && effectiveAdults === roomType.maxOccupancy + 1;
+          const roomsForTotal = needsMultipleRooms ? roomsNeeded : numberOfRooms;
+          const basePrice =
+            (roomType.offerPrice ?? roomType.basePriceCents) / 100;
+          const originalBasePrice = roomType.basePriceCents / 100;
+          const extraAdultCharge = hasExtraAdult ? EXTRA_ADULT_CHARGE : 0;
+          const pricePerRoom = basePrice + extraAdultCharge;
+          const totalPerNight = pricePerRoom * roomsForTotal;
+          const showBreakdown = hasExtraAdult || roomsForTotal > 1;
+
+          return (
           <AnimatedContainer
             key={roomType.roomTypeId}
             animationName="fadeUp"
@@ -171,37 +221,78 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-end gap-4 mt-auto pt-6 border-t border-gray-100">
-                  <div className="flex flex-col">
-                    <span className="text-sm text-gray-500 font-dm-sans mb-1">
-                      Starting from
+                  <div className="flex flex-col gap-1 min-w-0">
+                    <span className="text-sm text-gray-500 font-dm-sans">
+                      {showBreakdown ? "Estimated total" : "Starting from"}
                     </span>
-                    <div className="flex items-baseline gap-2">
-                      {roomType.offerPrice !== null &&
-                        roomType.offerPrice !== undefined && (
-                          <span className="line-through text-gray-400 text-sm font-dm-sans">
-                            {new Intl.NumberFormat("en-IN", {
-                              style: "currency",
-                              currency: roomType.currencyCode,
-                              minimumFractionDigits: 0,
-                            }).format(roomType.basePriceCents / 100)}
+
+                    {showBreakdown ? (
+                      <div className="rounded-lg bg-background-light border border-border/30 px-4 py-3 font-dm-sans text-sm space-y-1.5 min-w-[220px]">
+                        <div className="flex justify-between gap-6 text-gray-600">
+                          <span>
+                            {roomType.offerPrice !== null &&
+                            roomType.offerPrice !== undefined ? (
+                              <>
+                                <span className="line-through text-gray-400 mr-1">
+                                  {formatCurrency(
+                                    originalBasePrice,
+                                    roomType.currencyCode
+                                  )}
+                                </span>
+                                {formatCurrency(basePrice, roomType.currencyCode)}
+                              </>
+                            ) : (
+                              formatCurrency(basePrice, roomType.currencyCode)
+                            )}
+                            <span className="text-gray-400"> / room</span>
                           </span>
-                        )}
-                      <span className="text-3xl font-cinzel font-bold text-primary">
-                        {new Intl.NumberFormat("en-IN", {
-                          style: "currency",
-                          currency: roomType.currencyCode,
-                          minimumFractionDigits: 0,
-                        }).format(
-                          roomType.offerPrice !== null &&
-                            roomType.offerPrice !== undefined
-                            ? roomType.offerPrice / 100
-                            : roomType.basePriceCents / 100
-                        )}
-                      </span>
-                      <span className="text-sm text-gray-500 font-dm-sans">
-                        / night
-                      </span>
-                    </div>
+                          {roomsForTotal > 1 && (
+                            <span className="text-gray-500">
+                              × {roomsForTotal} rooms
+                            </span>
+                          )}
+                        </div>
+
+                        {hasExtraAdult ? (
+                          <div className="flex justify-between gap-6 text-amber-700">
+                            <span className="flex items-center gap-1">
+                              <i className="fa fa-user-plus text-xs" />
+                              Extra adult charge
+                            </span>
+                            <span>
+                              + {formatCurrency(EXTRA_ADULT_CHARGE, roomType.currencyCode)}
+                            </span>
+                          </div>
+                        ) : null}
+
+                        <div className="border-t border-border/30 pt-1.5 flex justify-between items-baseline gap-4">
+                          <span className="text-gray-500 text-xs">
+                            per night, excl. taxes
+                          </span>
+                          <span className="text-2xl font-cinzel font-bold text-primary">
+                            {formatCurrency(totalPerNight, roomType.currencyCode)}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-baseline gap-2">
+                        {roomType.offerPrice !== null &&
+                          roomType.offerPrice !== undefined && (
+                            <span className="line-through text-gray-400 text-sm font-dm-sans">
+                              {formatCurrency(
+                                originalBasePrice,
+                                roomType.currencyCode
+                              )}
+                            </span>
+                          )}
+                        <span className="text-3xl font-cinzel font-bold text-primary">
+                          {formatCurrency(basePrice, roomType.currencyCode)}
+                        </span>
+                        <span className="text-sm text-gray-500 font-dm-sans">
+                          / night
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <button
@@ -215,7 +306,8 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
               </div>
             </div>
           </AnimatedContainer>
-        ))}
+        );
+        })}
       </div>
 
       {showAllAmenities ? (
