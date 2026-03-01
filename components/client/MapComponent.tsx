@@ -29,7 +29,7 @@ export default function MapComponent({
 }: MapComponentProps) {
   return (
     <MapContainer
-      center={[latitude, longitude]}
+      center={[latitude ?? 0, longitude ?? 0]}
       zoom={zoom}
       scrollWheelZoom={false}
       style={{ height: "400px", width: "100%", borderRadius: "10px" }}
@@ -38,9 +38,9 @@ export default function MapComponent({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[latitude, longitude]}>
+      <Marker position={[latitude ?? 0, longitude ?? 0]}>
         <Popup>
-          Location: {latitude}, {longitude}
+          Location: {latitude ?? 0}, {longitude ?? 0}
         </Popup>
       </Marker>
     </MapContainer>

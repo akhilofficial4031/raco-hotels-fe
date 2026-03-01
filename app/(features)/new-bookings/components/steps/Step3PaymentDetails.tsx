@@ -7,10 +7,11 @@ import { useFormContext, Controller } from "react-hook-form";
 import { BookingFormValues } from "../form-schema";
 import { getFetcher } from "@/lib/fetcher";
 import { ApiResponse } from "@/types/api";
-
-const ROOM_TAX_RATE = 0.05;
-const EXTRA_ADULT_CHARGE_CENTS = 100000; // ₹1,000 in paise
-const EXTRA_ADULT_TAX_RATE = 0.05;
+import {
+  getExtraAdultCount,
+  BOOKING_TAX_RATE,
+  EXTRA_ADULT_CHARGE_CENTS,
+} from "@/lib/booking-calc";
 
 interface Step3PaymentDetailsProps {
   roomType: RoomType;
@@ -86,7 +87,13 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
 
   const childrenTreatedAsAdults = childAges.filter((age) => age > 10).length;
   const effectiveAdults = numAdults + childrenTreatedAsAdults;
-  const hasExtraAdult = effectiveAdults === roomType.maxOccupancy + 1;
+  // numberOfRooms is already the effective room count passed from the booking page
+  const extraAdultCount = getExtraAdultCount(
+    effectiveAdults,
+    roomType.maxOccupancy,
+    numberOfRooms
+  );
+  const hasExtraAdult = extraAdultCount > 0;
 
   const getRoomRent = useCallback(() => {
     if (roomType.offerPrice) {
@@ -121,12 +128,10 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
 
     const taxableRoomAmount =
       totalAfterDiscount > 0 ? totalAfterDiscount : subtotal;
-    const roomTax = Math.round(taxableRoomAmount * ROOM_TAX_RATE);
+    const roomTax = Math.round(taxableRoomAmount * BOOKING_TAX_RATE);
 
-    const extraAdultSubtotal = hasExtraAdult
-      ? EXTRA_ADULT_CHARGE_CENTS * numberOfNights
-      : 0;
-    const extraAdultTax = Math.round(extraAdultSubtotal * EXTRA_ADULT_TAX_RATE);
+    const extraAdultSubtotal = extraAdultCount * EXTRA_ADULT_CHARGE_CENTS * numberOfNights;
+    const extraAdultTax = Math.round(extraAdultSubtotal * BOOKING_TAX_RATE);
 
     setValue("taxAmount", roomTax + extraAdultTax);
     setValue(
@@ -142,7 +147,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
     totalAfterDiscount,
     numberOfNights,
     numberOfRooms,
-    hasExtraAdult,
+    extraAdultCount,
   ]);
 
   const handleApplyPromoCode = async () => {
@@ -199,12 +204,10 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
     basePrice * (numberOfNights ?? 1) * (numberOfRooms ?? 1);
   const taxableRoomAmount =
     totalAfterDiscount > 0 ? totalAfterDiscount : subtotalAmount;
-  const roomTaxDisplay = Math.round(taxableRoomAmount * ROOM_TAX_RATE);
-  const extraAdultSubtotalDisplay = hasExtraAdult
-    ? EXTRA_ADULT_CHARGE_CENTS * numberOfNights
-    : 0;
+  const roomTaxDisplay = Math.round(taxableRoomAmount * BOOKING_TAX_RATE);
+  const extraAdultSubtotalDisplay = extraAdultCount * EXTRA_ADULT_CHARGE_CENTS * numberOfNights;
   const extraAdultTaxDisplay = Math.round(
-    extraAdultSubtotalDisplay * EXTRA_ADULT_TAX_RATE
+    extraAdultSubtotalDisplay * BOOKING_TAX_RATE
   );
 
   return (
@@ -299,7 +302,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
         )}
 
         <div className="flex justify-between items-center text-gray-600 pb-2 mt-2">
-          <span>Room Tax ({(ROOM_TAX_RATE * 100).toFixed(0)}%)</span>
+          <span>Room Tax ({(BOOKING_TAX_RATE * 100).toFixed(0)}%)</span>
           <span>
             {formatCurrency(roomTaxDisplay, roomType.currencyCode ?? "INR")}
           </span>
@@ -307,10 +310,11 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
 
         {hasExtraAdult && (
           <>
-            <div className="flex justify-between items-center text-gray-600 pb-2 mt-2">
+            <div className="flex justify-between items-center text-amber-700 pb-2 mt-2">
               <span>
                 Extra Adult Charge (₹
                 {(EXTRA_ADULT_CHARGE_CENTS / 100).toLocaleString("en-IN")} ×{" "}
+                {extraAdultCount} {extraAdultCount === 1 ? "room" : "rooms"} ×{" "}
                 {numberOfNights} {numberOfNights === 1 ? "night" : "nights"})
               </span>
               <span>
@@ -320,9 +324,9 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
                 )}
               </span>
             </div>
-            <div className="flex justify-between items-center text-gray-600 pb-2 mt-2">
+            <div className="flex justify-between items-center text-amber-600 text-xs pb-2 mt-2">
               <span>
-                Tax on Extra Adult ({(EXTRA_ADULT_TAX_RATE * 100).toFixed(0)}%)
+                Tax on Extra Adult ({(BOOKING_TAX_RATE * 100).toFixed(0)}%)
               </span>
               <span>
                 {formatCurrency(

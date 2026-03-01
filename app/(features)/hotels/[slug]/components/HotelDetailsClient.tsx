@@ -38,6 +38,9 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
   const [availableRooms, _setAvailableRooms] = useState<RoomType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [rooms, setRooms] = useState(1);
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [childAges, setChildAges] = useState<number[]>([]);
   const { openModal } = useQuickBooking();
 
   const handleCheckAvailability = async () => {
@@ -47,12 +50,14 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
     }
     const checkIn = dates[0].format("YYYY-MM-DD");
     const checkOut = dates[1].format("YYYY-MM-DD");
-    const numberOfRooms = rooms;
     const params = new URLSearchParams({
       hotelId: hotel.id.toString(),
       checkIn,
       checkOut,
-      numberOfRooms: numberOfRooms.toString(),
+      numberOfRooms: rooms.toString(),
+      adults: adults.toString(),
+      children: children.toString(),
+      childAges: childAges.join(","),
     });
     router.push(`/available-rooms?${params.toString()}`);
   };
@@ -150,6 +155,12 @@ const HotelDetailsClient: React.FC<HotelDetailsClientProps> = ({
             onDatesChange={onCheckinDatesChange}
             rooms={rooms}
             onRoomsChange={setRooms}
+            adults={adults}
+            onAdultsChange={setAdults}
+            numChildren={children}
+            onChildrenChange={setChildren}
+            childAges={childAges}
+            onChildAgesChange={setChildAges}
             onCheck={handleCheckAvailability}
             loading={false}
           />

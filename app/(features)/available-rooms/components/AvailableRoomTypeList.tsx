@@ -22,8 +22,31 @@ interface AvailableRoomTypeListProps {
 
 const EXTRA_ADULT_CHARGE = 1000;
 
-function getRoomsNeeded(effectiveAdults: number, maxOccupancy: number): number {
-  return Math.ceil(effectiveAdults / maxOccupancy);
+/**
+ * Returns rooms needed when extra adults cannot be accommodated in selectedRooms.
+ * Each room can hold up to maxOccupancy + 1 guests (1 extra adult allowed per room).
+ */
+function getRoomsNeeded(
+  effectiveAdults: number,
+  maxOccupancy: number,
+  selectedRooms: number
+): number {
+  if (effectiveAdults <= selectedRooms * (maxOccupancy + 1)) return selectedRooms;
+  return Math.ceil(effectiveAdults / (maxOccupancy + 1));
+}
+
+/**
+ * Returns how many rooms require an extra adult, given roomsForTotal rooms.
+ * Each room can have at most 1 extra adult beyond maxOccupancy.
+ */
+function getExtraAdultCount(
+  effectiveAdults: number,
+  maxOccupancy: number,
+  roomsForTotal: number
+): number {
+  const extra = effectiveAdults - roomsForTotal * maxOccupancy;
+  if (extra <= 0) return 0;
+  return Math.min(extra, roomsForTotal);
 }
 
 function formatCurrency(amount: number, currencyCode: string): string {
@@ -52,16 +75,19 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
   );
 
   const visibleRoomTypes = roomTypes.filter((rt) => {
-    if (effectiveAdults <= rt.maxOccupancy + 1) return true;
-    const needed = getRoomsNeeded(effectiveAdults, rt.maxOccupancy);
+    // Fits within selected rooms (with or without extra adult per room)
+    if (effectiveAdults <= numberOfRooms * (rt.maxOccupancy + 1)) return true;
+    // Extra rooms needed — check availability
+    const needed = getRoomsNeeded(effectiveAdults, rt.maxOccupancy, numberOfRooms);
     return rt.availableRooms >= needed;
   });
 
   const handleProceedToBooking = (roomType: AvailableRoomType) => {
-    const roomsNeeded =
-      effectiveAdults > roomType.maxOccupancy + 1
-        ? getRoomsNeeded(effectiveAdults, roomType.maxOccupancy)
-        : numberOfRooms;
+    const roomsNeeded = getRoomsNeeded(
+      effectiveAdults,
+      roomType.maxOccupancy,
+      numberOfRooms
+    );
 
     const params = new URLSearchParams({
       hotelId: hotelId.toString(),
@@ -93,17 +119,22 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
       </h2>
       <div className="flex flex-col gap-16">
         {visibleRoomTypes.map((roomType, index) => {
-          const needsMultipleRooms = effectiveAdults > roomType.maxOccupancy + 1;
-          const roomsNeeded = getRoomsNeeded(effectiveAdults, roomType.maxOccupancy);
-          const hasExtraAdult =
-            !needsMultipleRooms && effectiveAdults === roomType.maxOccupancy + 1;
-          const roomsForTotal = needsMultipleRooms ? roomsNeeded : numberOfRooms;
+          const roomsForTotal = getRoomsNeeded(
+            effectiveAdults,
+            roomType.maxOccupancy,
+            numberOfRooms
+          );
+          const extraAdultCount = getExtraAdultCount(
+            effectiveAdults,
+            roomType.maxOccupancy,
+            roomsForTotal
+          );
+          const hasExtraAdult = extraAdultCount > 0;
           const basePrice =
             (roomType.offerPrice ?? roomType.basePriceCents) / 100;
           const originalBasePrice = roomType.basePriceCents / 100;
-          const extraAdultCharge = hasExtraAdult ? EXTRA_ADULT_CHARGE : 0;
-          const pricePerRoom = basePrice + extraAdultCharge;
-          const totalPerNight = pricePerRoom * roomsForTotal;
+          const totalPerNight =
+            basePrice * roomsForTotal + extraAdultCount * EXTRA_ADULT_CHARGE;
           const showBreakdown = hasExtraAdult || roomsForTotal > 1;
 
           return (
@@ -257,10 +288,17 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
                           <div className="flex justify-between gap-6 text-amber-700">
                             <span className="flex items-center gap-1">
                               <i className="fa fa-user-plus text-xs" />
-                              Extra adult charge
+                              Extra adult
+                              {extraAdultCount > 1
+                                ? ` (${extraAdultCount} rooms)`
+                                : " (1 room)"}
                             </span>
                             <span>
-                              + {formatCurrency(EXTRA_ADULT_CHARGE, roomType.currencyCode)}
+                              +{" "}
+                              {formatCurrency(
+                                extraAdultCount * EXTRA_ADULT_CHARGE,
+                                roomType.currencyCode
+                              )}
                             </span>
                           </div>
                         ) : null}

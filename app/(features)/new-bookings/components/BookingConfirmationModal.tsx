@@ -1,5 +1,6 @@
 "use client";
 import { message } from "@/components/message";
+import { BOOKING_TAX_RATE } from "@/lib/booking-calc";
 import { PaymentDetails } from "@/types/razorpay";
 import { CloseOutlined, DownloadOutlined } from "@ant-design/icons";
 import { Button, Divider, Modal } from "antd";
@@ -295,11 +296,10 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                 <div>
                   <strong>Status:</strong>
                   <span
-                    className={`ml-1 px-1.5 py-0.5 rounded-full text-xs  ${
-                      booking.status === "confirmed"
+                    className={`ml-1 px-1.5 py-0.5 rounded-full text-xs  ${booking.status === "confirmed"
                         ? "text-green-600"
                         : "text-yellow-600"
-                    }`}
+                      }`}
                     style={{
                       color:
                         booking.status === "confirmed" ? "#166534" : "#92400e",
@@ -380,7 +380,7 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                 </span>
               </div>
               <div className="flex justify-between">
-                <span>Tax (18%):</span>
+                <span>Tax ({(BOOKING_TAX_RATE * 100).toFixed(0)}%):</span>
                 <span>
                   {formatCurrency(booking.taxAmountCents, booking.currencyCode)}
                 </span>
@@ -436,13 +436,12 @@ const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
                   <strong>Payment Status:</strong>
                 </span>
                 <span
-                  className={`px-1.5 py-0.5 rounded-full text-xs  ${
-                    paymentDetails?.status === "success"
+                  className={`px-1.5 py-0.5 rounded-full text-xs  ${paymentDetails?.status === "success"
                       ? "text-green-800"
                       : booking.paymentStatus === "completed"
                         ? "text-green-800 "
                         : "text-yellow-800 "
-                  }`}
+                    }`}
                   style={{
                     color:
                       paymentDetails?.status === "success"

@@ -10,9 +10,7 @@ import {
 } from "@ant-design/icons";
 import { Carousel } from "antd";
 import moment from "moment";
-
-const EXTRA_ADULT_CHARGE = 1000;
-const EXTRA_ADULT_TAX_RATE = 0.05;
+import { getExtraAdultCount, EXTRA_ADULT_CHARGE } from "@/lib/booking-calc";
 
 interface BookingSummaryProps {
   hotel: Hotel;
@@ -66,17 +64,22 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   const childrenTreatedAsAdults = childAges.filter((age) => age > 10).length;
   const effectiveAdults = adults + childrenTreatedAsAdults;
   const childrenUnder10 = children - childrenTreatedAsAdults;
-  const hasExtraAdult = effectiveAdults === roomType.maxOccupancy + 1;
+
+  // numberOfRooms is already the effective room count (set by AvailableRoomTypeList)
+  const extraAdultCount = getExtraAdultCount(
+    effectiveAdults,
+    roomType.maxOccupancy,
+    numberOfRooms
+  );
+  const hasExtraAdult = extraAdultCount > 0;
 
   const basePrice = (roomType.offerPrice ?? roomType.basePriceCents) / 100;
   const originalBasePrice = roomType.basePriceCents / 100;
   const hasOffer = roomType.offerPrice != null;
 
   const roomSubtotal = basePrice * numberOfRooms * nights;
-  const extraAdultPerNight = hasExtraAdult ? EXTRA_ADULT_CHARGE : 0;
-  const extraAdultSubtotal = extraAdultPerNight * nights;
-  const extraAdultTax = extraAdultSubtotal * EXTRA_ADULT_TAX_RATE;
-  const grandTotal = roomSubtotal + extraAdultSubtotal + extraAdultTax;
+  const extraAdultSubtotal = extraAdultCount * EXTRA_ADULT_CHARGE * nights;
+  const grandTotal = roomSubtotal + extraAdultSubtotal;
 
   return (
     <div className="bg-white border border-border rounded-lg overflow-hidden">
@@ -175,7 +178,10 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
             <div className="flex items-center gap-2 mt-2 px-3 py-2 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-xs">
               <UserOutlined />
               <span>
-                1 extra adult accommodated in the same room — surcharge applies
+                {extraAdultCount === 1
+                  ? "1 extra adult accommodated in 1 room"
+                  : `${extraAdultCount} extra adults across ${extraAdultCount} rooms`}{" "}
+                — surcharge applies
               </span>
             </div>
           ) : null}
@@ -212,37 +218,23 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
 
           {/* Extra adult charge */}
           {hasExtraAdult ? (
-            <>
-              <div className="flex justify-between text-amber-700">
-                <span>
-                  Extra adult charge (₹{EXTRA_ADULT_CHARGE.toLocaleString("en-IN")} × {nights}{" "}
-                  {nights === 1 ? "night" : "nights"})
-                </span>
-                <span className="font-semibold ml-4 shrink-0">
-                  {formatCurrency(extraAdultSubtotal, roomType.currencyCode)}
-                </span>
-              </div>
-              <div className="flex justify-between text-amber-600 text-xs">
-                <span>
-                  GST on extra adult charge (
-                  {(EXTRA_ADULT_TAX_RATE * 100).toFixed(0)}%)
-                </span>
-                <span className="font-medium ml-4 shrink-0">
-                  + {formatCurrency(extraAdultTax, roomType.currencyCode)}
-                </span>
-              </div>
-            </>
+            <div className="flex justify-between text-amber-700 mt-1">
+              <span>
+                Extra adult charge (₹{EXTRA_ADULT_CHARGE.toLocaleString("en-IN")} ×{" "}
+                {extraAdultCount} {extraAdultCount === 1 ? "room" : "rooms"} × {nights}{" "}
+                {nights === 1 ? "night" : "nights"})
+              </span>
+              <span className="font-semibold ml-4 shrink-0">
+                {formatCurrency(extraAdultSubtotal, roomType.currencyCode)}
+              </span>
+            </div>
           ) : null}
 
           {/* Divider + Total */}
           <div className="border-t border-gray-200 pt-3 mt-2 flex justify-between items-baseline">
             <div>
-              <p className="font-bold text-gray-900 text-base">Total</p>
-              <p className="text-xs text-gray-400">
-                {hasExtraAdult
-                  ? "Room taxes billed at check-in"
-                  : "Taxes & fees billed at check-in"}
-              </p>
+              <p className="font-bold text-gray-900 text-base">Subtotal</p>
+              <p className="text-xs text-gray-400">Taxes &amp; fees shown in payment step</p>
             </div>
             <span className="text-2xl font-bold text-primary ml-4">
               {formatCurrency(grandTotal, roomType.currencyCode)}

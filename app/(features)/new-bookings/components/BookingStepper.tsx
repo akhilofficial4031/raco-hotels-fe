@@ -205,7 +205,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
             } else {
               message.error(
                 verifyData.message ??
-                  "Payment verification failed. Please contact support."
+                "Payment verification failed. Please contact support."
               );
             }
           } catch (error) {
@@ -262,6 +262,7 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
           checkOutDate,
           numAdults,
           numChildren,
+          childrenAges: childAges,
           status: "confirmed",
         },
         customerData: {
@@ -411,9 +412,8 @@ const BookingStepper: React.FC<BookingStepperProps> = ({
         {steps.map((step, index) => (
           <div
             key={step.number}
-            className={`px-8 pt-8 ${
-              index < steps.length - 1 ? "border-b border-gray-200" : ""
-            }`}
+            className={`px-8 pt-8 ${index < steps.length - 1 ? "border-b border-gray-200" : ""
+              }`}
           >
             <h2 className="text-xl font-bold mb-4">
               Step {step.number}: {step.title}

@@ -4,12 +4,26 @@ import { RoomType, AvailableRoomDetails } from "@/types/hotel";
 import { getAvailableRoomTypesForHotel } from "@/lib/hotels";
 import Image from "next/image";
 import React, { useState } from "react";
-import { DatePicker, Button, Modal, Spin, InputNumber } from "antd";
+import { DatePicker, Button, Modal, Spin, InputNumber, Select } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { message } from "@/components/message";
 import dayjs from "dayjs";
 import RoomImageCarousel from "./RoomImageCarousel";
 import { useRouter } from "next/navigation";
 import AnimatedContainer from "@/components/ui/AnimatedContainer";
+import { getRoomsNeeded } from "@/lib/booking-calc";
+
+const renderDropdownNoScroll = (menu: React.ReactNode) => (
+  <div onWheel={(e) => e.stopPropagation()}>{menu}</div>
+);
+
+const CHILD_AGE_OPTIONS = [
+  { value: 0, label: "Below 1 year" },
+  ...Array.from({ length: 18 }, (_, i) => ({
+    value: i + 1,
+    label: `${i + 1} year`,
+  })),
+];
 
 const { RangePicker } = DatePicker;
 
@@ -22,6 +36,9 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
   const [numberOfRooms, setNumberOfRooms] = useState(1);
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [childAges, setChildAges] = useState<number[]>([]);
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [dates, setDates] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
     dayjs().add(1, "day"),
@@ -33,6 +50,43 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
   );
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const router = useRouter();
+
+  // Derived occupancy — recalculated on every render from current state
+  const effectiveAdults =
+    adults + childAges.filter((age) => age > 10).length;
+  const minRoomsNeeded = selectedRoom
+    ? getRoomsNeeded(effectiveAdults, selectedRoom.maxOccupancy, numberOfRooms)
+    : numberOfRooms;
+  const capacityExceeded = selectedRoom
+    ? effectiveAdults > numberOfRooms * (selectedRoom.maxOccupancy + 1)
+    : false;
+
+  const handleRoomsChange = (value: number) => {
+    setNumberOfRooms(value);
+    setIsAvailable(null);
+    setAvailableRooms([]);
+  };
+
+  const handleAdultsChange = (value: number) => {
+    setAdults(value);
+    setIsAvailable(null);
+    setAvailableRooms([]);
+  };
+
+  const handleChildrenCountChange = (count: number) => {
+    setChildren(count);
+    setChildAges(Array.from({ length: count }, (_, i) => childAges[i] ?? 0));
+    setIsAvailable(null);
+    setAvailableRooms([]);
+  };
+
+  const handleChildAgeChange = (index: number, age: number) => {
+    const updated = [...childAges];
+    updated[index] = age;
+    setChildAges(updated);
+    setIsAvailable(null);
+    setAvailableRooms([]);
+  };
 
   const showModal = (roomType: RoomType) => {
     setSelectedRoom(roomType);
@@ -86,13 +140,15 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
     if (!selectedRoom || !dates[0] || !dates[1]) return;
     const checkIn = dates[0].format("YYYY-MM-DD");
     const checkOut = dates[1].format("YYYY-MM-DD");
-    const numberOfRoomsString = numberOfRooms.toString();
     const params = new URLSearchParams({
       hotelId: hotelId.toString(),
       roomTypeId: selectedRoom.id.toString(),
       checkIn,
       checkOut,
-      numberOfRooms: numberOfRoomsString,
+      numberOfRooms: numberOfRooms.toString(),
+      adults: adults.toString(),
+      children: children.toString(),
+      childAges: childAges.join(","),
     });
     router.push(`/new-bookings?${params.toString()}`);
   };
@@ -101,6 +157,10 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
     setIsModalVisible(false);
     setIsAvailable(null);
     setAvailableRooms([]);
+    setAdults(1);
+    setChildren(0);
+    setChildAges([]);
+    setNumberOfRooms(1);
   };
 
   const handleShowAllAmenities = (roomType: RoomType) => {
@@ -285,7 +345,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
       </div>
       {selectedRoom ? (
         <Modal
-          title={`Check Availability for ${selectedRoom.name}`}
+          title={`Check Availability — ${selectedRoom.name}`}
           open={isModalVisible}
           onCancel={handleCancel}
           centered
@@ -301,46 +361,146 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
                 isAvailable ? handleProceedToBooking : handleCheckAvailability
               }
               loading={isLoading}
+              disabled={
+                !dates[0] ||
+                !dates[1] ||
+                (children > 0 && childAges.length < children) ||
+                capacityExceeded
+              }
               className="!bg-primary !text-white hover:!bg-primary/90"
             >
               {isAvailable ? "Proceed to Booking" : "Check Now"}
             </Button>,
           ]}
         >
-          <div className="space-y-4">
+          <div className="space-y-4 pt-2">
+            {/* Dates */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select your dates and number of rooms:
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Check In — Check Out
               </label>
-              <div className="grid grid-cols-1  gap-2">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Number of rooms</label>
-                  <InputNumber
-                    min={1}
-                    placeholder="Number of rooms"
-                    value={numberOfRooms}
-                    onChange={(value) => setNumberOfRooms(value ?? 1)}
-                    className="!w-full !mt-2 !mb-3"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Select your dates</label>
-                  <RangePicker
-                    value={dates}
-                    onChange={(dates) => {
-                      setDates(dates as [dayjs.Dayjs | null, dayjs.Dayjs | null]);
-                      setIsAvailable(null); // Reset availability when dates change
-                      setAvailableRooms([]);
-                    }}
-                    disabledDate={(current) =>
-                      current && current < dayjs().startOf("day")
-                    }
-                    className="!w-full !mt-2"
-                  />
-                </div>
+              <RangePicker
+                value={dates}
+                onChange={(d) => {
+                  setDates(d as [dayjs.Dayjs | null, dayjs.Dayjs | null]);
+                  setIsAvailable(null);
+                  setAvailableRooms([]);
+                }}
+                disabledDate={(current) =>
+                  current && current < dayjs().startOf("day")
+                }
+                className="!w-full"
+                size="large"
+              />
+            </div>
+
+            {/* Rooms / Adults / Children */}
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Rooms
+                </label>
+                <InputNumber
+                  min={1}
+                  max={20}
+                  value={numberOfRooms}
+                  onChange={(v) => handleRoomsChange(v ?? 1)}
+                  className={`!w-full${capacityExceeded ? " !border-amber-400" : ""}`}
+                  size="large"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Adults
+                </label>
+                <InputNumber
+                  min={1}
+                  max={20}
+                  value={adults}
+                  onChange={(v) => handleAdultsChange(v ?? 1)}
+                  className="!w-full"
+                  size="large"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Children
+                </label>
+                <InputNumber
+                  min={0}
+                  max={20}
+                  value={children}
+                  onChange={(v) => handleChildrenCountChange(v ?? 0)}
+                  className="!w-full"
+                  size="large"
+                />
               </div>
             </div>
 
+            {/* Occupancy warning */}
+            {capacityExceeded && selectedRoom ? (
+              <div className="flex items-start gap-3 bg-amber-50 border border-amber-300 rounded-md px-4 py-3 text-sm">
+                <i className="fa fa-exclamation-triangle text-amber-500 mt-0.5 shrink-0" />
+                <div className="flex-1">
+                  <p className="text-amber-800 font-medium">
+                    Not enough rooms for {effectiveAdults} adult
+                    {effectiveAdults > 1 ? "s" : ""}
+                  </p>
+                  <p className="text-amber-700 mt-0.5">
+                    Each room fits up to{" "}
+                    <strong>{selectedRoom.maxOccupancy + 1}</strong> guests
+                    (incl. 1 extra adult). You need at least{" "}
+                    <strong>{minRoomsNeeded}</strong> room
+                    {minRoomsNeeded > 1 ? "s" : ""}.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRoomsChange(minRoomsNeeded)}
+                  className="shrink-0 text-xs font-semibold text-amber-800 underline hover:text-amber-900 whitespace-nowrap"
+                >
+                  Set to {minRoomsNeeded}
+                </button>
+              </div>
+            ) : null}
+
+            {/* Child ages */}
+            {children > 0 && (
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-2">
+                  Age of {children === 1 ? "child" : "children"}
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: children }, (_, i) => (
+                    <div key={i}>
+                      <label className="block text-xs text-gray-500 mb-1">
+                        Child {i + 1}
+                      </label>
+                      <Select
+                        size="large"
+                        placeholder="Select age"
+                        value={childAges[i] ?? undefined}
+                        onChange={(v) => handleChildAgeChange(i, v)}
+                        options={CHILD_AGE_OPTIONS}
+                        className="!w-full"
+                        getPopupContainer={(trigger) =>
+                          trigger.parentElement ?? document.body
+                        }
+                        dropdownRender={renderDropdownNoScroll}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Info note */}
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <InfoCircleOutlined className="shrink-0" />
+              <span>Children above age 10 are considered as adults</span>
+            </div>
+
+            {/* Availability feedback */}
             {isLoading ? (
               <div className="text-center py-4">
                 <Spin size="large" />
