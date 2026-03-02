@@ -19,7 +19,7 @@ interface BookingSummaryProps {
   checkOut: string | null;
   numberOfRooms: number;
   adults: number;
-  children: number;
+  numberOfChildren: number;
   childAges: number[];
 }
 
@@ -38,7 +38,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   checkOut,
   numberOfRooms,
   adults,
-  children,
+  numberOfChildren,
   childAges,
 }) => {
   if (!hotel || !roomType) {
@@ -63,7 +63,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
 
   const childrenTreatedAsAdults = childAges.filter((age) => age > 10).length;
   const effectiveAdults = adults + childrenTreatedAsAdults;
-  const childrenUnder10 = children - childrenTreatedAsAdults;
+  const childrenUnder10 = numberOfChildren - childrenTreatedAsAdults;
 
   // numberOfRooms is already the effective room count (set by AvailableRoomTypeList)
   const extraAdultCount = getExtraAdultCount(
