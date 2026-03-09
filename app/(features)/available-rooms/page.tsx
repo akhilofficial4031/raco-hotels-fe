@@ -112,7 +112,7 @@ const AvailableRoomsPageContent = () => {
             checkOut={checkOut}
             numberOfRooms={parseInt(numberOfRooms ?? "1", 10)}
             adults={adults}
-            children={children}
+            numberOfChildren={children}
             childAges={childAges}
             effectiveAdults={effectiveAdults}
           />

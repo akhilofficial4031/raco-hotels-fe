@@ -192,7 +192,7 @@ const NewBookingsPageContent = () => {
                 checkOut={checkOut}
                 numberOfRooms={parseInt(numberOfRooms, 10)}
                 adults={adults}
-                children={children}
+                numberOfChildren={children}
                 childAges={childAges}
               />
             </div>

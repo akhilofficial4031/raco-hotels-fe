@@ -71,7 +71,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
   const { control, watch, setValue } = useFormContext<BookingFormValues>();
   const selectedAddonIds: number[] = watch("addons", []);
   const totalAmount = watch("totalAmount", roomType?.basePriceCents ?? 0);
-  const taxAmount = watch("taxAmount", 0);
+  const _taxAmount = watch("taxAmount", 0);
   const promoCode = watch("promoCode", "");
   const discountAmount = watch(
     "discountAmount" as keyof BookingFormValues,
@@ -308,7 +308,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
           </span>
         </div>
 
-        {hasExtraAdult && (
+        {hasExtraAdult ? (
           <>
             <div className="flex justify-between items-center text-amber-700 pb-2 mt-2">
               <span>
@@ -336,7 +336,7 @@ const Step3PaymentDetails: React.FC<Step3PaymentDetailsProps> = ({
               </span>
             </div>
           </>
-        )}
+        ) : null}
 
         <div className="border-b border-gray-200 mb-2" />
 

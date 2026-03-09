@@ -15,7 +15,7 @@ interface AvailableRoomTypeListProps {
   checkOut: string;
   numberOfRooms: number;
   adults: number;
-  children: number;
+  numberOfChildren: number;
   childAges: number[];
   effectiveAdults: number;
 }
@@ -64,7 +64,7 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
   checkOut,
   numberOfRooms,
   adults,
-  children,
+  numberOfChildren,
   childAges,
   effectiveAdults,
 }) => {
@@ -96,7 +96,7 @@ const AvailableRoomTypeList: React.FC<AvailableRoomTypeListProps> = ({
       checkOut,
       numberOfRooms: roomsNeeded.toString(),
       adults: adults.toString(),
-      children: children.toString(),
+      children: numberOfChildren.toString(),
       childAges: childAges.join(","),
     });
     router.push(`/new-bookings?${params.toString()}`);
