@@ -497,7 +497,7 @@ const RoomTypes: React.FC<RoomTypesProps> = ({ roomTypes, hotelId }) => {
             {/* Info note */}
             <div className="flex items-center gap-2 text-xs text-gray-500">
               <InfoCircleOutlined className="shrink-0" />
-              <span>Children above age 10 are considered as adults</span>
+              <span>Children above the age of 10 will be charged</span>
             </div>
 
             {/* Availability feedback */}

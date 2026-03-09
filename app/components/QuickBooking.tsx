@@ -12,8 +12,8 @@ import {
 } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const { RangePicker } = DatePicker;
 
@@ -48,6 +48,7 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const params = useParams();
 
   const handleCheckAvailability = async (values: QuickBookingFormValues) => {
     setLoading(true);
@@ -79,12 +80,32 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
     onClose();
     form.resetFields();
   };
+  const getHotelIdFromParams = () => {
+    const hotelSlug = params?.['slug'];
+    if (!hotelSlug) return null;
+    const hotel = hotels.find((hotel) => hotel.slug === hotelSlug);
+    if (!hotel) return null;
+    return hotel.id;
+  };
+
+  const handleClose = () => {
+    onClose();
+    form.resetFields();
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const hotelId = getHotelIdFromParams();
+    if (hotelId) {
+      form.setFieldValue("hotelId", hotelId);
+    }
+  }, [params, open]);
 
   return (
     <Modal
       title="Quick Booking"
       open={open}
-      onCancel={onClose}
+      onCancel={handleClose}
       footer={null}
       centered
       destroyOnHidden
@@ -186,7 +207,7 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
           <div className="flex items-center gap-2 mb-2">
             <InfoCircleOutlined className="text-gray-400 shrink-0" />
             <span className="text-sm text-gray-500">
-              Children above age 10 are considered as adults
+              Children above the age of 10 will be charged
             </span>
           </div>
 

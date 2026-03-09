@@ -48,7 +48,7 @@ export async function getLandingPageContent(): Promise<LandingPageContent> {
     }
 
     const content = response.data;
-    console.log("content2", content);
+    // console.log("content2", content);
     // Validate the content structure (basic validation)
     if (!content.hero || !content.aboutUs || !content.seo) {
       throw new Error("Invalid landing page content structure");

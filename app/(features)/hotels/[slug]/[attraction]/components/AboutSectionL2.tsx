@@ -13,7 +13,6 @@ const AboutSectionL2: React.FC<Props> = ({ content }) => {
   // Ensure we have at least 1 image to work with
   const sourceImages =
     images && images.length > 0 ? images : ["/placeholder.jpg"];
-  console.log(sourceImages);
 
   // Prepare carousel items
   // const carouselItems: CarouselImageItem[] = sourceImages.map((img) => ({
