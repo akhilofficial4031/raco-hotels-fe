@@ -212,7 +212,7 @@ const CheckAvailability: React.FC<CheckAvailabilityProps> = ({
               <div className="flex items-center gap-2 mt-2">
                 <InfoCircleOutlined className="text-white/50 shrink-0 text-xs" />
                 <span className="text-xs text-white/60">
-                  Children above the age of 10 will be charged
+                  Children from the age of 10 will be charged
                 </span>
               </div>
             </div>

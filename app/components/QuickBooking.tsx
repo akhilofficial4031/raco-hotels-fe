@@ -207,7 +207,7 @@ const QuickBooking: React.FC<QuickBookingProps> = ({
           <div className="flex items-center gap-2 mb-2">
             <InfoCircleOutlined className="text-gray-400 shrink-0" />
             <span className="text-sm text-gray-500">
-              Children above the age of 10 will be charged
+              Children from the age of 10 will be charged
             </span>
           </div>
 
