@@ -4,6 +4,7 @@ import {
   FooterContactContent,
   FooterContactContentPages,
   FooterImagePath,
+  FooterPhoneNumber,
 } from "@/lib/footer";
 import Image from "next/image";
 import Link from "next/link";
@@ -59,6 +60,19 @@ const Footer = () => {
       return FooterImagePath["raco-cyber-residency"];
     }
     return FooterImagePath.home;
+  };
+
+  const footerPhoneNumber = (): string => {
+    if (pathname === "/") {
+      return FooterPhoneNumber.home;
+    } else if (pathname.includes(FooterContactContentPages.RACO_REGENCY)) {
+      return FooterPhoneNumber["raco-regency"];
+    } else if (
+      pathname.includes(FooterContactContentPages.RACO_CYBER_RESIDENCY)
+    ) {
+      return FooterPhoneNumber["raco-cyber-residency"];
+    }
+    return FooterPhoneNumber.home;
   };
 
   const handleBookingClick = () => {
@@ -255,7 +269,7 @@ const Footer = () => {
               </Link>
               <div className="mt-auto">
                 <p className="text-sm !mb-1">
-                  <PhoneOutlined className="w-4 h-4" /> <span>092490 97929</span>
+                  <PhoneOutlined className="w-4 h-4" /> <span>{footerPhoneNumber()}</span>
                 </p>
                 <p className="text-sm">
                   <MailOutlined className="w-4 h-4" />{" "}

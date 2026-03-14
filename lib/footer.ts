@@ -18,3 +18,9 @@ export const FooterImagePath = {
   "raco-regency": "/footer-raco-regency.webp",
   home: "/footer-home.webp",
 };
+
+export const FooterPhoneNumber = {
+  "raco-cyber-residency": "+91 90726 36969",
+  "raco-regency": "+91 97786 99715",
+  home: "+91 92490 97929",
+};
